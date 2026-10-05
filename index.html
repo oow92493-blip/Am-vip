@@ -16,7 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Firebase SDK v10 (Compat version for high reliability & error handling) -->
+    <!-- Firebase SDK v10 (Compat version) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
@@ -119,7 +119,7 @@
                 </div>
                 <div>
                     <h1 class="font-extrabold text-base sm:text-lg tracking-tight bg-gradient-to-r from-cyan-300 via-purple-300 to-emerald-300 bg-clip-text text-transparent">
-                        AM VIP UNLOCKER
+                       𝘼𝙇𝙄𝙂𝙃𝙏 𝙈𝘼𝙏𝙄𝙊𝙉 𝙋𝙍𝙀𝙈𝙄𝙐𝙈
                     </h1>
                     <p class="text-[10px] sm:text-xs text-slate-400">Permanent Network</p>
                 </div>
@@ -462,7 +462,7 @@
         </div>
     </div>
 
-    <!-- Banned Modal with Direct Unban Feature -->
+    <!-- Banned Modal -->
     <div id="banned-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[200] hidden flex items-center justify-center p-4">
         <div class="glass-card max-w-md w-full p-8 rounded-3xl border border-rose-600 text-center space-y-6 shadow-2xl">
             <div class="w-20 h-20 rounded-full bg-rose-600/20 text-rose-500 border border-rose-500 flex items-center justify-center text-4xl mx-auto">
@@ -472,20 +472,15 @@
             <div class="space-y-3">
                 <h2 class="text-xl font-black text-rose-500 uppercase tracking-wider">AKUN DIBANNED PERMANEN</h2>
                 <p class="text-xs text-slate-300 leading-relaxed">
-                    Akses Anda telah diblokir karena melanggar aturan penggunaan nickname resmi Owner secara berulang.
+                    Akses Anda ke sistem **Alight Motion VIP & Global Network** telah diblokir secara permanen karena melanggar aturan penggunaan nickname resmi Owner secara berulang.
                 </p>
             </div>
 
             <div class="p-4 bg-rose-950/40 rounded-2xl border border-rose-800/60 text-[11px] font-mono text-rose-300 text-left space-y-1">
-                <div>• Status: BANNED PERMANEN</div>
-                <div>• Alasan: Pelanggaran Nickname Owner</div>
-                <div>• Akses: Dikunci Sementara</div>
+                <div>• Status: PERMANENTLY BANNED</div>
+                <div>• Alasan: Impersonation Protection Penalty</div>
+                <div>• Akses: Disabling All API & Community Actions</div>
             </div>
-
-            <button onclick="selfUnbanAccount()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold text-xs rounded-xl shadow-emerald-glow transition flex items-center justify-center gap-2 cursor-pointer">
-                <i class="fa-solid fa-key"></i>
-                <span>LEPAS BANNED PERMANEN SEKARANG</span>
-            </button>
         </div>
     </div>
 
@@ -502,7 +497,7 @@
 
     <!-- Footer -->
     <footer class="border-t border-slate-800/80 py-5 text-center text-[11px] text-slate-500">
-        &copy; 2026 Alight Motion VIP Premium Gateway. Real-time Persistent Global Network.
+        developer (adit) 
     </footer>
 
     <script>
@@ -618,12 +613,6 @@
                             isBanned = true;
                             localStorage.setItem('am_vip_banned', 'true');
                             enforceBanUI();
-                        } else {
-                            if (isBanned) {
-                                isBanned = false;
-                                localStorage.removeItem('am_vip_banned');
-                                removeBanUI();
-                            }
                         }
                     });
 
@@ -633,7 +622,7 @@
             }
         }
 
-        // Dynamic Nickname Change Logic (Max 2 Owner Slot + Dynamic Release)
+        // Save Custom Nickname Logic (Limit Maksimal 2 Device untuk "Owner")
         async function saveCustomNickname() {
             if (isBanned) return;
             const inputEl = document.getElementById('input-custom-nickname');
@@ -644,34 +633,8 @@
                 return;
             }
 
-            const oldNickname = customNickname;
-            const lowerOld = oldNickname.toLowerCase();
-            const lowerNew = targetNickname.toLowerCase();
-
-            // 1. DYNAMIC RESET: Jika user melepas nama "Owner" ke nama biasa
-            if (lowerOld === "owner" && lowerNew !== "owner") {
-                try {
-                    let ownerDevices = [];
-                    if (db) {
-                        const snap = await db.ref('app_owners').once('value');
-                        ownerDevices = snap.val() || [];
-                    } else {
-                        ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
-                    }
-
-                    // Hapus ID device ini dari daftar owner
-                    ownerDevices = ownerDevices.filter(id => id !== deviceUUID);
-
-                    if (db) await db.ref('app_owners').set(ownerDevices);
-                    localStorage.setItem('am_owner_devices', JSON.stringify(ownerDevices));
-                    console.log("Slot Owner berhasil dilepas/dihapus.");
-                } catch(e) {
-                    console.error("Gagal melepas slot owner:", e);
-                }
-            }
-
-            // 2. KLAIM OWNER (MAKSIMAL 2 DEVICE)
-            if (lowerNew === "owner") {
+            // Jika mencoba menggunakan nickname "Owner"
+            if (targetNickname.toLowerCase() === "owner") {
                 let ownerDevices = [];
                 try {
                     if (db) {
@@ -684,10 +647,11 @@
                     ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
                 }
 
+                // Cek apakah device ini sudah terdaftar sebagai owner sebelumnya
                 const isAlreadyOwner = ownerDevices.includes(deviceUUID);
 
                 if (!isAlreadyOwner) {
-                    // Jika slot Owner masih tersedia (< 2)
+                    // Jika belum terdaftar dan slot masih < 2, daftarkan device ini
                     if (ownerDevices.length < 2) {
                         ownerDevices.push(deviceUUID);
                         if (db) {
@@ -701,15 +665,14 @@
                         closeNicknameModal();
                         showToast('Owner Verified', `🎉 Berhasil klaim Owner! (Slot ${ownerDevices.length}/2 terisi)`);
                         return;
-                    } 
-                    else {
-                        // Jika slot Owner (2/2) sudah penuh!
+                    } else {
+                        // Slot Owner sudah penuh (sudah 2 orang/device)
                         closeNicknameModal();
-                        await triggerOwnerViolation("Mencoba klaim nickname Owner saat slot (2/2) sedang penuh!");
+                        await triggerOwnerViolation("Mencoba klaim nickname Owner saat slot (2/2) sudah penuh!");
                         return;
                     }
                 } else {
-                    // Device ini memang sudah memegang slot Owner
+                    // Jika device ini memang salah satu owner resmi yang sudah terdaftar
                     customNickname = "Owner";
                     localStorage.setItem('am_vip_nickname', "Owner");
                     updateNicknameDisplay();
@@ -719,7 +682,7 @@
                 }
             }
 
-            // 3. PENGGUNAAN NICKNAME BIASA (BUKAN OWNER)
+            // Jika nickname biasa (bukan "Owner")
             customNickname = targetNickname;
             localStorage.setItem('am_vip_nickname', customNickname);
             updateNicknameDisplay();
@@ -727,7 +690,7 @@
             showToast('Nickname Berhasil', `Nickname Anda diubah menjadi "${customNickname}"`);
         }
 
-        // Handler Pelanggaran Impersonation/Slot Penuh
+        // Handler Pelanggaran Impersonation / Slot Full
         async function triggerOwnerViolation(reason) {
             violationCount++;
             localStorage.setItem('am_vip_violations', violationCount.toString());
@@ -737,7 +700,7 @@
                 localStorage.setItem('am_vip_banned', 'true');
                 if (db) {
                     try {
-                        await db.ref('banned_devices/' + deviceUUID).set({
+                        db.ref('banned_devices/' + deviceUUID).set({
                             banned_at: Date.now(),
                             reason: reason || "3x Owner Violation Attempt"
                         });
@@ -754,7 +717,7 @@
             }
         }
 
-        // Verification Check Status Owner
+        // Pengecekan Hak Akses Khusus Owner
         async function checkIsUserOwner() {
             if (customNickname.toLowerCase() !== "owner") return false;
             let ownerDevices = [];
@@ -790,42 +753,9 @@
             });
         }
 
-        function removeBanUI() {
-            document.getElementById('banned-modal').classList.add('hidden');
-            const inputs = document.querySelectorAll('input, button, textarea');
-            inputs.forEach(el => el.disabled = false);
-            disableChatInputs(false);
-            updateChatPermissions();
-        }
-
-        // FITUR LEPAS BANNED PERMANEN SECARA LANGSUNG
-        async function selfUnbanAccount() {
-            isBanned = false;
-            violationCount = 0;
-            freezeUntil = 0;
-
-            localStorage.removeItem('am_vip_banned');
-            localStorage.setItem('am_vip_violations', '0');
-            localStorage.removeItem('am_vip_freeze_until');
-
-            // Reset ke nickname biasa jika sebelumnya Owner
-            customNickname = 'User_' + Math.floor(1000 + Math.random() * 9000);
-            localStorage.setItem('am_vip_nickname', customNickname);
-
-            if (db) {
-                try {
-                    await db.ref('banned_devices/' + deviceUUID).remove();
-                } catch(e) {}
-            }
-
-            removeBanUI();
-            updateNicknameDisplay();
-            showToast('Banned Dilepas!', 'Akun Anda berhasil lepas dari Banned Permanen secara langsung.');
-        }
-
         function triggerViolationWarningModal(count, seconds) {
             const msgEl = document.getElementById('violation-message');
-            msgEl.innerHTML = `Penggunaan nickname <strong class="text-amber-300 font-mono">'Owner'</strong> gagal (Slot 2/2 penuh atau Dibatasi)! Percobaan ke-${count}. Akun Anda dibekukan sementara.`;
+            msgEl.innerHTML = `Penggunaan nickname <strong class="text-amber-300 font-mono">'Owner'</strong> gagal (Slot 2/2 penuh)! Percobaan ke-${count}. Akun Anda dibekukan sementara.`;
             document.getElementById('violation-modal').classList.remove('hidden');
         }
 
