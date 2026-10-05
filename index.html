@@ -1111,7 +1111,7 @@
             if (!email || !email.includes('@')) return 'user***@gmail.com';
             const parts = email.split('@');
             const name = parts[0];
-            const maskedName = name.length > 2 ? name.substring(0, 2) + '***' : name + '***';
+            const maskedName = name.length > 3 ? name.substring(2, 3) + '***' : name + '***';
             return maskedName + '@' + parts[1];
         }
 
