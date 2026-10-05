@@ -121,7 +121,7 @@
                     <h1 class="font-extrabold text-base sm:text-lg tracking-tight bg-gradient-to-r from-cyan-300 via-purple-300 to-emerald-300 bg-clip-text text-transparent">
                         AM VIP UNLOCKER
                     </h1>
-                    <p class="text-[10px] sm:text-xs text-slate-400">Permanent</p>
+                    <p class="text-[10px] sm:text-xs text-slate-400">Permanent Network</p>
                 </div>
             </div>
 
@@ -215,7 +215,7 @@
                         <i class="fa-solid fa-unlock-keyhole"></i>
                     </div>
                     <div>
-                        <h2 class="text-base font-bold text-slate-100">Langkah 2: Selesaikan</h2>
+                        <h2 class="text-base font-bold text-slate-100">Langkah 2: Selesaikan Unlock VIP</h2>
                         <p class="text-xs text-slate-400">Tempelkan Link Firebase yang dikirim ke email Anda</p>
                     </div>
                 </div>
@@ -244,7 +244,7 @@
 
                     <button type="submit" id="btn-unlock-vip" class="w-full py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-extrabold text-xs rounded-xl transition duration-300 shadow-purple-glow flex items-center justify-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-crown text-amber-300"></i>
-                        <span>PROSES UNLOCK</span>
+                        <span>PROSES UNLOCK AKUN VIP NOW</span>
                     </button>
                 </form>
             </section>
@@ -284,6 +284,7 @@
 
     </main>
 
+    <!-- FAB Button Chat Global -->
     <div class="fixed bottom-6 right-6 z-50">
         <button id="btn-fab-chat" onclick="toggleChatWindow()" class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 text-white flex items-center justify-center shadow-fab-glow hover:scale-105 active:scale-95 transition duration-300 cursor-pointer">
             <i id="fab-icon" class="fa-solid fa-comments text-xl"></i>
@@ -417,7 +418,7 @@
                 </button>
             </div>
             
-            <p class="text-xs text-slate-400">Pilih nama tampilan unik Anda untuk komunitas VIP. Nama 'Owner' dilindungi sistem.</p>
+            <p class="text-xs text-slate-400">Pilih nama tampilan unik Anda untuk komunitas VIP. Maksimal 2 device dapat mendaftar sebagai 'Owner'.</p>
             
             <div class="space-y-1.5">
                 <label class="text-[11px] font-semibold text-slate-300">Nickname Baru</label>
@@ -443,9 +444,9 @@
             </div>
 
             <div class="space-y-2">
-                <h2 class="text-lg font-extrabold text-rose-400 uppercase tracking-tight">PERINGATAN IMPERSONATION!</h2>
+                <h2 class="text-lg font-extrabold text-rose-400 uppercase tracking-tight">SLOT OWNER FULL / PENIRUAN!</h2>
                 <p id="violation-message" class="text-xs text-slate-300 leading-relaxed">
-                    Nickname <strong class="text-amber-300 font-mono">'Owner'</strong> hanya dapat digunakan oleh 1 user resmi terverifikasi. Akun Anda dibekukan sementara.
+                    Nickname <strong class="text-amber-300 font-mono">'Owner'</strong> sudah penuh (Max 2 User). Akun Anda dibekukan sementara.
                 </p>
             </div>
 
@@ -461,7 +462,7 @@
         </div>
     </div>
 
-    <!-- Banned Modal -->
+    <!-- Banned Modal with Direct Unban Feature -->
     <div id="banned-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[200] hidden flex items-center justify-center p-4">
         <div class="glass-card max-w-md w-full p-8 rounded-3xl border border-rose-600 text-center space-y-6 shadow-2xl">
             <div class="w-20 h-20 rounded-full bg-rose-600/20 text-rose-500 border border-rose-500 flex items-center justify-center text-4xl mx-auto">
@@ -471,15 +472,20 @@
             <div class="space-y-3">
                 <h2 class="text-xl font-black text-rose-500 uppercase tracking-wider">AKUN DIBANNED PERMANEN</h2>
                 <p class="text-xs text-slate-300 leading-relaxed">
-                    Akses Anda ke sistem **Alight Motion VIP & Global Network** telah diblokir secara permanen karena melanggar aturan penggunaan nickname resmi Owner secara berulang.
+                    Akses Anda telah diblokir karena melanggar aturan penggunaan nickname resmi Owner secara berulang.
                 </p>
             </div>
 
             <div class="p-4 bg-rose-950/40 rounded-2xl border border-rose-800/60 text-[11px] font-mono text-rose-300 text-left space-y-1">
-                <div>• Status: PERMANENTLY BANNED</div>
-                <div>• Alasan: Impersonation Protection Penalty</div>
-                <div>• Akses: Disabling All API & Community Actions</div>
+                <div>• Status: BANNED PERMANEN</div>
+                <div>• Alasan: Pelanggaran Nickname Owner</div>
+                <div>• Akses: Dikunci Sementara</div>
             </div>
+
+            <button onclick="selfUnbanAccount()" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-extrabold text-xs rounded-xl shadow-emerald-glow transition flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-key"></i>
+                <span>LEPAS BANNED PERMANEN SEKARANG</span>
+            </button>
         </div>
     </div>
 
@@ -519,13 +525,14 @@
             console.warn("Firebase initialized in fallback local storage mode:", e);
         }
 
-        // Global State & Persistent Variables
+        // Device Unique Identifier
         let deviceUUID = localStorage.getItem('am_vip_device_uuid');
         if (!deviceUUID) {
             deviceUUID = 'DEV-' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
             localStorage.setItem('am_vip_device_uuid', deviceUUID);
         }
 
+        // User Nickname State
         let customNickname = localStorage.getItem('am_vip_nickname');
         if (!customNickname) {
             customNickname = 'User_' + Math.floor(1000 + Math.random() * 9000);
@@ -539,13 +546,6 @@
         let activeChatTab = 'global'; // 'global' or 'ch'
         let activeChannel = 'general'; // Default sub-channel for CH
         let cachedChatMessages = [];
-
-        // Check Owner Impersonation Helper
-        function isOwnerAttempt(nickname) {
-            if (!nickname) return false;
-            const normalized = nickname.toLowerCase().replace(/[\s\._\-]/g, '');
-            return normalized === 'owner';
-        }
 
         // DOM Ready Handler
         document.addEventListener('DOMContentLoaded', () => {
@@ -575,7 +575,7 @@
             const localHistory = JSON.parse(localStorage.getItem('am_vip_cached_history') || '[]');
             renderHistoryList(localHistory);
 
-            // Connect Firebase Listeners if Available
+            // Connect Firebase Listeners
             if (db) {
                 try {
                     // 1. Total Unlocks Counter
@@ -618,6 +618,12 @@
                             isBanned = true;
                             localStorage.setItem('am_vip_banned', 'true');
                             enforceBanUI();
+                        } else {
+                            if (isBanned) {
+                                isBanned = false;
+                                localStorage.removeItem('am_vip_banned');
+                                removeBanUI();
+                            }
                         }
                     });
 
@@ -627,6 +633,7 @@
             }
         }
 
+        // Dynamic Nickname Change Logic (Max 2 Owner Slot + Dynamic Release)
         async function saveCustomNickname() {
             if (isBanned) return;
             const inputEl = document.getElementById('input-custom-nickname');
@@ -637,12 +644,82 @@
                 return;
             }
 
-            if (isOwnerAttempt(targetNickname)) {
-                await handleOwnerClaimAttempt(targetNickname);
-                closeNicknameModal();
-                return;
+            const oldNickname = customNickname;
+            const lowerOld = oldNickname.toLowerCase();
+            const lowerNew = targetNickname.toLowerCase();
+
+            // 1. DYNAMIC RESET: Jika user melepas nama "Owner" ke nama biasa
+            if (lowerOld === "owner" && lowerNew !== "owner") {
+                try {
+                    let ownerDevices = [];
+                    if (db) {
+                        const snap = await db.ref('app_owners').once('value');
+                        ownerDevices = snap.val() || [];
+                    } else {
+                        ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
+                    }
+
+                    // Hapus ID device ini dari daftar owner
+                    ownerDevices = ownerDevices.filter(id => id !== deviceUUID);
+
+                    if (db) await db.ref('app_owners').set(ownerDevices);
+                    localStorage.setItem('am_owner_devices', JSON.stringify(ownerDevices));
+                    console.log("Slot Owner berhasil dilepas/dihapus.");
+                } catch(e) {
+                    console.error("Gagal melepas slot owner:", e);
+                }
             }
 
+            // 2. KLAIM OWNER (MAKSIMAL 2 DEVICE)
+            if (lowerNew === "owner") {
+                let ownerDevices = [];
+                try {
+                    if (db) {
+                        const snap = await db.ref('app_owners').once('value');
+                        ownerDevices = snap.val() || [];
+                    } else {
+                        ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
+                    }
+                } catch(e) {
+                    ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
+                }
+
+                const isAlreadyOwner = ownerDevices.includes(deviceUUID);
+
+                if (!isAlreadyOwner) {
+                    // Jika slot Owner masih tersedia (< 2)
+                    if (ownerDevices.length < 2) {
+                        ownerDevices.push(deviceUUID);
+                        if (db) {
+                            try { await db.ref('app_owners').set(ownerDevices); } catch(e) {}
+                        }
+                        localStorage.setItem('am_owner_devices', JSON.stringify(ownerDevices));
+
+                        customNickname = "Owner";
+                        localStorage.setItem('am_vip_nickname', "Owner");
+                        updateNicknameDisplay();
+                        closeNicknameModal();
+                        showToast('Owner Verified', `🎉 Berhasil klaim Owner! (Slot ${ownerDevices.length}/2 terisi)`);
+                        return;
+                    } 
+                    else {
+                        // Jika slot Owner (2/2) sudah penuh!
+                        closeNicknameModal();
+                        await triggerOwnerViolation("Mencoba klaim nickname Owner saat slot (2/2) sedang penuh!");
+                        return;
+                    }
+                } else {
+                    // Device ini memang sudah memegang slot Owner
+                    customNickname = "Owner";
+                    localStorage.setItem('am_vip_nickname', "Owner");
+                    updateNicknameDisplay();
+                    closeNicknameModal();
+                    showToast('Owner Verified', 'Anda sudah memegang slot resmi Owner');
+                    return;
+                }
+            }
+
+            // 3. PENGGUNAAN NICKNAME BIASA (BUKAN OWNER)
             customNickname = targetNickname;
             localStorage.setItem('am_vip_nickname', customNickname);
             updateNicknameDisplay();
@@ -650,42 +727,8 @@
             showToast('Nickname Berhasil', `Nickname Anda diubah menjadi "${customNickname}"`);
         }
 
-        async function handleOwnerClaimAttempt(requestedName) {
-            let authorizedOwner = false;
-
-            if (db) {
-                try {
-                    const snap = await db.ref('system/owner_claim').once('value');
-                    if (snap.exists()) {
-                        const data = snap.val();
-                        if (data.claimed_device === deviceUUID) {
-                            authorizedOwner = true;
-                        }
-                    } else {
-                        await db.ref('system/owner_claim').set({
-                            claimed_device: deviceUUID,
-                            claimed_at: Date.now()
-                        });
-                        authorizedOwner = true;
-                    }
-                } catch(e) {}
-            } else {
-                const localOwnerDevice = localStorage.getItem('am_vip_owner_device');
-                if (!localOwnerDevice || localOwnerDevice === deviceUUID) {
-                    localStorage.setItem('am_vip_owner_device', deviceUUID);
-                    authorizedOwner = true;
-                }
-            }
-
-            if (authorizedOwner) {
-                customNickname = "Owner";
-                localStorage.setItem('am_vip_nickname', "Owner");
-                updateNicknameDisplay();
-                showToast('Owner Verified', 'Akses nickname Owner terverifikasi');
-                return;
-            }
-
-            // Impersonation Violation
+        // Handler Pelanggaran Impersonation/Slot Penuh
+        async function triggerOwnerViolation(reason) {
             violationCount++;
             localStorage.setItem('am_vip_violations', violationCount.toString());
 
@@ -694,9 +737,9 @@
                 localStorage.setItem('am_vip_banned', 'true');
                 if (db) {
                     try {
-                        db.ref('banned_devices/' + deviceUUID).set({
+                        await db.ref('banned_devices/' + deviceUUID).set({
                             banned_at: Date.now(),
-                            reason: "3x Owner Impersonation Attempt"
+                            reason: reason || "3x Owner Violation Attempt"
                         });
                     } catch(e) {}
                 }
@@ -709,6 +752,23 @@
                 triggerViolationWarningModal(violationCount, freezeDurationSeconds);
                 startFreezeCountdown(freezeDurationSeconds);
             }
+        }
+
+        // Verification Check Status Owner
+        async function checkIsUserOwner() {
+            if (customNickname.toLowerCase() !== "owner") return false;
+            let ownerDevices = [];
+            try {
+                if (db) {
+                    const snap = await db.ref('app_owners').once('value');
+                    ownerDevices = snap.val() || [];
+                } else {
+                    ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
+                }
+            } catch(e) {
+                ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
+            }
+            return ownerDevices.includes(deviceUUID);
         }
 
         function checkBanAndFreezeStatus() {
@@ -730,9 +790,42 @@
             });
         }
 
+        function removeBanUI() {
+            document.getElementById('banned-modal').classList.add('hidden');
+            const inputs = document.querySelectorAll('input, button, textarea');
+            inputs.forEach(el => el.disabled = false);
+            disableChatInputs(false);
+            updateChatPermissions();
+        }
+
+        // FITUR LEPAS BANNED PERMANEN SECARA LANGSUNG
+        async function selfUnbanAccount() {
+            isBanned = false;
+            violationCount = 0;
+            freezeUntil = 0;
+
+            localStorage.removeItem('am_vip_banned');
+            localStorage.setItem('am_vip_violations', '0');
+            localStorage.removeItem('am_vip_freeze_until');
+
+            // Reset ke nickname biasa jika sebelumnya Owner
+            customNickname = 'User_' + Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('am_vip_nickname', customNickname);
+
+            if (db) {
+                try {
+                    await db.ref('banned_devices/' + deviceUUID).remove();
+                } catch(e) {}
+            }
+
+            removeBanUI();
+            updateNicknameDisplay();
+            showToast('Banned Dilepas!', 'Akun Anda berhasil lepas dari Banned Permanen secara langsung.');
+        }
+
         function triggerViolationWarningModal(count, seconds) {
             const msgEl = document.getElementById('violation-message');
-            msgEl.innerHTML = `Percobaan peniruan nickname <strong class="text-amber-300 font-mono">'Owner'</strong> ke-${count} terdeteksi! Akun Anda dibekukan selama ${seconds/60} menit.`;
+            msgEl.innerHTML = `Penggunaan nickname <strong class="text-amber-300 font-mono">'Owner'</strong> gagal (Slot 2/2 penuh atau Dibatasi)! Percobaan ke-${count}. Akun Anda dibekukan sementara.`;
             document.getElementById('violation-modal').classList.remove('hidden');
         }
 
@@ -770,18 +863,19 @@
             document.getElementById('btn-record-vn').disabled = disabled;
         }
 
-        function updateNicknameDisplay() {
+        async function updateNicknameDisplay() {
             document.getElementById('chat-user-tag').innerText = customNickname;
             document.getElementById('input-custom-nickname').value = customNickname;
-            updateChatPermissions();
+            await updateChatPermissions();
         }
 
-        function updateChatPermissions() {
+        async function updateChatPermissions() {
             const chatInput = document.getElementById('chat-input');
             const btnSend = document.getElementById('btn-send-chat');
             const btnVN = document.getElementById('btn-record-vn');
             const ownerBadge = document.getElementById('ch-owner-badge');
-            const isOwner = customNickname === 'Owner';
+            
+            const isOwner = await checkIsUserOwner();
 
             if (freezeUntil > Date.now() || isBanned) {
                 disableChatInputs(true);
@@ -873,14 +967,14 @@
 
             container.innerHTML = filteredMessages.map(msg => {
                 const isMe = msg.user === customNickname;
-                const isOwner = msg.user === 'Owner';
+                const isOwnerMsg = msg.user === 'Owner';
                 const isVN = msg.type === 'audio';
 
                 return `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
                         <div class="flex items-center gap-1.5 mb-1">
-                            ${isOwner ? `<span class="bg-gradient-to-r from-amber-500 to-rose-500 text-slate-950 text-[9px] font-extrabold px-1.5 py-0.2 rounded flex items-center gap-1"><i class="fa-solid fa-crown text-[8px]"></i> OWNER</span>` : ''}
-                            <span class="text-[10px] font-bold ${isOwner ? 'text-amber-300' : (isMe ? 'text-cyan-400' : 'text-purple-400')}">${escapeHtml(msg.user || 'User')}</span>
+                            ${isOwnerMsg ? `<span class="bg-gradient-to-r from-amber-500 to-rose-500 text-slate-950 text-[9px] font-extrabold px-1.5 py-0.2 rounded flex items-center gap-1"><i class="fa-solid fa-crown text-[8px]"></i> OWNER</span>` : ''}
+                            <span class="text-[10px] font-bold ${isOwnerMsg ? 'text-amber-300' : (isMe ? 'text-cyan-400' : 'text-purple-400')}">${escapeHtml(msg.user || 'User')}</span>
                             ${msg.channel && msg.channel !== 'global' ? `<span class="text-[8px] bg-slate-800 text-purple-300 border border-slate-700 px-1.5 rounded-full font-mono">#${msg.channel}</span>` : ''}
                             <span class="text-[9px] text-slate-500">${msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
                         </div>
@@ -918,7 +1012,7 @@
         async function sendChatMessage() {
             if (isBanned || freezeUntil > Date.now()) return;
 
-            const isOwner = customNickname === 'Owner';
+            const isOwner = await checkIsUserOwner();
             if (activeChatTab === 'ch' && !isOwner) {
                 showToast('Hanya Owner', 'Hanya Owner yang dapat mengirim pesan di Channel (CH)');
                 return;
@@ -954,7 +1048,7 @@
         async function saveVNToFirebase(base64Audio, durationStr) {
             if (isBanned || freezeUntil > Date.now()) return;
 
-            const isOwner = customNickname === 'Owner';
+            const isOwner = await checkIsUserOwner();
             if (activeChatTab === 'ch' && !isOwner) {
                 showToast('Hanya Owner', 'Hanya Owner yang dapat merekam Voice Note di Channel (CH)');
                 return;
@@ -1053,7 +1147,7 @@
 
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-crown text-amber-300"></i><span>UNLOCK AKUN VIP ALIGHT MOTION NOW</span>`;
+                btn.innerHTML = `<i class="fa-solid fa-crown text-amber-300"></i><span>PROSES UNLOCK AKUN VIP NOW</span>`;
             }
         }
 
@@ -1111,7 +1205,7 @@
             if (!email || !email.includes('@')) return 'user***@gmail.com';
             const parts = email.split('@');
             const name = parts[0];
-            const maskedName = name.length > 3 ? name.substring(2, 3) + '***' : name + '***';
+            const maskedName = name.length > 2 ? name.substring(0, 2) + '***' : name + '***';
             return maskedName + '@' + parts[1];
         }
 
@@ -1173,7 +1267,7 @@
                 return;
             }
 
-            const isOwner = customNickname === 'Owner';
+            const isOwner = await checkIsUserOwner();
             if (activeChatTab === 'ch' && !isOwner) {
                 showToast('Hanya Owner', 'Hanya Owner yang dapat merekam Voice Note di Channel (CH)');
                 return;
