@@ -299,29 +299,36 @@
         <div id="chat-floating-container" class="chat-floating-window glass-card w-full sm:max-w-md h-[88vh] sm:h-[620px] rounded-t-3xl sm:rounded-3xl border border-purple-500/30 flex flex-col shadow-2xl overflow-hidden transform translate-y-full sm:translate-y-8 transition-transform duration-300">
             
             <!-- Chat Header -->
-            <div class="flex items-center justify-between p-4 border-b border-slate-800/80 bg-slate-950/70">
-                <div class="flex items-center gap-2.5">
+            <div class="flex items-center justify-between p-3.5 border-b border-slate-800/80 bg-slate-950/70">
+                <div class="flex items-center gap-2">
                     <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs border border-purple-500/30">
                         <i class="fa-solid fa-comments"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-1.5">
-                            <h3 class="text-xs font-bold text-slate-100">Komunitas VIP Network</h3>
+                            <h3 class="text-xs font-bold text-slate-100">Komunitas VIP</h3>
                             <button onclick="openNicknameModal()" class="text-[10px] text-cyan-400 hover:text-cyan-300 bg-cyan-950/80 border border-cyan-800 px-2 py-0.5 rounded-lg flex items-center gap-1 cursor-pointer">
                                 <i class="fa-solid fa-pen-to-square"></i> <span id="chat-user-tag">User-****</span>
                             </button>
                         </div>
-                        <p class="text-[10px] text-slate-400">Global Chat & Multi-Channel (CH)</p>
+                        <p class="text-[9px] text-slate-400">Global Chat & Call Room</p>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-2">
-                    <!-- Fullscreen Toggle Slider Switch -->
-                    <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2 py-1 rounded-xl">
-                        <span class="text-[10px] text-slate-400 font-semibold"><i class="fa-solid fa-expand text-[9px]"></i> Full</span>
+                <div class="flex items-center gap-1.5">
+                    <!-- Tombol Panggilan Global -->
+                    <button onclick="startCall('voice', 'Global Group')" class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/30 flex items-center justify-center text-xs transition cursor-pointer" title="Call Global">
+                        <i class="fa-solid fa-phone"></i>
+                    </button>
+                    <button onclick="startCall('video', 'Global Group')" class="w-7 h-7 rounded-xl bg-cyan-500/20 border border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/30 flex items-center justify-center text-xs transition cursor-pointer" title="VC Global">
+                        <i class="fa-solid fa-video"></i>
+                    </button>
+
+                    <!-- Fullscreen Toggle -->
+                    <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 px-1.5 py-1 rounded-xl">
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="toggle-fullscreen-chat" onchange="toggleFullscreenMode(this.checked)" class="sr-only peer">
-                            <div class="w-7 h-4 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-cyan-500"></div>
+                            <div class="w-6 h-3.5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all peer-checked:bg-cyan-500"></div>
                         </label>
                     </div>
 
@@ -371,6 +378,17 @@
                 <div class="text-center py-10 text-slate-500 text-xs animate-pulse">Menghubungkan ke Chat Network...</div>
             </div>
 
+            <!-- Media Preview Bar (Cancel Send Option) -->
+            <div id="media-preview-bar" class="hidden p-2.5 bg-slate-900 border-t border-slate-800 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2 overflow-hidden">
+                    <div id="media-preview-thumb" class="w-10 h-10 rounded-lg bg-slate-950 overflow-hidden shrink-0 flex items-center justify-center border border-slate-800"></div>
+                    <span id="media-preview-name" class="text-[11px] text-slate-300 truncate font-mono">media.jpg</span>
+                </div>
+                <button type="button" onclick="cancelMediaUpload()" class="px-3 py-1.5 bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 text-rose-300 text-xs font-bold rounded-xl flex items-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i> Batal Kirim
+                </button>
+            </div>
+
             <!-- Voice Note Recording Bar -->
             <div id="vn-recording-bar" class="hidden p-3 bg-rose-950/90 border-t border-rose-800/80 flex items-center justify-between">
                 <div class="flex items-center gap-3">
@@ -391,8 +409,14 @@
             </div>
 
             <!-- Chat Form Bar -->
-            <form id="chat-form" onsubmit="event.preventDefault(); sendChatMessage();" class="p-3 border-t border-slate-800/80 bg-slate-950/90 flex items-center gap-2">
-                <input type="text" id="chat-input" placeholder="Ketik pesan komunitas VIP..." class="flex-grow bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-cyan-400 transition">
+            <form id="chat-form" onsubmit="event.preventDefault(); sendChatMessage();" class="p-2.5 border-t border-slate-800/80 bg-slate-950/90 flex items-center gap-2">
+                <!-- Attachment Button for Photo/Video -->
+                <input type="file" id="media-input" accept="image/*,video/*" class="hidden" onchange="handleMediaSelected(event)">
+                <button type="button" onclick="document.getElementById('media-input').click()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-purple-400 flex items-center justify-center text-xs transition shrink-0 cursor-pointer" title="Kirim Foto / Video">
+                    <i class="fa-solid fa-paperclip"></i>
+                </button>
+
+                <input type="text" id="chat-input" placeholder="Ketik pesan komunitas VIP..." class="flex-grow bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-400 transition">
                 
                 <button type="button" id="btn-record-vn" onclick="startVNRecording()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-cyan-400 flex items-center justify-center text-xs transition shrink-0 cursor-pointer" title="Rekam Voice Note">
                     <i class="fa-solid fa-microphone"></i>
@@ -403,6 +427,53 @@
                 </button>
             </form>
 
+        </div>
+    </div>
+
+    <!-- Edit Chat Modal -->
+    <div id="edit-chat-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[70] hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-sm w-full p-5 rounded-3xl border border-cyan-500/30 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-xs text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-pen text-cyan-400"></i> Edit Pesan Teks
+                </h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-white text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <input type="hidden" id="edit-msg-id">
+            <textarea id="edit-msg-text" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 font-sans focus:outline-none focus:border-cyan-400 resize-none"></textarea>
+
+            <div class="flex items-center justify-end gap-2">
+                <button type="button" onclick="closeEditModal()" class="px-3.5 py-1.5 rounded-xl bg-slate-900 text-slate-400 text-xs font-semibold hover:bg-slate-800">Batal</button>
+                <button type="button" onclick="saveEditedMessage()" class="px-3.5 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-extrabold shadow-vip-glow">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Call Interface Modal -->
+    <div id="call-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[150] hidden flex flex-col items-center justify-between p-8 text-center">
+        <div class="space-y-3 pt-6">
+            <span id="call-type-badge" class="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-300 text-xs font-mono font-bold uppercase">VOICE CALL</span>
+            <h2 id="call-target-name" class="text-2xl font-black text-slate-100">Global Group</h2>
+            <p id="call-status-timer" class="text-xs text-slate-400 font-mono">Menghubungkan...</p>
+        </div>
+
+        <div id="call-media-container" class="w-full max-w-sm h-64 rounded-3xl bg-slate-900/80 border border-slate-800 flex items-center justify-center relative overflow-hidden">
+            <div id="call-avatar" class="w-24 h-24 rounded-full bg-gradient-to-tr from-purple-600 to-cyan-500 flex items-center justify-center text-3xl font-extrabold text-slate-950 shadow-fab-glow animate-pulse">
+                <i class="fa-solid fa-user"></i>
+            </div>
+            <video id="call-video-stream" class="hidden absolute inset-0 w-full h-full object-cover" autoplay playsinline></video>
+        </div>
+
+        <div class="flex items-center gap-4 pb-6">
+            <button onclick="toggleMuteCall()" id="btn-call-mute" class="w-12 h-12 rounded-full bg-slate-900 border border-slate-800 text-slate-300 flex items-center justify-center text-base hover:bg-slate-800 transition">
+                <i class="fa-solid fa-microphone"></i>
+            </button>
+            <button onclick="endCall()" class="w-16 h-16 rounded-full bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center text-xl shadow-lg transition">
+                <i class="fa-solid fa-phone-slash"></i>
+            </button>
         </div>
     </div>
 
@@ -541,6 +612,7 @@
         let activeChatTab = 'global'; // 'global' or 'ch'
         let activeChannel = 'general'; // Default sub-channel for CH
         let cachedChatMessages = [];
+        let pendingMediaData = null; // Storage for photo/video preview before sending
 
         // DOM Ready Handler
         document.addEventListener('DOMContentLoaded', () => {
@@ -584,15 +656,21 @@
                         }
                     });
 
-                    // 2. Chat Messages Stream
-                    db.ref('chats').limitToLast(50).on('value', (snap) => {
+                    // 2. Chat Messages Stream (Mengambil ID pesan Firebase)
+                    db.ref('chats').limitToLast(60).on('value', (snap) => {
                         if (snap.exists()) {
                             const data = snap.val();
-                            const msgList = Object.values(data);
+                            const msgList = [];
+                            Object.keys(data).forEach(key => {
+                                msgList.push({ id: key, ...data[key] });
+                            });
                             msgList.sort((a,b) => a.timestamp - b.timestamp);
                             cachedChatMessages = msgList;
                             localStorage.setItem('am_vip_cached_chats', JSON.stringify(msgList));
                             renderChatMessages(cachedChatMessages);
+                        } else {
+                            cachedChatMessages = [];
+                            renderChatMessages([]);
                         }
                     });
 
@@ -633,7 +711,6 @@
                 return;
             }
 
-            // Jika mencoba menggunakan nickname "Owner"
             if (targetNickname.toLowerCase() === "owner") {
                 let ownerDevices = [];
                 try {
@@ -647,11 +724,9 @@
                     ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
                 }
 
-                // Cek apakah device ini sudah terdaftar sebagai owner sebelumnya
                 const isAlreadyOwner = ownerDevices.includes(deviceUUID);
 
                 if (!isAlreadyOwner) {
-                    // Jika belum terdaftar dan slot masih < 2, daftarkan device ini
                     if (ownerDevices.length < 2) {
                         ownerDevices.push(deviceUUID);
                         if (db) {
@@ -666,13 +741,11 @@
                         showToast('Owner Verified', `🎉 Berhasil klaim Owner! (Slot ${ownerDevices.length}/2 terisi)`);
                         return;
                     } else {
-                        // Slot Owner sudah penuh (sudah 2 orang/device)
                         closeNicknameModal();
                         await triggerOwnerViolation("Mencoba klaim nickname Owner saat slot (2/2) sudah penuh!");
                         return;
                     }
                 } else {
-                    // Jika device ini memang salah satu owner resmi yang sudah terdaftar
                     customNickname = "Owner";
                     localStorage.setItem('am_vip_nickname', "Owner");
                     updateNicknameDisplay();
@@ -682,7 +755,6 @@
                 }
             }
 
-            // Jika nickname biasa (bukan "Owner")
             customNickname = targetNickname;
             localStorage.setItem('am_vip_nickname', customNickname);
             updateNicknameDisplay();
@@ -690,7 +762,6 @@
             showToast('Nickname Berhasil', `Nickname Anda diubah menjadi "${customNickname}"`);
         }
 
-        // Handler Pelanggaran Impersonation / Slot Full
         async function triggerOwnerViolation(reason) {
             violationCount++;
             localStorage.setItem('am_vip_violations', violationCount.toString());
@@ -717,7 +788,6 @@
             }
         }
 
-        // Pengecekan Hak Akses Khusus Owner
         async function checkIsUserOwner() {
             if (customNickname.toLowerCase() !== "owner") return false;
             let ownerDevices = [];
@@ -875,6 +945,7 @@
             renderChatMessages(cachedChatMessages);
         }
 
+        // RENDER CHAT MESSAGES TERMASUK GAMBAR, VIDEO, EDIT & HAPUS
         function renderChatMessages(messages) {
             const container = document.getElementById('chat-messages');
             if (!messages || messages.length === 0) {
@@ -882,7 +953,10 @@
                 return;
             }
 
+            const hiddenLocalMsgs = JSON.parse(localStorage.getItem('am_vip_hidden_chats') || '[]');
+
             const filteredMessages = messages.filter(msg => {
+                if (hiddenLocalMsgs.includes(msg.id)) return false;
                 if (activeChatTab === 'global') {
                     return !msg.channel || msg.channel === 'global';
                 } else {
@@ -899,13 +973,26 @@
                 const isMe = msg.user === customNickname;
                 const isOwnerMsg = msg.user === 'Owner';
                 const isVN = msg.type === 'audio';
+                const isMedia = msg.type === 'media';
+                const msgId = msg.id || 'msg_' + msg.timestamp;
 
                 return `
-                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} group relative">
                         <div class="flex items-center gap-1.5 mb-1">
                             ${isOwnerMsg ? `<span class="bg-gradient-to-r from-amber-500 to-rose-500 text-slate-950 text-[9px] font-extrabold px-1.5 py-0.2 rounded flex items-center gap-1"><i class="fa-solid fa-crown text-[8px]"></i> OWNER</span>` : ''}
+                            
+                            <!-- Tombol Call User Secara Personal -->
+                            ${!isMe ? `
+                                <button onclick="startCall('voice', '${escapeHtml(msg.user)}')" class="text-slate-400 hover:text-emerald-400 text-[10px] cursor-pointer" title="Telepon User">
+                                    <i class="fa-solid fa-phone"></i>
+                                </button>
+                                <button onclick="startCall('video', '${escapeHtml(msg.user)}')" class="text-slate-400 hover:text-cyan-400 text-[10px] cursor-pointer" title="VC User">
+                                    <i class="fa-solid fa-video"></i>
+                                </button>
+                            ` : ''}
+
                             <span class="text-[10px] font-bold ${isOwnerMsg ? 'text-amber-300' : (isMe ? 'text-cyan-400' : 'text-purple-400')}">${escapeHtml(msg.user || 'User')}</span>
-                            ${msg.channel && msg.channel !== 'global' ? `<span class="text-[8px] bg-slate-800 text-purple-300 border border-slate-700 px-1.5 rounded-full font-mono">#${msg.channel}</span>` : ''}
+                            ${msg.edited ? `<span class="text-[8px] text-slate-500 font-mono">(diedit)</span>` : ''}
                             <span class="text-[9px] text-slate-500">${msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
                         </div>
                         
@@ -926,16 +1013,220 @@
                                     </div>
                                 </div>
                             </div>
+                        ` : isMedia ? `
+                            <div class="p-1 rounded-2xl ${isMe ? 'bg-purple-600/20 border border-purple-500/40' : 'bg-slate-900 border border-slate-800'} max-w-[80%] overflow-hidden">
+                                ${msg.mediaType === 'image' ? `
+                                    <img src="${msg.mediaUrl}" class="rounded-xl w-full max-h-60 object-cover cursor-pointer" onclick="window.open('${msg.mediaUrl}', '_blank')">
+                                ` : `
+                                    <video src="${msg.mediaUrl}" controls class="rounded-xl w-full max-h-60 object-cover"></video>
+                                `}
+                                ${msg.text ? `<p class="p-2 text-xs text-slate-100">${escapeHtml(msg.text)}</p>` : ''}
+                            </div>
                         ` : `
                             <div class="px-3.5 py-2.5 rounded-2xl ${isMe ? 'bg-gradient-to-r from-purple-600/30 to-cyan-500/30 border border-cyan-500/40 text-slate-100 rounded-tr-none' : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none'} max-w-[85%] leading-relaxed break-words">
                                 ${escapeHtml(msg.text)}
                             </div>
                         `}
+
+                        <!-- Menu Aksi/Opsi Chat (Edit & Hapus) -->
+                        <div class="flex items-center gap-2 mt-1 opacity-80 hover:opacity-100 transition">
+                            ${isMe && msg.type === 'text' ? `
+                                <button onclick="openEditModal('${msgId}', '${escapeHtml(msg.text)}')" class="text-[9px] text-slate-400 hover:text-cyan-300 flex items-center gap-0.5 cursor-pointer">
+                                    <i class="fa-solid fa-pen text-[8px]"></i> Edit
+                                </button>
+                            ` : ''}
+                            <button onclick="deleteMessageForMe('${msgId}')" class="text-[9px] text-slate-400 hover:text-amber-300 flex items-center gap-0.5 cursor-pointer">
+                                <i class="fa-solid fa-user-xmark text-[8px]"></i> Hapus Saya
+                            </button>
+                            ${isMe ? `
+                                <button onclick="deleteMessageForEveryone('${msgId}')" class="text-[9px] text-slate-400 hover:text-rose-400 flex items-center gap-0.5 cursor-pointer">
+                                    <i class="fa-solid fa-trash text-[8px]"></i> Hapus Semua
+                                </button>
+                            ` : ''}
+                        </div>
                     </div>
                 `;
             }).join('');
 
             container.scrollTop = container.scrollHeight;
+        }
+
+        // FITUR EDIT CHAT
+        function openEditModal(msgId, currentText) {
+            document.getElementById('edit-msg-id').value = msgId;
+            document.getElementById('edit-msg-text').value = currentText;
+            document.getElementById('edit-chat-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-chat-modal').classList.add('hidden');
+        }
+
+        async function saveEditedMessage() {
+            const msgId = document.getElementById('edit-msg-id').value;
+            const newText = document.getElementById('edit-msg-text').value.trim();
+            if (!newText) return;
+
+            if (db) {
+                try {
+                    await db.ref('chats/' + msgId).update({
+                        text: newText,
+                        edited: true
+                    });
+                    showToast('Pesan Diedit', 'Perubahan berhasil disimpan');
+                } catch(e) {}
+            } else {
+                const idx = cachedChatMessages.findIndex(m => m.id === msgId);
+                if (idx !== -1) {
+                    cachedChatMessages[idx].text = newText;
+                    cachedChatMessages[idx].edited = true;
+                    localStorage.setItem('am_vip_cached_chats', JSON.stringify(cachedChatMessages));
+                    renderChatMessages(cachedChatMessages);
+                }
+            }
+            closeEditModal();
+        }
+
+        // FITUR HAPUS UNTUK SAYA (LOKAL)
+        function deleteMessageForMe(msgId) {
+            let hiddenLocalMsgs = JSON.parse(localStorage.getItem('am_vip_hidden_chats') || '[]');
+            if (!hiddenLocalMsgs.includes(msgId)) {
+                hiddenLocalMsgs.push(msgId);
+                localStorage.setItem('am_vip_hidden_chats', JSON.stringify(hiddenLocalMsgs));
+            }
+            renderChatMessages(cachedChatMessages);
+            showToast('Dihapus', 'Pesan disembunyikan dari tampilan Anda');
+        }
+
+        // FITUR HAPUS UNTUK SEMUA ORANG (FIREBASE DATABASE)
+        async function deleteMessageForEveryone(msgId) {
+            if (db) {
+                try {
+                    await db.ref('chats/' + msgId).remove();
+                    showToast('Pesan Dihapus', 'Pesan dihapus untuk semua orang');
+                } catch(e) {}
+            } else {
+                cachedChatMessages = cachedChatMessages.filter(m => m.id !== msgId);
+                localStorage.setItem('am_vip_cached_chats', JSON.stringify(cachedChatMessages));
+                renderChatMessages(cachedChatMessages);
+            }
+        }
+
+        // FITUR HANDLER MEDIA (FOTO / VIDEO)
+        function handleMediaSelected(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Batasan Ukuran Berkas Maksimal 5MB untuk Base64
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Ukuran Terlalu Besar', 'Maksimal ukuran foto/video adalah 5MB');
+                return;
+            }
+
+            const isImage = file.type.startsWith('image/');
+            const isVideo = file.type.startsWith('video/');
+
+            if (!isImage && !isVideo) {
+                showToast('Format Salah', 'Pilih berkas Foto atau Video!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                pendingMediaData = {
+                    mediaUrl: e.target.result,
+                    mediaType: isImage ? 'image' : 'video',
+                    fileName: file.name
+                };
+
+                // Tampilkan Bar Preview Media + Tombol Batal
+                const previewBar = document.getElementById('media-preview-bar');
+                const thumbContainer = document.getElementById('media-preview-thumb');
+                document.getElementById('media-preview-name').innerText = file.name;
+
+                if (isImage) {
+                    thumbContainer.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                } else {
+                    thumbContainer.innerHTML = `<i class="fa-solid fa-file-video text-purple-400 text-lg"></i>`;
+                }
+
+                previewBar.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // FITUR CANCEL UNTUK KIRIM FOTO / VIDEO
+        function cancelMediaUpload() {
+            pendingMediaData = null;
+            document.getElementById('media-input').value = '';
+            document.getElementById('media-preview-bar').classList.add('hidden');
+            showToast('Dibatalkan', 'Pengiriman media dibatalkan');
+        }
+
+        // FITUR TELEPON / VC (USER & GLOBAL)
+        let activeCallStream = null;
+        let isCallMuted = false;
+
+        async function startCall(callType, targetName) {
+            if (isBanned || freezeUntil > Date.now()) return;
+
+            const modal = document.getElementById('call-modal');
+            const badge = document.getElementById('call-type-badge');
+            const targetEl = document.getElementById('call-target-name');
+            const statusEl = document.getElementById('call-status-timer');
+            const videoStream = document.getElementById('call-video-stream');
+            const avatar = document.getElementById('call-avatar');
+
+            badge.innerText = callType === 'voice' ? 'VOICE CALL' : 'VIDEO CALL';
+            targetEl.innerText = targetName;
+            statusEl.innerText = 'Menghubungkan ke server audio/video...';
+            
+            modal.classList.remove('hidden');
+
+            try {
+                const constraints = {
+                    audio: true,
+                    video: callType === 'video'
+                };
+                activeCallStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+                if (callType === 'video') {
+                    videoStream.srcObject = activeCallStream;
+                    videoStream.classList.remove('hidden');
+                    avatar.classList.add('hidden');
+                } else {
+                    videoStream.classList.add('hidden');
+                    avatar.classList.remove('hidden');
+                }
+
+                statusEl.innerText = '00:00 - Terhubung';
+            } catch(err) {
+                statusEl.innerText = 'Gagal mengakses mikrofon/kamera';
+                showToast('Akses Ditolak', 'Izinkan izin mikrofon/kamera di browser!');
+            }
+        }
+
+        function toggleMuteCall() {
+            if (activeCallStream) {
+                const audioTrack = activeCallStream.getAudioTracks()[0];
+                if (audioTrack) {
+                    audioTrack.enabled = !audioTrack.enabled;
+                    isCallMuted = !audioTrack.enabled;
+                    const btn = document.getElementById('btn-call-mute');
+                    btn.className = isCallMuted 
+                        ? "w-12 h-12 rounded-full bg-rose-600/30 border border-rose-500 text-rose-300 flex items-center justify-center text-base"
+                        : "w-12 h-12 rounded-full bg-slate-900 border border-slate-800 text-slate-300 flex items-center justify-center text-base";
+                }
+            }
+        }
+
+        function endCall() {
+            if (activeCallStream) {
+                activeCallStream.getTracks().forEach(track => track.stop());
+                activeCallStream = null;
+            }
+            document.getElementById('call-modal').classList.add('hidden');
+            showToast('Panggilan Berakhir', 'Panggilan telah ditutup');
         }
 
         // Send Chat Message
@@ -950,24 +1241,32 @@
 
             const input = document.getElementById('chat-input');
             const text = input.value.trim();
-            if (!text) return;
+            
+            if (!text && !pendingMediaData) return;
 
             input.value = '';
 
             const messageChannel = activeChatTab === 'global' ? 'global' : activeChannel;
             const msgObj = {
                 user: customNickname,
-                type: 'text',
+                type: pendingMediaData ? 'media' : 'text',
                 text: text,
                 channel: messageChannel,
                 timestamp: Date.now()
             };
+
+            if (pendingMediaData) {
+                msgObj.mediaUrl = pendingMediaData.mediaUrl;
+                msgObj.mediaType = pendingMediaData.mediaType;
+                cancelMediaUpload(); // Reset preview bar
+            }
 
             if (db) {
                 try {
                     await db.ref('chats').push(msgObj);
                 } catch(e) {}
             } else {
+                msgObj.id = 'msg_' + Date.now();
                 cachedChatMessages.push(msgObj);
                 localStorage.setItem('am_vip_cached_chats', JSON.stringify(cachedChatMessages));
                 renderChatMessages(cachedChatMessages);
@@ -1000,6 +1299,7 @@
                     showToast('VN Terkirim', `Voice note dikirim ke ${messageChannel === 'global' ? 'Global Chat' : '#' + messageChannel}`);
                 } catch(e) {}
             } else {
+                vnObj.id = 'msg_' + Date.now();
                 cachedChatMessages.push(vnObj);
                 localStorage.setItem('am_vip_cached_chats', JSON.stringify(cachedChatMessages));
                 renderChatMessages(cachedChatMessages);
