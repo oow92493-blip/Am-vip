@@ -316,11 +316,14 @@
                 </div>
 
                 <div class="flex items-center gap-1.5">
-                    <!-- Notification Bell Toggle Button (Chrome Push Notification) -->
-                    <button id="btn-toggle-notif" onclick="requestChromeNotificationPermission()" class="w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 hover:text-cyan-400 flex items-center justify-center text-xs transition cursor-pointer relative" title="Aktifkan Notifikasi Chrome">
-                        <i id="notif-bell-icon" class="fa-solid fa-bell-slash"></i>
-                        <span id="notif-status-dot" class="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500"></span>
-                    </button>
+                    <!-- Notification Toggle Switch (Hidup/Matikan Notifikasi) -->
+                    <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-1 rounded-xl" title="Hidup/Matikan Notifikasi">
+                        <i id="notif-bell-icon" class="fa-solid fa-bell text-[11px] text-slate-400"></i>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="toggle-notif-switch" onchange="toggleNotificationState(this.checked)" class="sr-only peer">
+                            <div class="w-6 h-3.5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all peer-checked:bg-cyan-500"></div>
+                        </label>
+                    </div>
 
                     <!-- Fullscreen Toggle -->
                     <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 px-1.5 py-1 rounded-xl">
@@ -606,6 +609,9 @@
         // Sound Effect for Chrome Push Notification
         const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
 
+        // Status Pengaturan Notifikasi (Simpan di LocalStorage, Default: TRUE)
+        let isNotificationEnabled = localStorage.getItem('am_vip_notif_enabled') !== 'false';
+
         // DOM Ready Handler
         document.addEventListener('DOMContentLoaded', () => {
             updateNicknameDisplay();
@@ -623,66 +629,69 @@
             }
         });
 
-        // ================= CHROME PUSH NOTIFICATION SYSTEM ================= //
+        // ================= SAKELAR NOTIFIKASI TOGGLE SYSTEM ================= //
         function updateNotificationUI() {
+            const toggleSwitch = document.getElementById('toggle-notif-switch');
             const bellIcon = document.getElementById('notif-bell-icon');
-            const statusDot = document.getElementById('notif-status-dot');
-            const btnNotif = document.getElementById('btn-toggle-notif');
 
-            if (!("Notification" in window)) {
-                if (btnNotif) btnNotif.style.display = 'none';
-                return;
+            if (toggleSwitch) {
+                toggleSwitch.checked = isNotificationEnabled;
             }
 
-            if (Notification.permission === "granted") {
-                bellIcon.className = "fa-solid fa-bell text-cyan-400";
-                statusDot.className = "absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-400 shadow-emerald-glow";
-                btnNotif.title = "Notifikasi Chrome Aktif";
-            } else if (Notification.permission === "denied") {
-                bellIcon.className = "fa-solid fa-bell-slash text-rose-400";
-                statusDot.className = "absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500";
-                btnNotif.title = "Notifikasi Ditolak di Chrome (Aktifkan lewat pengaturan browser)";
-            } else {
-                bellIcon.className = "fa-solid fa-bell-slash text-slate-400";
-                statusDot.className = "absolute top-1 right-1 w-2 h-2 rounded-full bg-amber-400";
-                btnNotif.title = "Klik untuk Izinkan Notifikasi Chrome";
+            if (bellIcon) {
+                if (isNotificationEnabled) {
+                    bellIcon.className = "fa-solid fa-bell text-[11px] text-cyan-400";
+                } else {
+                    bellIcon.className = "fa-solid fa-bell-slash text-[11px] text-rose-400";
+                }
             }
         }
 
-        async function requestChromeNotificationPermission() {
-            if (!("Notification" in window)) {
-                showToast('Tidak Didukung', 'Browser Anda tidak mendukung Web Notification');
-                return;
-            }
-
-            if (Notification.permission === "granted") {
-                showToast('Notifikasi Aktif', 'Notifikasi Chrome sudah aktif untuk semua pesan global!');
-                // Trigger test notification
-                triggerChromePushNotification("Notifikasi Aktif!", "Anda akan menerima notifikasi setiap ada pesan baru di Global Chat.");
-                return;
-            }
-
-            if (Notification.permission === "denied") {
-                showToast('Akses Ditolak', 'Izinkan notifikasi melalui ikon gembok di Chrome URL bar');
-                return;
-            }
-
-            const permission = await Notification.requestPermission();
-            updateNotificationUI();
-
-            if (permission === "granted") {
-                showToast('Izin Diberikan', 'Notifikasi Chrome berhasil diaktifkan!');
-                triggerChromePushNotification("Alight Motion VIP Global Chat", "Notifikasi Chrome berhasil diaktifkan!");
+        async function toggleNotificationState(enable) {
+            if (enable) {
+                if ("Notification" in window) {
+                    if (Notification.permission === "granted") {
+                        isNotificationEnabled = true;
+                        localStorage.setItem('am_vip_notif_enabled', 'true');
+                        updateNotificationUI();
+                        showToast('Notifikasi Aktif', 'Notifikasi berhasil diaktifkan');
+                    } else if (Notification.permission === "denied") {
+                        isNotificationEnabled = false;
+                        localStorage.setItem('am_vip_notif_enabled', 'false');
+                        updateNotificationUI();
+                        showToast('Akses Ditolak Browser', 'Izinkan notifikasi via pengaturan browser Chrome');
+                    } else {
+                        const permission = await Notification.requestPermission();
+                        if (permission === "granted") {
+                            isNotificationEnabled = true;
+                            localStorage.setItem('am_vip_notif_enabled', 'true');
+                            updateNotificationUI();
+                            showToast('Izin Diberikan', 'Notifikasi Chrome diaktifkan');
+                        } else {
+                            isNotificationEnabled = false;
+                            localStorage.setItem('am_vip_notif_enabled', 'false');
+                            updateNotificationUI();
+                            showToast('Notifikasi Ditolak', 'Akses notifikasi tidak diberikan');
+                        }
+                    }
+                } else {
+                    showToast('Tidak Didukung', 'Browser tidak mendukung push notification');
+                }
             } else {
-                showToast('Notifikasi Ditolak', 'Anda tidak akan menerima notifikasi pesan baru');
+                isNotificationEnabled = false;
+                localStorage.setItem('am_vip_notif_enabled', 'false');
+                updateNotificationUI();
+                showToast('Notifikasi Dimatikan', 'Anda tidak akan menerima suara / push notif');
             }
         }
 
         function triggerChromePushNotification(title, body) {
+            // Cek jika fitur notifikasi dimatikan oleh user lewat Sakelar Toggle
+            if (!isNotificationEnabled) return;
             if (!("Notification" in window) || Notification.permission !== "granted") return;
 
             try {
-                // Play notification audio sound
+                // Mainkan efek suara
                 notificationSound.play().catch(() => {});
 
                 const notif = new Notification(title, {
@@ -1537,9 +1546,9 @@
                 }, 10);
                 icon.className = "fa-solid fa-xmark text-xl";
 
-                // Auto prompt Chrome notification permission when user opens chat room for first time
-                if ("Notification" in window && Notification.permission === "default") {
-                    requestChromeNotificationPermission();
+                // Meminta izin notifikasi browser secara otomatis saat pertama kali buka jika notifikasi diaktifkan
+                if (isNotificationEnabled && "Notification" in window && Notification.permission === "default") {
+                    toggleNotificationState(true);
                 }
             } else {
                 overlay.classList.add('opacity-0');
@@ -1593,7 +1602,7 @@
                 vnTimerInterval = setInterval(() => {
                     vnSeconds++;
                     const m = String(Math.floor(vnSeconds / 60)).padStart(2, '0');
-                    const s = String(remaining % 60).padStart(2, '0');
+                    const s = String(vnSeconds % 60).padStart(2, '0');
                     document.getElementById('vn-timer').innerText = `${m}:${s}`;
                 }, 1000);
 
