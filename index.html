@@ -82,7 +82,15 @@
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 6px; }
         ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
 
-        /* Floating Chat Box Modes */
+        .history-card-item {
+            animation: fadeInSmooth 0.35s ease-out forwards;
+        }
+
+        @keyframes fadeInSmooth {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .chat-floating-window {
             transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -125,7 +133,6 @@
                 </div>
             </div>
 
-            <!-- Server Status Badge -->
             <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-full shadow-emerald-glow">
                 <span class="relative flex h-2.5 w-2.5">
                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -138,7 +145,6 @@
 
     <main class="max-w-5xl mx-auto px-4 py-6 w-full flex-grow space-y-6">
 
-        <!-- Live Global Statistics Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div class="glass-card rounded-2xl p-5 border border-cyan-500/20 flex items-center justify-between shadow-vip-glow">
                 <div class="space-y-1">
@@ -165,10 +171,8 @@
             </div>
         </div>
 
-        <!-- 2-Step VIP Activation Section -->
         <div class="space-y-6">
             
-            <!-- Step Navigation Tabs -->
             <div class="grid grid-cols-2 gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800/80">
                 <button onclick="switchStep(1)" id="tab-step-1" class="step-tab active py-3.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border border-transparent cursor-pointer">
                     <span class="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-300 flex items-center justify-center text-[10px]">1</span>
@@ -180,7 +184,6 @@
                 </button>
             </div>
 
-            <!-- Step 1 Panel: Email Link Request -->
             <section id="panel-step-1" class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 shadow-vip-glow">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-base font-bold">
@@ -208,7 +211,6 @@
                 </form>
             </section>
 
-            <!-- Step 2 Panel: Unlock Account -->
             <section id="panel-step-2" class="hidden glass-card rounded-3xl p-6 sm:p-8 space-y-6 shadow-purple-glow">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-400 flex items-center justify-center text-base font-bold">
@@ -249,7 +251,6 @@
                 </form>
             </section>
 
-            <!-- Result Feedback Card -->
             <section id="result-card" class="hidden glass-card rounded-3xl p-6 border border-slate-800 space-y-3 transition-all duration-300">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2">
@@ -265,17 +266,18 @@
                 <div id="result-content" class="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 font-mono text-xs text-cyan-300 overflow-x-auto whitespace-pre-wrap"></div>
             </section>
 
-            <!-- Persistent Global History Log Card -->
             <section class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-800 space-y-4">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                     <div class="flex items-center gap-2">
-                        <i class="fa-solid fa-list-check text-cyan-400"></i>
-                        <h3 class="text-xs font-bold text-slate-200">Riwayat Global VIP Premium</h3>
+                        <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i>
+                        <h3 class="text-xs font-bold text-slate-200">Riwayat VIP Email Aktivasi</h3>
                     </div>
-                    <span class="text-[10px] text-slate-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full">Realtime Global Database</span>
+                    <span class="text-[10px] text-slate-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live Network
+                    </span>
                 </div>
 
-                <div id="global-history-list" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                <div id="global-history-list" class="space-y-2.5 max-h-72 overflow-y-auto pr-1">
                     <div class="text-center py-6 text-xs text-slate-500 animate-pulse">Memuat riwayat global VIP...</div>
                 </div>
             </section>
@@ -306,17 +308,16 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-1.5">
-                            <h3 class="text-xs font-bold text-slate-100">Komunitas VIP</h3>
+                            <h3 class="text-xs font-bold text-slate-100">Komunitas VIP & Rating</h3>
                             <button onclick="openNicknameModal()" class="text-[10px] text-cyan-400 hover:text-cyan-300 bg-cyan-950/80 border border-cyan-800 px-2 py-0.5 rounded-lg flex items-center gap-1 cursor-pointer">
                                 <i class="fa-solid fa-pen-to-square"></i> <span id="chat-user-tag">User-****</span>
                             </button>
                         </div>
-                        <p class="text-[9px] text-slate-400">Global Chat Room</p>
+                        <p class="text-[9px] text-slate-400">Global Chat & Review Room</p>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-1.5">
-                    <!-- Notification Toggle Switch (Hidup/Matikan Notifikasi) -->
                     <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-1 rounded-xl" title="Hidup/Matikan Notifikasi">
                         <i id="notif-bell-icon" class="fa-solid fa-bell text-[11px] text-slate-400"></i>
                         <label class="relative inline-flex items-center cursor-pointer">
@@ -325,7 +326,6 @@
                         </label>
                     </div>
 
-                    <!-- Fullscreen Toggle -->
                     <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 px-1.5 py-1 rounded-xl">
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="toggle-fullscreen-chat" onchange="toggleFullscreenMode(this.checked)" class="sr-only peer">
@@ -333,14 +333,13 @@
                         </label>
                     </div>
 
-                    <!-- Close Chat Button -->
                     <button onclick="toggleChatWindow(false)" class="w-7 h-7 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-rose-400 flex items-center justify-center text-xs transition cursor-pointer">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Chat & Channel Mode Selector Tab Bar -->
+            <!-- Chat Tab Bar -->
             <div class="px-3 pt-2 pb-1 bg-slate-950/90 border-b border-slate-800/80 flex items-center justify-between gap-2">
                 <div class="grid grid-cols-2 gap-1.5 w-full">
                     <button onclick="switchChatTab('global')" id="tab-btn-global" class="py-1.5 px-3 rounded-xl text-[11px] font-bold border transition flex items-center justify-center gap-1.5 bg-cyan-500/20 border-cyan-400 text-cyan-300">
@@ -352,7 +351,6 @@
                 </div>
             </div>
 
-            <!-- Sub-Channel (CH) Pills Selector Bar -->
             <div id="channel-pills-bar" class="hidden px-3 py-2 bg-slate-900/90 border-b border-slate-800/80 flex items-center justify-between gap-1.5 overflow-x-auto text-[10px] font-mono whitespace-nowrap">
                 <div class="flex items-center gap-1.5 overflow-x-auto">
                     <button onclick="selectChannel('general')" id="ch-pill-general" class="ch-pill px-2.5 py-1 rounded-lg bg-purple-500/20 border border-purple-400 text-purple-300 font-bold">#general</button>
@@ -365,7 +363,6 @@
                 </div>
             </div>
 
-            <!-- Freeze Penalty Indicator Bar -->
             <div id="freeze-indicator-bar" class="hidden p-2.5 bg-amber-950/90 border-b border-amber-800/80 flex items-center justify-between text-xs text-amber-300 font-mono">
                 <span class="flex items-center gap-2">
                     <i class="fa-solid fa-snowflake animate-spin"></i>
@@ -379,7 +376,6 @@
                 <div class="text-center py-10 text-slate-500 text-xs animate-pulse">Menghubungkan ke Chat Network...</div>
             </div>
 
-            <!-- Reply Preview Bar (Ditampilkan saat pengguna membalas pesan) -->
             <div id="reply-preview-bar" class="hidden p-2.5 bg-slate-900 border-t border-slate-800 flex items-center justify-between gap-3 font-mono">
                 <div class="flex items-center gap-2 overflow-hidden border-l-2 border-cyan-400 pl-2">
                     <div class="flex flex-col overflow-hidden">
@@ -392,7 +388,6 @@
                 </button>
             </div>
 
-            <!-- Media Preview Bar (Cancel Send Option) -->
             <div id="media-preview-bar" class="hidden p-2.5 bg-slate-900 border-t border-slate-800 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-2 overflow-hidden">
                     <div id="media-preview-thumb" class="w-10 h-10 rounded-lg bg-slate-950 overflow-hidden shrink-0 flex items-center justify-center border border-slate-800"></div>
@@ -403,7 +398,6 @@
                 </button>
             </div>
 
-            <!-- Voice Note Recording Bar -->
             <div id="vn-recording-bar" class="hidden p-3 bg-rose-950/90 border-t border-rose-800/80 flex items-center justify-between">
                 <div class="flex items-center gap-3">
                     <span class="relative flex h-3 w-3">
@@ -422,24 +416,38 @@
                 </div>
             </div>
 
-            <!-- Chat Form Bar -->
-            <form id="chat-form" onsubmit="event.preventDefault(); sendChatMessage();" class="p-2.5 border-t border-slate-800/80 bg-slate-950/90 flex items-center gap-2">
-                <!-- Attachment Button for Photo/Video -->
-                <input type="file" id="media-input" accept="image/*,video/*" class="hidden" onchange="handleMediaSelected(event)">
-                <button type="button" onclick="document.getElementById('media-input').click()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-purple-400 flex items-center justify-center text-xs transition shrink-0 cursor-pointer" title="Kirim Foto / Video">
-                    <i class="fa-solid fa-paperclip"></i>
-                </button>
+            <!-- Chat & Rating Form Bar -->
+            <div class="p-2 bg-slate-950 border-t border-slate-800/80 flex flex-col gap-2">
+                <!-- Select Rating Stars -->
+                <div class="flex items-center justify-between px-2 pt-1">
+                    <span class="text-[10px] font-semibold text-slate-400">Beri Rating:</span>
+                    <div id="rating-star-picker" class="flex items-center gap-1 text-amber-400 text-xs">
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(1)"></i>
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(2)"></i>
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(3)"></i>
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(4)"></i>
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(5)"></i>
+                        <span id="rating-val-display" class="text-[10px] font-bold text-amber-300 ml-1">(5/5)</span>
+                    </div>
+                </div>
 
-                <input type="text" id="chat-input" placeholder="Ketik pesan komunitas VIP..." class="flex-grow bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-400 transition">
-                
-                <button type="button" id="btn-record-vn" onclick="startVNRecording()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-cyan-400 flex items-center justify-center text-xs transition shrink-0 cursor-pointer" title="Rekam Voice Note">
-                    <i class="fa-solid fa-microphone"></i>
-                </button>
+                <form id="chat-form" onsubmit="event.preventDefault(); sendChatMessage();" class="flex items-center gap-2">
+                    <input type="file" id="media-input" accept="image/*,video/*" class="hidden" onchange="handleMediaSelected(event)">
+                    <button type="button" onclick="document.getElementById('media-input').click()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-purple-400 flex items-center justify-center text-xs transition shrink-0 cursor-pointer" title="Kirim Foto / Video">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
 
-                <button type="submit" id="btn-send-chat" class="w-9 h-9 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-slate-950 font-bold text-xs transition flex items-center justify-center shrink-0 cursor-pointer">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </form>
+                    <input type="text" id="chat-input" placeholder="Tulis komentar & ulasan Anda..." class="flex-grow bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-400 transition">
+                    
+                    <button type="button" id="btn-record-vn" onclick="startVNRecording()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-cyan-400 flex items-center justify-center text-xs transition shrink-0 cursor-pointer" title="Rekam Voice Note">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+
+                    <button type="submit" id="btn-send-chat" class="w-9 h-9 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-slate-950 font-bold text-xs transition flex items-center justify-center shrink-0 cursor-pointer">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
 
         </div>
     </div>
@@ -565,7 +573,6 @@
         const HIDDEN_BASE_ENDPOINT = 'https://apiz.vsunsee.qzz.io/vsunseeV8/alightmotion';
         const HIDDEN_API_KEY = 'VsunseeXVANZ';
 
-        // Firebase Realtime Database Fallback Config
         const firebaseConfig = {
             databaseURL: "https://am-vip-default-rtdb.firebaseio.com"
         };
@@ -580,14 +587,12 @@
             console.warn("Firebase initialized in fallback local storage mode:", e);
         }
 
-        // Device Unique Identifier
         let deviceUUID = localStorage.getItem('am_vip_device_uuid');
         if (!deviceUUID) {
             deviceUUID = 'DEV-' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
             localStorage.setItem('am_vip_device_uuid', deviceUUID);
         }
 
-        // User Nickname State
         let customNickname = localStorage.getItem('am_vip_nickname');
         if (!customNickname) {
             customNickname = 'User_' + Math.floor(1000 + Math.random() * 9000);
@@ -598,28 +603,24 @@
         let freezeUntil = parseInt(localStorage.getItem('am_vip_freeze_until') || '0');
         let isBanned = localStorage.getItem('am_vip_banned') === 'true';
 
-        let activeChatTab = 'global'; // 'global' or 'ch'
-        let activeChannel = 'general'; // Default sub-channel for CH
+        let activeChatTab = 'global'; 
+        let activeChannel = 'general'; 
         let cachedChatMessages = [];
-        let pendingMediaData = null; // Storage for photo/video preview before sending
+        let pendingMediaData = null; 
+        let selectedRatingScore = 5; 
         
-        // Reply Target State
         let currentReplyTarget = null; 
 
-        // Sound Effect for Chrome Push Notification
         const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-
-        // Status Pengaturan Notifikasi (Simpan di LocalStorage, Default: TRUE)
         let isNotificationEnabled = localStorage.getItem('am_vip_notif_enabled') !== 'false';
 
-        // DOM Ready Handler
         document.addEventListener('DOMContentLoaded', () => {
             updateNicknameDisplay();
             checkBanAndFreezeStatus();
             setupRealtimeDataListeners();
             updateNotificationUI();
+            setRatingScore(5);
 
-            // Synced Email Input Listener
             const email1 = document.getElementById('input-email-1');
             if (email1) {
                 email1.addEventListener('input', (e) => {
@@ -629,7 +630,33 @@
             }
         });
 
-        // ================= SAKELAR NOTIFIKASI TOGGLE SYSTEM ================= //
+        function setRatingScore(score) {
+            selectedRatingScore = score;
+            const stars = document.querySelectorAll('#rating-star-picker i');
+            stars.forEach((star, idx) => {
+                if (idx < score) {
+                    star.classList.remove('opacity-40');
+                    star.classList.add('opacity-100');
+                } else {
+                    star.classList.remove('opacity-100');
+                    star.classList.add('opacity-40');
+                }
+            });
+            document.getElementById('rating-val-display').innerText = `(${score}/5)`;
+        }
+
+        function renderStarsHTML(score) {
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= score) {
+                    starsHTML += `<i class="fa-solid fa-star text-amber-400 text-[9px]"></i>`;
+                } else {
+                    starsHTML += `<i class="fa-solid fa-star text-slate-700 text-[9px]"></i>`;
+                }
+            }
+            return starsHTML;
+        }
+
         function updateNotificationUI() {
             const toggleSwitch = document.getElementById('toggle-notif-switch');
             const bellIcon = document.getElementById('notif-bell-icon');
@@ -686,12 +713,10 @@
         }
 
         function triggerChromePushNotification(title, body) {
-            // Cek jika fitur notifikasi dimatikan oleh user lewat Sakelar Toggle
             if (!isNotificationEnabled) return;
             if (!("Notification" in window) || Notification.permission !== "granted") return;
 
             try {
-                // Mainkan efek suara
                 notificationSound.play().catch(() => {});
 
                 const notif = new Notification(title, {
@@ -711,10 +736,8 @@
                 console.warn("Gagal memicu notifikasi Chrome:", err);
             }
         }
-        // ==================================================================== //
 
         function setupRealtimeDataListeners() {
-            // Load Local Data Initially
             const localStats = localStorage.getItem('am_vip_cached_stats') || '1250';
             document.getElementById('stat-total-premium').innerText = parseInt(localStats).toLocaleString();
 
@@ -725,10 +748,8 @@
             const localHistory = JSON.parse(localStorage.getItem('am_vip_cached_history') || '[]');
             renderHistoryList(localHistory);
 
-            // Connect Firebase Listeners
             if (db) {
                 try {
-                    // 1. Total Unlocks Counter
                     db.ref('stats/total_unlocks').on('value', (snap) => {
                         if (snap.exists()) {
                             const val = snap.val();
@@ -739,7 +760,6 @@
                         }
                     });
 
-                    // 2. Chat Messages Stream & Realtime Push Notifications
                     db.ref('chats').limitToLast(60).on('value', (snap) => {
                         if (snap.exists()) {
                             const data = snap.val();
@@ -751,20 +771,15 @@
                             });
                             msgList.sort((a,b) => a.timestamp - b.timestamp);
 
-                            // Detect New incoming Messages & Trigger Chrome Push Notification
                             if (cachedChatMessages.length > 0 && msgList.length > cachedChatMessages.length) {
                                 const newMsg = msgList[msgList.length - 1];
                                 
-                                // Push Notification if the message isn't sent by current user
                                 if (newMsg.user !== customNickname) {
                                     const sender = newMsg.user || 'Seseorang';
                                     const notifText = newMsg.text || (newMsg.type === 'audio' ? '🎤 Voice Note Baru' : '📷 Media Baru');
                                     const channelTag = newMsg.channel === 'global' ? '[Global Chat]' : `[#${newMsg.channel}]`;
 
-                                    // Chrome Native Push Notification
                                     triggerChromePushNotification(`${channelTag} ${sender}`, notifText);
-
-                                    // UI In-App Toast Notification
                                     showToast(`Pesan Baru dari ${sender}`, notifText);
                                 }
                             }
@@ -778,7 +793,6 @@
                         }
                     });
 
-                    // 3. History Logs Stream
                     db.ref('history').limitToLast(15).on('value', (snap) => {
                         if (snap.exists()) {
                             const data = snap.val();
@@ -789,7 +803,6 @@
                         }
                     });
 
-                    // 4. Ban Devices Stream
                     db.ref('banned_devices/' + deviceUUID).on('value', (snap) => {
                         if (snap.exists()) {
                             isBanned = true;
@@ -804,7 +817,6 @@
             }
         }
 
-        // Save Custom Nickname Logic
         async function saveCustomNickname() {
             if (isBanned) return;
             const inputEl = document.getElementById('input-custom-nickname');
@@ -1007,7 +1019,7 @@
             } else {
                 ownerBadge.classList.add('hidden');
                 chatInput.disabled = false;
-                chatInput.placeholder = "Ketik pesan publik ke Global Chat...";
+                chatInput.placeholder = "Tulis komentar & ulasan Anda...";
                 btnSend.disabled = false;
                 btnSend.classList.remove('opacity-40', 'cursor-not-allowed');
                 btnVN.disabled = false;
@@ -1049,7 +1061,6 @@
             renderChatMessages(cachedChatMessages);
         }
 
-        // LOGIKA SET & CANCEL TARGET REPLY
         function setReplyTarget(msgId, userName, msgText) {
             if (isBanned || freezeUntil > Date.now()) {
                 showToast('Akses Dibatasi', 'Anda sedang dibekukan');
@@ -1068,11 +1079,10 @@
             document.getElementById('reply-preview-bar').classList.add('hidden');
         }
 
-        // RENDER CHAT MESSAGES
         function renderChatMessages(messages) {
             const container = document.getElementById('chat-messages');
             if (!messages || messages.length === 0) {
-                container.innerHTML = `<p class="text-center py-10 text-slate-500 text-xs">Belum ada pesan. Mulai percakapan sekarang!</p>`;
+                container.innerHTML = `<p class="text-center py-10 text-slate-500 text-xs">Belum ada komentar/pesan. Jadilah yang pertama memberikan ulasan!</p>`;
                 return;
             }
 
@@ -1088,7 +1098,7 @@
             });
 
             if (filteredMessages.length === 0) {
-                container.innerHTML = `<p class="text-center py-10 text-slate-500 text-xs">Belum ada pesan di ${activeChatTab === 'global' ? 'Global Chat' : '#' + activeChannel}. Kirim pesan pertama!</p>`;
+                container.innerHTML = `<p class="text-center py-10 text-slate-500 text-xs">Belum ada ulasan di ${activeChatTab === 'global' ? 'Global Chat' : '#' + activeChannel}. Kirim ulasan pertama Anda!</p>`;
                 return;
             }
 
@@ -1098,26 +1108,29 @@
                 const isVN = msg.type === 'audio';
                 const isMedia = msg.type === 'media';
                 const msgId = msg.id || 'msg_' + msg.timestamp;
-                const displayText = msg.text || (isVN ? '🎤 Voice Note' : isMedia ? '📷 Media' : '');
+                const displayText = msg.text || (isVN ? ' Voice Note' : isMedia ? '📷 Media' : '');
+                const ratingScore = msg.rating || 5;
 
                 return `
                     <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} group relative overflow-hidden">
-                        
                         <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} w-full">
-                            
-                            <div class="flex items-center gap-1.5 mb-1">
+                            <div class="flex items-center gap-1.5 mb-1 flex-wrap">
                                 ${isOwnerMsg ? `<span class="bg-gradient-to-r from-amber-500 to-rose-500 text-slate-950 text-[9px] font-extrabold px-1.5 py-0.2 rounded flex items-center gap-1"><i class="fa-solid fa-crown text-[8px]"></i> OWNER</span>` : ''}
 
-                                <span class="text-[10px] font-bold ${isOwnerMsg ? 'text-amber-300' : (isMe ? 'text-cyan-400' : 'text-purple-400')}">${escapeHtml(msg.user || 'User')}</span>${msg.edited ? `<span class="text-[8px] text-slate-500 font-mono">(diedit)</span>` : ''}
+                                <span class="text-[10px] font-bold ${isOwnerMsg ? 'text-amber-300' : (isMe ? 'text-cyan-400' : 'text-purple-400')}">${escapeHtml(msg.user || 'User')}</span>
+                                
+                                <span class="flex items-center gap-0.5 bg-slate-900 border border-slate-800 px-1.5 py-0.5 rounded-full">
+                                    ${renderStarsHTML(ratingScore)}
+                                </span>
+
+                                ${msg.edited ? `<span class="text-[8px] text-slate-500 font-mono">(diedit)</span>` : ''}
                                 <span class="text-[9px] text-slate-500">${msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
                             </div>
                             
-                            <!-- TEKAN KARTU PESAN UNTUK REPLY -->
                             <div onclick="setReplyTarget('${msgId}', '${escapeHtml(msg.user)}', '${escapeHtml(displayText)}')" 
                                  class="max-w-[85%] flex flex-col ${isMe ? 'items-end' : 'items-start'} cursor-pointer active:scale-95 transition-transform" 
-                                 title="Tekan untuk membalas pesan ini">
+                                 title="Tekan untuk membalas komentar ini">
                                 
-                                <!-- Tampilan Kuotasi Balasan (Reply Box) -->
                                 ${msg.replyTo ? `
                                     <div class="mb-1 p-1.5 px-2.5 rounded-xl bg-slate-950/90 border-l-2 border-cyan-400 text-[10px] text-slate-400 font-mono w-full">
                                         <div class="font-bold text-cyan-300">@${escapeHtml(msg.replyTo.user)}</div>
@@ -1158,7 +1171,6 @@
                                 `}
                             </div>
 
-                            <!-- Menu Aksi Opsi Chat (Edit & Hapus) -->
                             <div class="flex items-center gap-2 mt-1 opacity-80 hover:opacity-100 transition">
                                 ${isMe && msg.type === 'text' ? `
                                     <button onclick="openEditModal('${msgId}', '${escapeHtml(msg.text)}')" class="text-[9px] text-slate-400 hover:text-cyan-300 flex items-center gap-0.5 cursor-pointer">
@@ -1182,7 +1194,6 @@
             container.scrollTop = container.scrollHeight;
         }
 
-        // FITUR EDIT CHAT
         function openEditModal(msgId, currentText) {
             document.getElementById('edit-msg-id').value = msgId;
             document.getElementById('edit-msg-text').value = currentText;
@@ -1218,7 +1229,6 @@
             closeEditModal();
         }
 
-        // FITUR HAPUS UNTUK SAYA (LOKAL)
         function deleteMessageForMe(msgId) {
             let hiddenLocalMsgs = JSON.parse(localStorage.getItem('am_vip_hidden_chats') || '[]');
             if (!hiddenLocalMsgs.includes(msgId)) {
@@ -1229,7 +1239,6 @@
             showToast('Dihapus', 'Pesan disembunyikan dari tampilan Anda');
         }
 
-        // FITUR HAPUS UNTUK SEMUA ORANG (FIREBASE DATABASE)
         async function deleteMessageForEveryone(msgId) {
             if (db) {
                 try {
@@ -1243,7 +1252,6 @@
             }
         }
 
-        // FITUR HANDLER MEDIA (FOTO / VIDEO)
         function handleMediaSelected(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1291,7 +1299,6 @@
             showToast('Dibatalkan', 'Pengiriman media dibatalkan');
         }
 
-        // SEND CHAT MESSAGE WITH TARGETING PAYLOAD
         async function sendChatMessage() {
             if (isBanned || freezeUntil > Date.now()) return;
 
@@ -1313,15 +1320,15 @@
                 user: customNickname,
                 type: pendingMediaData ? 'media' : 'text',
                 text: text,
+                rating: selectedRatingScore,
                 channel: messageChannel,
                 timestamp: Date.now()
             };
 
-            // Sertakan data balasan/target pengiriman khusus jika sedang membalas pesan
             if (currentReplyTarget) {
                 msgObj.replyTo = currentReplyTarget;
                 msgObj.targetUser = currentReplyTarget.user;
-                cancelReplyTarget(); // Reset preview bar setelah dikirim
+                cancelReplyTarget();
             }
 
             if (pendingMediaData) {
@@ -1342,7 +1349,6 @@
             }
         }
 
-        // SAVE VOICE NOTE PAYLOAD WITH REPLY & TARGETING
         async function saveVNToFirebase(base64Audio, durationStr) {
             if (isBanned || freezeUntil > Date.now()) return;
 
@@ -1358,6 +1364,7 @@
                 type: 'audio',
                 audioData: base64Audio,
                 duration: durationStr,
+                rating: selectedRatingScore,
                 channel: messageChannel,
                 timestamp: Date.now()
             };
@@ -1458,8 +1465,10 @@
 
         async function recordGlobalUnlock(email) {
             const maskedEmail = maskEmail(email);
+            const username = extractUsername(email);
             const historyObj = {
                 email: maskedEmail,
+                username: username,
                 status: 'SUCCESS',
                 timestamp: Date.now()
             };
@@ -1490,20 +1499,37 @@
                 return;
             }
 
-            container.innerHTML = historyList.map(item => `
-                <div class="p-3 bg-slate-950/80 rounded-2xl border border-slate-800/80 flex items-center justify-between text-xs">
-                    <div class="flex items-center gap-2.5">
-                        <span class="w-6 h-6 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-[10px]">
-                            <i class="fa-solid fa-check"></i>
-                        </span>
-                        <span class="font-mono text-slate-200 font-semibold">${escapeHtml(item.email)}</span>
+            container.innerHTML = historyList.map(item => {
+                const displayEmail = item.email ? escapeHtml(item.email) : 'user***@gmail.com';
+                const displayUsername = item.username ? escapeHtml(item.username) : extractUsername(item.email || '');
+                const timeStr = item.timestamp ? new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Baru saja';
+                const dateStr = item.timestamp ? new Date(item.timestamp).toLocaleDateString([], { day: '2-digit', month: 'short' }) : '';
+
+                return `
+                    <div class="history-card-item p-3.5 bg-slate-950/80 hover:bg-slate-900/90 rounded-2xl border border-slate-800/80 hover:border-cyan-500/30 transition-all duration-300 flex items-center justify-between gap-3 shadow-sm">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xs font-bold shrink-0 shadow-inner">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-xs text-slate-100 font-bold truncate tracking-tight">${displayEmail}</span>
+                                    <span class="text-[9px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 px-1.5 py-0.2 rounded font-mono shrink-0">@${displayUsername}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                                    <span class="flex items-center gap-1"><i class="fa-solid fa-clock text-[9px] text-cyan-400"></i> ${timeStr} ${dateStr ? `• ${dateStr}` : ''}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="text-[10px] text-emerald-400 font-extrabold bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-1 rounded-full shadow-emerald-glow flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check text-[9px]"></i> VIP ACTIVE
+                            </span>
+                        </div>
                     </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded-full">VIP ACTIVE</span>
-                        <span class="text-[10px] text-slate-500 font-mono">${item.timestamp ? new Date(item.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function maskEmail(email) {
@@ -1512,6 +1538,12 @@
             const name = parts[0];
             const maskedName = name.length > 2 ? name.substring(0, 2) + '***' : name + '***';
             return maskedName + '@' + parts[1];
+        }
+
+        function extractUsername(email) {
+            if (!email) return 'user';
+            const name = email.split('@')[0];
+            return name.replace(/\*/g, '');
         }
 
         function switchStep(step) {
@@ -1546,7 +1578,6 @@
                 }, 10);
                 icon.className = "fa-solid fa-xmark text-xl";
 
-                // Meminta izin notifikasi browser secara otomatis saat pertama kali buka jika notifikasi diaktifkan
                 if (isNotificationEnabled && "Notification" in window && Notification.permission === "default") {
                     toggleNotificationState(true);
                 }
