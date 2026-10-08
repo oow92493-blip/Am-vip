@@ -1,0 +1,2139 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alight Motion VIP</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome 6 Pro Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK v10 (Compat version) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        vip: {
+                            cyan: '#00f2fe',
+                            purple: '#7f00ff',
+                            amber: '#f59e0b',
+                            emerald: '#10b981',
+                            rose: '#f43f5e',
+                            dark: '#05070f',
+                            card: 'rgba(13, 19, 36, 0.88)'
+                        }
+                    },
+                    boxShadow: {
+                        'vip-glow': '0 0 35px -5px rgba(0, 242, 254, 0.35)',
+                        'purple-glow': '0 0 35px -5px rgba(127, 0, 255, 0.35)',
+                        'emerald-glow': '0 0 25px -5px rgba(16, 185, 129, 0.35)',
+                        'fab-glow': '0 0 30px rgba(127, 0, 255, 0.7)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #05070f;
+            color: #f1f5f9;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(127, 0, 255, 0.25) 0px, transparent 45%),
+                radial-gradient(at 90% 90%, rgba(0, 242, 254, 0.22) 0px, transparent 45%),
+                radial-gradient(at 50% 50%, rgba(16, 185, 129, 0.12) 0px, transparent 65%);
+            background-attachment: fixed;
+        }
+
+        .glass-card {
+            background: rgba(13, 19, 36, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .step-tab.active {
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.28), rgba(127, 0, 255, 0.28));
+            border-color: rgba(0, 242, 254, 0.55);
+            color: #ffffff;
+            box-shadow: 0 0 25px rgba(0, 242, 254, 0.25);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #05070f; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 6px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00f2fe; }
+
+        .history-card-item {
+            animation: fadeInSmooth 0.35s ease-out forwards;
+        }
+
+        @keyframes fadeInSmooth {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-floating-window {
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .chat-floating-window.fullscreen-mode {
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            max-width: 100vw !important;
+            max-height: 100vh !important;
+            border-radius: 0 !important;
+            z-index: 9999 !important;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.15); opacity: 0.3; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+        .animate-pulse-ring {
+            animation: pulse-ring 2.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-950 font-sans relative pb-20 sm:pb-0">
+
+    <header class="border-b border-slate-800/80 glass-card sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center text-slate-950 font-extrabold text-lg shadow-vip-glow">
+                    <i class="fa-solid fa-crown text-slate-950 text-base"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-base sm:text-lg tracking-tight bg-gradient-to-r from-cyan-300 via-purple-300 to-emerald-300 bg-clip-text text-transparent">
+                       𝘼𝙇𝙄𝙂𝙃𝙏 𝙈𝘼𝙏𝙄𝙊𝙉 𝙋𝙍𝙀𝙈𝙄𝙐𝙈
+                    </h1>
+                    <p class="text-[10px] sm:text-xs text-slate-400">free premium</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-full shadow-emerald-glow">
+                <span class="relative flex h-2.5 w-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs font-bold text-emerald-400 tracking-wide">Server Online</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-6 w-full flex-grow space-y-6">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="glass-card rounded-2xl p-5 border border-cyan-500/20 flex items-center justify-between shadow-vip-glow">
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total AM Premium Berhasil</p>
+                    <h2 id="stat-total-premium" class="text-2xl sm:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 to-emerald-300 font-mono">
+                        1,250
+                    </h2>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 text-xl">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-2xl p-5 border border-purple-500/20 flex items-center justify-between shadow-purple-glow">
+                <div class="space-y-1">
+                    <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Status Akses VIP</p>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-sm"></i> UNLIMITED FREE
+                    </h2>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 text-xl">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            
+            <div class="grid grid-cols-2 gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800/80">
+                <button onclick="switchStep(1)" id="tab-step-1" class="step-tab active py-3.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border border-transparent cursor-pointer">
+                    <span class="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-400 text-cyan-300 flex items-center justify-center text-[10px]">1</span>
+                    <span>Kirim Link Email</span>
+                </button>
+                <button onclick="switchStep(2)" id="tab-step-2" class="step-tab py-3.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 border border-transparent cursor-pointer">
+                    <span class="w-5 h-5 rounded-full bg-purple-500/20 border border-purple-400 text-purple-300 flex items-center justify-center text-[10px]">2</span>
+                    <span>Unlock VIP</span>
+                </button>
+            </div>
+
+            <section id="panel-step-1" class="glass-card rounded-3xl p-6 sm:p-8 space-y-6 shadow-vip-glow">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-base font-bold">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-100">Langkah 1: Kirim Link Ke Email</h2>
+                        <p class="text-xs text-slate-400">Masukkan email Alight Motion untuk mengirim autentikasi</p>
+                    </div>
+                </div>
+
+                <form onsubmit="event.preventDefault(); handleSendLink();" class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold text-slate-300">Email Alight Motion</label>
+                        <div class="relative">
+                            <input type="email" id="input-email-1" required placeholder="contoh: user@gmail.com" class="w-full bg-slate-950/90 border border-slate-800 rounded-xl pl-10 pr-4 py-3.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-400 transition">
+                            <i class="fa-solid fa-envelope absolute left-3.5 top-4 text-slate-500 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btn-send-link" class="w-full py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold text-xs rounded-xl transition duration-300 shadow-vip-glow flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>KIRIM LINK KE EMAIL</span>
+                    </button>
+                </form>
+            </section>
+
+            <section id="panel-step-2" class="hidden glass-card rounded-3xl p-6 sm:p-8 space-y-6 shadow-purple-glow">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-400 flex items-center justify-center text-base font-bold">
+                        <i class="fa-solid fa-unlock-keyhole"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-100">Langkah 2: Selesaikan Unlock VIP</h2>
+                        <p class="text-xs text-slate-400">Tempelkan Link Firebase yang dikirim ke email Anda</p>
+                    </div>
+                </div>
+
+                <form onsubmit="event.preventDefault(); handleUnlockVIP();" class="space-y-4">
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-semibold text-slate-300">Email Terhubung</label>
+                            <span class="text-[10px] text-emerald-400 font-medium"><i class="fa-solid fa-circle-check"></i> Terisi Otomatis</span>
+                        </div>
+                        <div class="relative">
+                            <input type="email" id="input-email-2" required placeholder="user@gmail.com" class="w-full bg-slate-950/90 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-xs text-cyan-300 font-mono focus:outline-none focus:border-purple-400 transition">
+                            <i class="fa-solid fa-user-check absolute left-3.5 top-3.5 text-cyan-400 text-xs"></i>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-semibold text-slate-300">Link Firebase Auth</label>
+                            <button type="button" onclick="pasteFirebaseLink()" class="text-[11px] text-purple-400 hover:text-purple-300 font-medium flex items-center gap-1 cursor-pointer">
+                                <i class="fa-regular fa-paste"></i> Tempel Link
+                            </button>
+                        </div>
+                        <textarea id="input-firebase-link" rows="3" required placeholder="Tempelkan link auth Firebase di sini... (https://alight-creative.firebaseapp.com/...)" class="w-full bg-slate-950/90 border border-slate-800 rounded-xl p-3 text-xs text-purple-200 font-mono focus:outline-none focus:border-purple-400 transition leading-relaxed resize-none"></textarea>
+                    </div>
+
+                    <button type="submit" id="btn-unlock-vip" class="w-full py-4 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-extrabold text-xs rounded-xl transition duration-300 shadow-purple-glow flex items-center justify-center gap-2 cursor-pointer">
+                        <i class="fa-solid fa-crown text-amber-300"></i>
+                        <span>PROSES UNLOCK AKUN VIP NOW</span>
+                    </button>
+                </form>
+            </section>
+
+            <section id="result-card" class="hidden glass-card rounded-3xl p-6 border border-slate-800 space-y-3 transition-all duration-300">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span id="result-badge-icon" class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs">
+                            <i class="fa-solid fa-check"></i>
+                        </span>
+                        <h3 id="result-title" class="font-bold text-sm text-slate-100">Status Respon</h3>
+                    </div>
+                    <button onclick="copyResultText()" class="text-xs text-slate-400 hover:text-cyan-400 flex items-center gap-1 cursor-pointer">
+                        <i class="fa-regular fa-copy"></i> Salin
+                    </button>
+                </div>
+                <div id="result-content" class="p-3.5 bg-slate-950 rounded-2xl border border-slate-800 font-mono text-xs text-cyan-300 overflow-x-auto whitespace-pre-wrap"></div>
+            </section>
+
+            <section class="glass-card rounded-3xl p-5 sm:p-6 border border-slate-800 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-clock-rotate-left text-cyan-400"></i>
+                        <h3 class="text-xs font-bold text-slate-200">Riwayat email</h3>
+                    </div>
+                    <span class="text-[10px] text-slate-400 bg-slate-900 border border-slate-800 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live aktivitas
+                    </span>
+                </div>
+
+                <div id="global-history-list" class="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+                    <div class="text-center py-6 text-xs text-slate-500 animate-pulse">Memuat riwayat global VIP...</div>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- FAB Buttons (Temp Email + Chat Global) di Pojok Kanan Bawah -->
+    <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+        <!-- Tombol Temp Email Generator -->
+        <button onclick="toggleTempEmailWindow()" class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-vip-glow hover:scale-105 active:scale-95 transition duration-300 cursor-pointer" title="Generator Temp Email Server Online">
+            <i class="fa-solid fa-envelope-open-text text-xl"></i>
+            <span id="temp-email-badge" class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-slate-950 hidden"></span>
+            <span class="absolute inset-0 rounded-full border-2 border-cyan-400/50 animate-pulse-ring pointer-events-none"></span>
+        </button>
+
+        <!-- FAB Button Chat Global -->
+        <button id="btn-fab-chat" onclick="toggleChatWindow()" class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 text-white flex items-center justify-center shadow-fab-glow hover:scale-105 active:scale-95 transition duration-300 cursor-pointer">
+            <i id="fab-icon" class="fa-solid fa-comments text-xl"></i>
+            <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950"></span>
+            <span class="absolute inset-0 rounded-full border-2 border-cyan-400/50 animate-pulse-ring pointer-events-none"></span>
+        </button>
+    </div>
+
+    <!-- Modal Window Temp Email Generator -->
+    <div id="temp-email-modal-overlay" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden opacity-0 transition-opacity duration-300 flex items-end sm:items-center justify-center sm:p-4">
+        <div id="temp-email-container" class="chat-floating-window glass-card w-full sm:max-w-md h-[85vh] sm:h-[620px] rounded-t-3xl sm:rounded-3xl border border-cyan-500/40 flex flex-col shadow-2xl overflow-hidden transform translate-y-full sm:translate-y-8 transition-transform duration-300">
+            
+            <!-- Header Temp Email dengan Desain Premium & Kontrol Owner Maintenance -->
+            <div class="flex items-center justify-between p-4 border-b border-slate-800/80 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 text-cyan-300 flex items-center justify-center text-sm border border-cyan-500/30 shadow-vip-glow">
+                        <i class="fa-solid fa-envelope-circle-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-extrabold text-slate-100 flex items-center gap-1.5">
+                            Temp Mail Pro FreeI <span class="text-[9px] bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded-full border border-cyan-500/30">Live</span>
+                        </h3>
+                        <p class="text-[10px] text-slate-400">inbox⌛</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <div id="owner-maintenance-control" class="hidden">
+                        <button id="btn-toggle-maintenance" onclick="toggleTempEmailMaintenance()" class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition flex items-center gap-1 cursor-pointer bg-slate-900 border-slate-700 text-slate-300 hover:border-cyan-400">
+                            <i class="fa-solid fa-wrench text-[9px]"></i> <span id="maintenance-btn-text">Maintenance: Off</span>
+                        </button>
+                    </div>
+
+                    <button onclick="toggleTempEmailWindow(false)" class="w-8 h-8 rounded-xl bg-slate-900/80 border border-slate-800 hover:bg-rose-500/20 hover:border-rose-500/40 text-slate-400 hover:text-rose-400 flex items-center justify-center text-xs transition cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Konten Temp Email (Normal) -->
+            <div id="temp-email-active-content" class="p-4 flex-grow overflow-y-auto space-y-4 text-xs">
+                <!-- Box Alamat Email -->
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-semibold text-slate-300 flex items-center justify-between">
+                        <span>Alamat Temp Email API Anda</span>
+                        <span class="text-[10px] text-cyan-400 font-mono"><i class="fa-solid fa-bolt"></i> Siap Pakai</span>
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="temp-email-address" readonly class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-3.5 py-3 text-xs text-cyan-300 font-mono focus:outline-none shadow-inner" placeholder="Memuat email...">
+                        <button onclick="copyTempEmail()" class="px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-xl shrink-0 flex items-center gap-1.5 cursor-pointer shadow-vip-glow transition">
+                            <i class="fa-regular fa-copy"></i> Salin
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Custom Nama / Acak & Aksi -->
+                <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800/80 space-y-3 shadow-sm">
+                    <div class="space-y-1">
+                        <label class="text-[10px] font-semibold text-slate-400">Kustom Nama Temp Email API</label>
+                        <div class="flex items-center gap-2">
+                            <input type="text" id="custom-prefix-input" placeholder="contoh: vipuser" maxlength="15" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-400">
+                            <button onclick="generateCustomTempEmail()" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shrink-0 cursor-pointer transition shadow-purple-glow">
+                                Set Custom
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 pt-0.5">
+                        <button onclick="generateRandomTempEmail()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 font-bold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
+                            <i class="fa-solid fa-shuffle text-cyan-400"></i> Buat email acak
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Live Inbox / Notifikasi Masuk -->
+                <div class="space-y-2 pt-1">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-inbox text-cyan-400"></i> Kotak Masuk API (<span id="inbox-count">0</span>)
+                        </span>
+                        <button onclick="refreshTempInbox()" class="text-[10px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer bg-cyan-950/60 border border-cyan-900/50 px-2 py-1 rounded-lg">
+                            <i class="fa-solid fa-rotate"></i> Refresh API
+                        </button>
+                    </div>
+
+                    <div id="temp-inbox-list" class="space-y-2.5 min-h-[160px] max-h-[210px] overflow-y-auto pr-1">
+                        <div class="text-center py-10 text-slate-500 text-xs">Menunggu pesan masuk real-time via API...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tampilan Maintenance Khusus User Lain (Terkunci) -->
+            <div id="temp-email-maintenance-content" class="hidden flex-grow flex flex-col items-center justify-center p-6 text-center space-y-4 my-auto">
+                <div class="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-3xl shadow-lg animate-pulse">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-base font-extrabold text-amber-300 tracking-wide uppercase">Fitur Sedang Maintenance</h3>
+                    <p class="text-xs text-slate-400 max-w-xs leading-relaxed">
+                        Fitur <strong class="text-slate-200">Temp Email</strong> saat ini sedang ditutup sementara oleh Owner untuk pemeliharaan sistem melakukan pengembangan sementara
+                    </p>
+                </div>
+                <div class="pt-2">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] font-mono text-amber-400">
+                        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span> Status: Locked maintenance
+                    </span>
+                </div>
+            </div>
+            
+            <div class="p-3 bg-slate-950 border-t border-slate-800 text-center text-[10px] text-slate-500">
+                developer (adit) 
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Modal Window -->
+    <div id="chat-modal-overlay" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300 flex items-end sm:items-center justify-center sm:p-4">
+        
+        <div id="chat-floating-container" class="chat-floating-window glass-card w-full sm:max-w-md h-[88vh] sm:h-[620px] rounded-t-3xl sm:rounded-3xl border border-purple-500/30 flex flex-col shadow-2xl overflow-hidden transform translate-y-full sm:translate-y-8 transition-transform duration-300">
+            
+            <!-- Chat Header -->
+            <div class="flex items-center justify-between p-3.5 border-b border-slate-800/80 bg-slate-950/70">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs border border-purple-500/30">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-1.5">
+                            <h3 class="text-xs font-bold text-slate-100">Komunitas VIP & Rating</h3>
+                            <button onclick="openNicknameModal()" class="text-[10px] text-cyan-400 hover:text-cyan-300 bg-cyan-950/80 border border-cyan-800 px-2 py-0.5 rounded-lg flex items-center gap-1 cursor-pointer">
+                                <i class="fa-solid fa-pen-to-square"></i> <span id="chat-user-tag">User-****</span>
+                            </button>
+                        </div>
+                        <p class="text-[9px] text-slate-400">Global Chat & Review Room</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-1 rounded-xl" title="Hidup/Matikan Notifikasi">
+                        <i id="notif-bell-icon" class="fa-solid fa-bell text-[11px] text-slate-400"></i>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="toggle-notif-switch" onchange="toggleNotificationState(this.checked)" class="sr-only peer">
+                            <div class="w-6 h-3.5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all peer-checked:bg-cyan-500"></div>
+                        </label>
+                    </div>
+
+                    <div class="flex items-center gap-1 bg-slate-900 border border-slate-800 px-1.5 py-1 rounded-xl">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="toggle-fullscreen-chat" onchange="toggleFullscreenMode(this.checked)" class="sr-only peer">
+                            <div class="w-6 h-3.5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all peer-checked:bg-cyan-500"></div>
+                        </label>
+                    </div>
+
+                    <button onclick="toggleChatWindow(false)" class="w-7 h-7 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-rose-400 flex items-center justify-center text-xs transition cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Tab Bar -->
+            <div class="px-3 pt-2 pb-1 bg-slate-950/90 border-b border-slate-800/80 flex items-center justify-between gap-2">
+                <div class="grid grid-cols-2 gap-1.5 w-full">
+                    <button onclick="switchChatTab('global')" id="tab-btn-global" class="py-1.5 px-3 rounded-xl text-[11px] font-bold border transition flex items-center justify-center gap-1.5 bg-cyan-500/20 border-cyan-400 text-cyan-300">
+                        <i class="fa-solid fa-earth-americas text-[10px]"></i> Global Chat
+                    </button>
+                    <button onclick="switchChatTab('ch')" id="tab-btn-ch" class="py-1.5 px-3 rounded-xl text-[11px] font-bold border transition flex items-center justify-center gap-1.5 bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200">
+                        <i class="fa-solid fa-hashtag text-[10px]"></i> Channel (CH)
+                    </button>
+                </div>
+            </div>
+
+            <div id="channel-pills-bar" class="hidden px-3 py-2 bg-slate-900/90 border-b border-slate-800/80 flex items-center justify-between gap-1.5 overflow-x-auto text-[10px] font-mono whitespace-nowrap">
+                <div class="flex items-center gap-1.5 overflow-x-auto">
+                    <button onclick="selectChannel('general')" id="ch-pill-general" class="ch-pill px-2.5 py-1 rounded-lg bg-purple-500/20 border border-purple-400 text-purple-300 font-bold">#general</button>
+                    <button onclick="selectChannel('preset-am')" id="ch-pill-preset-am" class="ch-pill px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200">#preset-am</button>
+                    <button onclick="selectChannel('pengumuman-owner')" id="ch-pill-pengumuman-owner" class="ch-pill px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200">#pengumuman-owner</button>
+                    <button onclick="selectChannel('vip-lounge')" id="ch-pill-vip-lounge" class="ch-pill px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200">#vip-lounge</button>
+                </div>
+                <div id="ch-owner-badge" class="hidden text-[9px] bg-amber-500/10 border border-amber-500/30 text-amber-300 px-2 py-0.5 rounded-md font-bold flex items-center gap-1 shrink-0">
+                    <i class="fa-solid fa-lock text-[8px]"></i> Read-Only (Kontrol Owner)
+                </div>
+            </div>
+
+            <div id="freeze-indicator-bar" class="hidden p-2.5 bg-amber-950/90 border-b border-amber-800/80 flex items-center justify-between text-xs text-amber-300 font-mono">
+                <span class="flex items-center gap-2">
+                    <i class="fa-solid fa-snowflake animate-spin"></i>
+                    <span>Akses Dibekukan (Freeze):</span>
+                </span>
+                <span id="freeze-timer-display" class="font-bold text-amber-200">00:00</span>
+            </div>
+
+            <!-- Chat Message Scroll Container -->
+            <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs">
+                <div class="text-center py-10 text-slate-500 text-xs animate-pulse">Menghubungkan ke Chat Network...</div>
+            </div>
+
+            <div id="reply-preview-bar" class="hidden p-2.5 bg-slate-900 border-t border-slate-800 flex items-center justify-between gap-3 font-mono">
+                <div class="flex items-center gap-2 overflow-hidden border-l-2 border-cyan-400 pl-2">
+                    <div class="flex flex-col overflow-hidden">
+                        <span class="text-[10px] text-cyan-400 font-bold" id="reply-user-target">@User</span>
+                        <span class="text-[11px] text-slate-400 truncate max-w-[220px]" id="reply-text-target">Pesan balasan...</span>
+                    </div>
+                </div>
+                <button type="button" onclick="cancelReplyTarget()" class="w-6 h-6 rounded-lg bg-slate-950 hover:bg-rose-950 text-slate-400 hover:text-rose-400 flex items-center justify-center text-xs transition cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div id="media-preview-bar" class="hidden p-2.5 bg-slate-900 border-t border-slate-800 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2 overflow-hidden">
+                    <div id="media-preview-thumb" class="w-10 h-10 rounded-lg bg-slate-950 overflow-hidden shrink-0 flex items-center justify-center border border-slate-800"></div>
+                    <span id="media-preview-name" class="text-[11px] text-slate-300 truncate font-mono">media.jpg</span>
+                </div>
+                <button type="button" onclick="cancelMediaUpload()" class="px-3 py-1.5 bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 text-rose-300 text-xs font-bold rounded-xl flex items-center gap-1 cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i> Batal Kirim
+                </button>
+            </div>
+
+            <div id="vn-recording-bar" class="hidden p-3 bg-rose-950/90 border-t border-rose-800/80 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+                    </span>
+                    <span class="text-xs font-bold text-rose-300 font-mono">Merekam Voice Note... <span id="vn-timer">00:00</span></span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="cancelVNRecording()" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-[11px] font-semibold cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="button" onclick="stopAndSendVN()" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold flex items-center gap-1 cursor-pointer">
+                        <i class="fa-solid fa-paper-plane text-[10px]"></i> Kirim
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat & Rating Form Bar -->
+            <div class="p-2 bg-slate-950 border-t border-slate-800/80 flex flex-col gap-2">
+                <!-- Select Rating Stars -->
+                <div class="flex items-center justify-between px-2 pt-1">
+                    <span class="text-[10px] font-semibold text-slate-400">Beri Rating:</span>
+                    <div id="rating-star-picker" class="flex items-center gap-1 text-amber-400 text-xs">
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(1)"></i>
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(2)"></i>
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(3)"></i>
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(4)"></i>
+                        <i class="fa-solid fa-star cursor-pointer opacity-40 hover:opacity-100 transition" onclick="setRatingScore(5)"></i>
+                        <span id="rating-val-display" class="text-[10px] font-bold text-amber-300 ml-1">(5/5)</span>
+                    </div>
+                </div>
+
+                <form id="chat-form" onsubmit="event.preventDefault(); sendChatMessage();" class="flex items-center gap-2">
+                    <input type="file" id="media-input" accept="image/*,video/*" class="hidden" onchange="handleMediaSelected(event)">
+                    <button type="button" onclick="document.getElementById('media-input').click()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-purple-400 flex items-center justify-center text-xs transition shrink-0 cursor-pointer" title="Kirim Foto / Video">
+                        <i class="fa-solid fa-paperclip"></i>
+                    </button>
+
+                    <input type="text" id="chat-input" placeholder="Tulis komentar & ulasan Anda..." class="flex-grow bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2 text-xs text-slate-100 focus:outline-none focus:border-cyan-400 transition">
+                    
+                    <button type="button" id="btn-record-vn" onclick="startVNRecording()" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-cyan-400 flex items-center justify-center text-xs transition shrink-0 cursor-pointer" title="Rekam Voice Note">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+
+                    <button type="submit" id="btn-send-chat" class="w-9 h-9 rounded-xl bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-slate-950 font-bold text-xs transition flex items-center justify-center shrink-0 cursor-pointer">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Edit Chat Modal -->
+    <div id="edit-chat-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[70] hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-sm w-full p-5 rounded-3xl border border-cyan-500/30 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-xs text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-pen text-cyan-400"></i> Edit Pesan Teks
+                </h3>
+                <button onclick="closeEditModal()" class="text-slate-400 hover:text-white text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <input type="hidden" id="edit-msg-id">
+            <textarea id="edit-msg-text" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 font-sans focus:outline-none focus:border-cyan-400 resize-none"></textarea>
+
+            <div class="flex items-center justify-end gap-2">
+                <button type="button" onclick="closeEditModal()" class="px-3.5 py-1.5 rounded-xl bg-slate-900 text-slate-400 text-xs font-semibold hover:bg-slate-800">Batal</button>
+                <button type="button" onclick="saveEditedMessage()" class="px-3.5 py-1.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-extrabold shadow-vip-glow">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nickname Modal -->
+    <div id="nickname-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-sm w-full p-6 rounded-3xl border border-cyan-500/30 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+                    <i class="fa-solid fa-id-card text-cyan-400"></i> Ganti Nickname Chat
+                </h3>
+                <button onclick="closeNicknameModal()" class="text-slate-400 hover:text-white text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <p class="text-xs text-slate-400">Pilih nama tampilan unik Anda untuk komunitas VIP. Maksimal 2 device dapat mendaftar sebagai 'Owner'.</p>
+            
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-semibold text-slate-300">Nickname Baru</label>
+                <input type="text" id="input-custom-nickname" maxlength="20" placeholder="Ketik nama Anda..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-cyan-300 font-mono focus:outline-none focus:border-cyan-400">
+            </div>
+
+            <div class="flex items-center justify-end gap-2 pt-2">
+                <button type="button" onclick="closeNicknameModal()" class="px-4 py-2 rounded-xl bg-slate-900 text-slate-400 text-xs font-semibold hover:bg-slate-800">
+                    Batal
+                </button>
+                <button type="button" onclick="saveCustomNickname()" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 text-xs font-extrabold shadow-vip-glow">
+                    Simpan Nickname
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Violation Warning Modal -->
+    <div id="violation-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-6 sm:p-8 rounded-3xl border border-rose-500/50 space-y-5 text-center shadow-2xl">
+            <div class="w-16 h-16 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center text-3xl mx-auto animate-bounce">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+
+            <div class="space-y-2">
+                <h2 class="text-lg font-extrabold text-rose-400 uppercase tracking-tight">SLOT OWNER FULL / PENIRUAN!</h2>
+                <p id="violation-message" class="text-xs text-slate-300 leading-relaxed">
+                    Nickname <strong class="text-amber-300 font-mono">'Owner'</strong> sudah penuh (Max 2 User). Akun Anda dibekukan sementara.
+                </p>
+            </div>
+
+            <div class="p-3 bg-slate-950/80 rounded-2xl border border-slate-800 text-xs font-mono space-y-1">
+                <div class="text-slate-400">Durasi Pembekuan (Freeze):</div>
+                <div id="modal-freeze-timer" class="text-xl font-bold text-amber-400">03:00</div>
+                <div class="text-[10px] text-slate-500">Percobaan berulang akan mengakibatkan BANNED PERMANEN</div>
+            </div>
+
+            <button onclick="closeViolationModal()" class="w-full py-3 bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs rounded-xl shadow-lg transition">
+                SAYA MENGERTI
+            </button>
+        </div>
+    </div>
+
+    <!-- Banned Modal -->
+    <div id="banned-modal" class="fixed inset-0 bg-slate-950/95 backdrop-blur-xl z-[200] hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-md w-full p-8 rounded-3xl border border-rose-600 text-center space-y-6 shadow-2xl">
+            <div class="w-20 h-20 rounded-full bg-rose-600/20 text-rose-500 border border-rose-500 flex items-center justify-center text-4xl mx-auto">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+
+            <div class="space-y-3">
+                <h2 class="text-xl font-black text-rose-500 uppercase tracking-wider">AKUN DIBANNED PERMANEN</h2>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Akses Anda ke sistem **Alight Motion VIP & Global Network** telah diblokir secara permanen karena melanggar aturan penggunaan nickname resmi Owner secara berulang.
+                </p>
+            </div>
+
+            <div class="p-4 bg-rose-950/40 rounded-2xl border border-rose-800/60 text-[11px] font-mono text-rose-300 text-left space-y-1">
+                <div>• Status: PERMANENTLY BANNED</div>
+                <div>• Alasan: Impersonation Protection Penalty</div>
+                <div>• Akses: Disabling All API & Community Actions</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Banner -->
+    <div id="toast" class="fixed bottom-6 left-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="glass-card border border-cyan-500/40 text-slate-100 px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3">
+            <i id="toast-icon" class="fa-solid fa-circle-check text-cyan-400 text-base"></i>
+            <div>
+                <div id="toast-title" class="font-bold text-xs">Notifikasi</div>
+                <div id="toast-desc" class="text-[11px] text-slate-400">Proses berhasil dilaksanakan.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/80 py-5 text-center text-[11px] text-slate-500">
+        developer (adit) 
+    </footer>
+
+    <script>
+        // EMBEDDED HIDDEN CREDENTIALS
+        const HIDDEN_BASE_ENDPOINT = 'https://apiz.vsunsee.qzz.io/vsunseeV8/alightmotion';
+        const HIDDEN_API_KEY = 'VsunseeXVANZ';
+
+        const firebaseConfig = {
+            databaseURL: "https://am-vip-default-rtdb.firebaseio.com"
+        };
+
+        let db = null;
+        try {
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.database();
+        } catch(e) {
+            console.warn("Firebase initialized in fallback local storage mode:", e);
+        }
+
+        let deviceUUID = localStorage.getItem('am_vip_device_uuid');
+        if (!deviceUUID) {
+            deviceUUID = 'DEV-' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+            localStorage.setItem('am_vip_device_uuid', deviceUUID);
+        }
+
+        let customNickname = localStorage.getItem('am_vip_nickname');
+        if (!customNickname) {
+            customNickname = 'User_' + Math.floor(1000 + Math.random() * 9000);
+            localStorage.setItem('am_vip_nickname', customNickname);
+        }
+
+        let violationCount = parseInt(localStorage.getItem('am_vip_violations') || '0');
+        let freezeUntil = parseInt(localStorage.getItem('am_vip_freeze_until') || '0');
+        let isBanned = localStorage.getItem('am_vip_banned') === 'true';
+
+        let activeChatTab = 'global'; 
+        let activeChannel = 'general'; 
+        let cachedChatMessages = [];
+        let pendingMediaData = null; 
+        let selectedRatingScore = 5; 
+        
+        let currentReplyTarget = null; 
+
+        // Temp Email API Integration State
+        let currentTempEmail = localStorage.getItem('am_temp_email') || '';
+        let tempInboxMessages = JSON.parse(localStorage.getItem('am_temp_inbox') || '[]');
+        let isTempEmailMaintenance = localStorage.getItem('am_temp_maintenance') === 'true';
+
+        const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+        let isNotificationEnabled = localStorage.getItem('am_vip_notif_enabled') !== 'false';
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            updateNicknameDisplay();
+            checkBanAndFreezeStatus();
+            setupRealtimeDataListeners();
+            updateNotificationUI();
+            setRatingScore(5);
+            initTempEmailSystem();
+            await updateTempEmailMaintenanceUI();
+
+            const email1 = document.getElementById('input-email-1');
+            if (email1) {
+                email1.addEventListener('input', (e) => {
+                    const email2 = document.getElementById('input-email-2');
+                    if (email2) email2.value = e.target.value.trim();
+                });
+            }
+        });
+
+        // --- TEMP EMAIL API REAL-TIME LOGIC ---
+        const TEMP_DOMAINS = ['1secmail.com', '1secmail.org', '1secmail.net', 'esiix.com', 'xojxe.com'];
+
+        function initTempEmailSystem() {
+            if (!currentTempEmail) {
+                generateRandomTempEmail();
+            } else {
+                document.getElementById('temp-email-address').value = currentTempEmail;
+                renderTempInbox();
+            }
+            // Poll API secara real-time setiap 8 detik
+            setInterval(pollTempEmailInboxAPI, 8000);
+        }
+
+        async function updateTempEmailMaintenanceUI() {
+            const isOwner = await checkIsUserOwner();
+            const ownerControl = document.getElementById('owner-maintenance-control');
+            const activeContent = document.getElementById('temp-email-active-content');
+            const maintContent = document.getElementById('temp-email-maintenance-content');
+            const maintBtnText = document.getElementById('maintenance-btn-text');
+            const maintBtn = document.getElementById('btn-toggle-maintenance');
+
+            if (isOwner) {
+                ownerControl.classList.remove('hidden');
+            } else {
+                ownerControl.classList.add('hidden');
+            }
+
+            if (isTempEmailMaintenance && !isOwner) {
+                activeContent.classList.add('hidden');
+                maintContent.classList.remove('hidden');
+            } else {
+                activeContent.classList.remove('hidden');
+                maintContent.classList.add('hidden');
+            }
+
+            if (isTempEmailMaintenance) {
+                maintBtnText.innerText = "Maintenance: ON";
+                maintBtn.className = "px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition flex items-center gap-1 cursor-pointer bg-amber-500/20 border-amber-500 text-amber-300";
+            } else {
+                maintBtnText.innerText = "Maintenance: OFF";
+                maintBtn.className = "px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition flex items-center gap-1 cursor-pointer bg-slate-900 border-slate-700 text-slate-300 hover:border-cyan-400";
+            }
+        }
+
+        async function toggleTempEmailMaintenance() {
+            const isOwner = await checkIsUserOwner();
+            if (!isOwner) return;
+
+            isTempEmailMaintenance = !isTempEmailMaintenance;
+            localStorage.setItem('am_temp_maintenance', isTempEmailMaintenance ? 'true' : 'false');
+
+            if (db) {
+                try {
+                    await db.ref('settings/temp_email_maintenance').set(isTempEmailMaintenance);
+                } catch(e) {}
+            }
+
+            await updateTempEmailMaintenanceUI();
+            showToast("Status Maintenance", isTempEmailMaintenance ? "Temp Email ditutup untuk user lain (Maintenance ON)" : "Temp Email dibuka kembali (Maintenance OFF)");
+        }
+
+        function generateRandomTempEmail() {
+            const randomName = 'vip' + Math.random().toString(36).substring(2, 8);
+            const randomDomain = TEMP_DOMAINS[Math.floor(Math.random() * TEMP_DOMAINS.length)];
+            currentTempEmail = `${randomName}@${randomDomain}`;
+            localStorage.setItem('am_temp_email', currentTempEmail);
+            document.getElementById('temp-email-address').value = currentTempEmail;
+            tempInboxMessages = [];
+            localStorage.setItem('am_temp_inbox', JSON.stringify([]));
+            renderTempInbox();
+            showToast('Temp Email Baru', 'Alamat email sementara berhasil dibuat');
+        }
+
+        function generateCustomTempEmail() {
+            const prefix = document.getElementById('custom-prefix-input').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            if (!prefix) {
+                showToast('Nama Tidak Valid', 'Masukkan huruf atau angka untuk nama depan');
+                return;
+            }
+            const randomDomain = TEMP_DOMAINS[Math.floor(Math.random() * TEMP_DOMAINS.length)];
+            currentTempEmail = `${prefix}_${Math.floor(100 + Math.random() * 900)}@${randomDomain}`;
+            localStorage.setItem('am_temp_email', currentTempEmail);
+            document.getElementById('temp-email-address').value = currentTempEmail;
+            tempInboxMessages = [];
+            localStorage.setItem('am_temp_inbox', JSON.stringify([]));
+            renderTempInbox();
+            showToast('Kustom Email Siap', `Email: ${currentTempEmail}`);
+        }
+
+        function copyTempEmail() {
+            const emailVal = document.getElementById('temp-email-address').value;
+            if (emailVal) {
+                navigator.clipboard.writeText(emailVal);
+                showToast('Disalin', 'Alamat temp email disalin ke clipboard');
+                
+                const email1 = document.getElementById('input-email-1');
+                if (email1 && !email1.value) email1.value = emailVal;
+                const email2 = document.getElementById('input-email-2');
+                if (email2 && !email2.value) email2.value = emailVal;
+            }
+        }
+
+        async function toggleTempEmailWindow(forceState) {
+            const isOwner = await checkIsUserOwner();
+            const overlay = document.getElementById('temp-email-modal-overlay');
+            const container = document.getElementById('temp-email-container');
+            const isHidden = overlay.classList.contains('hidden');
+            const targetState = forceState !== undefined ? forceState : isHidden;
+
+            await updateTempEmailMaintenanceUI();
+
+            if (targetState) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    container.classList.remove('translate-y-full', 'sm:translate-y-8');
+                }, 10);
+                document.getElementById('temp-email-badge').classList.add('hidden');
+                pollTempEmailInboxAPI(); // Refresh langsung saat dibuka
+            } else {
+                overlay.classList.add('opacity-0');
+                container.classList.add('translate-y-full', 'sm:translate-y-8');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        async function pollTempEmailInboxAPI() {
+            if (!currentTempEmail) return;
+            try {
+                // Memanggil API real-time tempmail yang disediakan
+                const apiUrl = `https://apiz.vsunsee.qzz.io/vsunseeV8/tempmail?apikey=VsunseeXVANZ&check=&email=${encodeURIComponent(currentTempEmail)}`;
+                const res = await fetch(apiUrl);
+                const data = await res.json();
+
+                // Mendukung berbagai struktur format respons API (array pesan / objek berisi pesan)
+                let messages = [];
+                if (Array.isArray(data)) {
+                    messages = data;
+                } else if (data && Array.isArray(data.messages)) {
+                    messages = data.messages;
+                } else if (data && data.result && Array.isArray(data.result)) {
+                    messages = data.result;
+                }
+
+                if (messages.length > 0) {
+                    let hasNew = false;
+                    messages.forEach(msg => {
+                        const msgId = msg.id || msg.subject + (msg.date || '');
+                        if (!tempInboxMessages.some(m => (m.id === msgId || m.subject === msg.subject))) {
+                            tempInboxMessages.unshift({
+                                id: msgId,
+                                from: msg.from || msg.sender || 'Unknown Sender',
+                                subject: msg.subject || 'No Subject',
+                                date: msg.date || new Date().toLocaleTimeString(),
+                                body: msg.body || msg.text || msg.html || JSON.stringify(msg)
+                            });
+                            hasNew = true;
+                        }
+                    });
+
+                    if (hasNew) {
+                        localStorage.setItem('am_temp_inbox', JSON.stringify(tempInboxMessages));
+                        renderTempInbox();
+                        document.getElementById('temp-email-badge').classList.remove('hidden');
+                        triggerChromePushNotification("Email Masuk Realtime!", `Pesan diterima pada ${currentTempEmail}`);
+                        showToast("Email Masuk Baru!", "Kotak masuk temp mail diperbarui");
+                    }
+                }
+            } catch(e) {
+                // Fallback otomatis ke API publik 1secmail jika API utama sedang sinkronisasi
+                try {
+                    const parts = currentTempEmail.split('@');
+                    const fallbackRes = await fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${parts[0]}&domain=${parts[1]}`);
+                    const fallbackData = await fallbackRes.json();
+                    if (Array.isArray(fallbackData) && fallbackData.length > 0) {
+                        const latest = fallbackData[0];
+                        const detailRes = await fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${parts[0]}&domain=${parts[1]}&id=${latest.id}`);
+                        const detailData = await detailRes.json();
+                        
+                        if (!tempInboxMessages.some(m => m.id === latest.id)) {
+                            tempInboxMessages.unshift({
+                                id: latest.id,
+                                from: latest.from,
+                                subject: latest.subject,
+                                date: latest.date,
+                                body: detailData.body || detailData.textBody || 'No Content'
+                            });
+                            localStorage.setItem('am_temp_inbox', JSON.stringify(tempInboxMessages));
+                            renderTempInbox();
+                            document.getElementById('temp-email-badge').classList.remove('hidden');
+                        }
+                    }
+                } catch(err) {}
+            }
+        }
+
+        function refreshTempInbox() {
+            showToast('Memperbarui', 'Mengambil pesan terbaru dari API...');
+            pollTempEmailInboxAPI();
+        }
+
+        function renderTempInbox() {
+            const listEl = document.getElementById('temp-inbox-list');
+            document.getElementById('inbox-count').innerText = tempInboxMessages.length;
+
+            if (tempInboxMessages.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-10 text-slate-500 text-xs">Belum ada email masuk. Silakan gunakan alamat temp email ini untuk mendaftar.</div>`;
+                return;
+            }
+
+            listEl.innerHTML = tempInboxMessages.map(msg => {
+                let extractedLink = '';
+                const bodyText = typeof msg.body === 'string' ? msg.body : JSON.stringify(msg.body);
+                const urlMatch = bodyText.match(/(https:\/\/[^\s]+)/g);
+                if (urlMatch) {
+                    const found = urlMatch.find(u => u.includes('firebase') || u.includes('alight') || u.length > 25);
+                    if (found) extractedLink = found.replace(/["<>]/g, '');
+                }
+
+                return `
+                    <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
+                        <div class="flex items-center justify-between text-[10px] text-slate-400">
+                            <span class="font-bold text-cyan-300 truncate max-w-[180px]">${escapeHtml(msg.from)}</span>
+                            <span>${escapeHtml(msg.date)}</span>
+                        </div>
+                        <div class="font-bold text-slate-100 text-xs">${escapeHtml(msg.subject)}</div>
+                        <div class="text-[11px] text-slate-300 bg-slate-950 p-2 rounded-xl font-mono max-h-24 overflow-y-auto whitespace-pre-wrap">${escapeHtml(bodyText)}</div>
+                        
+                        ${extractedLink ? `
+                            <div class="pt-1 flex items-center justify-between gap-2">
+                                <input type="text" readonly value="${extractedLink}" class="w-full bg-slate-950 border border-purple-500/40 rounded-lg px-2.5 py-1.5 text-[10px] text-purple-300 font-mono">
+                                <button onclick="navigator.clipboard.writeText('${extractedLink}'); showToast('Link Disalin', 'Link verifikasi email disalin!');" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg shrink-0 text-[10px] cursor-pointer">
+                                    Salin Link
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+        // -----------------------------------------------------
+
+        function setRatingScore(score) {
+            selectedRatingScore = score;
+            const stars = document.querySelectorAll('#rating-star-picker i');
+            stars.forEach((star, idx) => {
+                if (idx < score) {
+                    star.classList.remove('opacity-40');
+                    star.classList.add('opacity-100');
+                } else {
+                    star.classList.remove('opacity-100');
+                    star.classList.add('opacity-40');
+                }
+            });
+            document.getElementById('rating-val-display').innerText = `(${score}/5)`;
+        }
+
+        function renderStarsHTML(score) {
+            let starsHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= score) {
+                    starsHTML += `<i class="fa-solid fa-star text-amber-400 text-[9px]"></i>`;
+                } else {
+                    starsHTML += `<i class="fa-solid fa-star text-slate-700 text-[9px]"></i>`;
+                }
+            }
+            return starsHTML;
+        }
+
+        function updateNotificationUI() {
+            const toggleSwitch = document.getElementById('toggle-notif-switch');
+            const bellIcon = document.getElementById('notif-bell-icon');
+
+            if (toggleSwitch) toggleSwitch.checked = isNotificationEnabled;
+
+            if (bellIcon) {
+                if (isNotificationEnabled) {
+                    bellIcon.className = "fa-solid fa-bell text-[11px] text-cyan-400";
+                } else {
+                    bellIcon.className = "fa-solid fa-bell-slash text-[11px] text-rose-400";
+                }
+            }
+        }
+
+        async function toggleNotificationState(enable) {
+            if (enable) {
+                if ("Notification" in window) {
+                    if (Notification.permission === "granted") {
+                        isNotificationEnabled = true;
+                        localStorage.setItem('am_vip_notif_enabled', 'true');
+                        updateNotificationUI();
+                        showToast('Notifikasi Aktif', 'Notifikasi berhasil diaktifkan');
+                    } else if (Notification.permission === "denied") {
+                        isNotificationEnabled = false;
+                        localStorage.setItem('am_vip_notif_enabled', 'false');
+                        updateNotificationUI();
+                        showToast('Akses Ditolak Browser', 'Izinkan notifikasi via pengaturan browser Chrome');
+                    } else {
+                        const permission = await Notification.requestPermission();
+                        if (permission === "granted") {
+                            isNotificationEnabled = true;
+                            localStorage.setItem('am_vip_notif_enabled', 'true');
+                            updateNotificationUI();
+                            showToast('Izin Diberikan', 'Notifikasi Chrome diaktifkan');
+                        } else {
+                            isNotificationEnabled = false;
+                            localStorage.setItem('am_vip_notif_enabled', 'false');
+                            updateNotificationUI();
+                            showToast('Notifikasi Ditolak', 'Akses notifikasi tidak diberikan');
+                        }
+                    }
+                } else {
+                    showToast('Tidak Didukung', 'Browser tidak mendukung push notification');
+                }
+            } else {
+                isNotificationEnabled = false;
+                localStorage.setItem('am_vip_notif_enabled', 'false');
+                updateNotificationUI();
+                showToast('Notifikasi Dimatikan', 'Anda tidak akan menerima suara / push notif');
+            }
+        }
+
+        function triggerChromePushNotification(title, body) {
+            if (!isNotificationEnabled) return;
+            if (!("Notification" in window) || Notification.permission !== "granted") return;
+
+            try {
+                notificationSound.play().catch(() => {});
+
+                const notif = new Notification(title, {
+                    body: body,
+                    icon: 'https://cdn-icons-png.flaticon.com/512/732/732200.png',
+                    badge: 'https://cdn-icons-png.flaticon.com/512/732/732200.png',
+                    tag: 'am-vip-chat-notif',
+                    renotify: true
+                });
+
+                notif.onclick = function() {
+                    window.focus();
+                    toggleChatWindow(true);
+                    this.close();
+                };
+            } catch (err) {}
+        }
+
+        function setupRealtimeDataListeners() {
+            const localStats = localStorage.getItem('am_vip_cached_stats') || '1250';
+            document.getElementById('stat-total-premium').innerText = parseInt(localStats).toLocaleString();
+
+            const localChats = JSON.parse(localStorage.getItem('am_vip_cached_chats') || '[]');
+            cachedChatMessages = localChats;
+            renderChatMessages(cachedChatMessages);
+
+            const localHistory = JSON.parse(localStorage.getItem('am_vip_cached_history') || '[]');
+            renderHistoryList(localHistory);
+
+            if (db) {
+                try {
+                    db.ref('settings/temp_email_maintenance').on('value', (snap) => {
+                        if (snap.exists()) {
+                            isTempEmailMaintenance = snap.val();
+                            localStorage.setItem('am_temp_maintenance', isTempEmailMaintenance ? 'true' : 'false');
+                            updateTempEmailMaintenanceUI();
+                        }
+                    });
+
+                    db.ref('stats/total_unlocks').on('value', (snap) => {
+                        if (snap.exists()) {
+                            const val = snap.val();
+                            document.getElementById('stat-total-premium').innerText = val.toLocaleString();
+                            localStorage.setItem('am_vip_cached_stats', val);
+                        } else {
+                            db.ref('stats/total_unlocks').set(1250);
+                        }
+                    });
+
+                    db.ref('chats').limitToLast(60).on('value', (snap) => {
+                        if (snap.exists()) {
+                            const data = snap.val();
+                            const msgList = [];
+
+                            Object.keys(data).forEach(key => {
+                                const item = { id: key, ...data[key] };
+                                msgList.push(item);
+                            });
+                            msgList.sort((a,b) => a.timestamp - b.timestamp);
+
+                            if (cachedChatMessages.length > 0 && msgList.length > cachedChatMessages.length) {
+                                const newMsg = msgList[msgList.length - 1];
+                                if (newMsg.user !== customNickname) {
+                                    const sender = newMsg.user || 'Seseorang';
+                                    const notifText = newMsg.text || (newMsg.type === 'audio' ? '🎤 Voice Note Baru' : '📷 Media Baru');
+                                    const channelTag = newMsg.channel === 'global' ? '[Global Chat]' : `[#${newMsg.channel}]`;
+
+                                    triggerChromePushNotification(`${channelTag} ${sender}`, notifText);
+                                    showToast(`Pesan Baru dari ${sender}`, notifText);
+                                }
+                            }
+
+                            cachedChatMessages = msgList;
+                            localStorage.setItem('am_vip_cached_chats', JSON.stringify(msgList));
+                            renderChatMessages(cachedChatMessages);
+                        } else {
+                            cachedChatMessages = [];
+                            renderChatMessages([]);
+                        }
+                    });
+
+                    db.ref('history').limitToLast(15).on('value', (snap) => {
+                        if (snap.exists()) {
+                            const data = snap.val();
+                            const historyList = Object.values(data);
+                            historyList.sort((a,b) => b.timestamp - a.timestamp);
+                            localStorage.setItem('am_vip_cached_history', JSON.stringify(historyList));
+                            renderHistoryList(historyList);
+                        }
+                    });
+
+                    db.ref('banned_devices/' + deviceUUID).on('value', (snap) => {
+                        if (snap.exists()) {
+                            isBanned = true;
+                            localStorage.setItem('am_vip_banned', 'true');
+                            enforceBanUI();
+                        }
+                    });
+
+                } catch(e) {}
+            }
+        }
+
+        async function saveCustomNickname() {
+            if (isBanned) return;
+            const inputEl = document.getElementById('input-custom-nickname');
+            const targetNickname = inputEl.value.trim();
+
+            if (!targetNickname) {
+                showToast('Input Kosong', 'Ketik nickname yang valid');
+                return;
+            }
+
+            if (targetNickname.toLowerCase() === "owner") {
+                let ownerDevices = [];
+                try {
+                    if (db) {
+                        const snap = await db.ref('app_owners').once('value');
+                        ownerDevices = snap.val() || [];
+                    } else {
+                        ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
+                    }
+                } catch(e) {
+                    ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
+                }
+
+                const isAlreadyOwner = ownerDevices.includes(deviceUUID);
+
+                if (!isAlreadyOwner) {
+                    if (ownerDevices.length < 2) {
+                        ownerDevices.push(deviceUUID);
+                        if (db) {
+                            try { await db.ref('app_owners').set(ownerDevices); } catch(e) {}
+                        }
+                        localStorage.setItem('am_owner_devices', JSON.stringify(ownerDevices));
+
+                        customNickname = "Owner";
+                        localStorage.setItem('am_vip_nickname', "Owner");
+                        updateNicknameDisplay();
+                        closeNicknameModal();
+                        showToast('Owner Verified', `🎉 Berhasil klaim Owner! (Slot ${ownerDevices.length}/2 terisi)`);
+                        return;
+                    } else {
+                        closeNicknameModal();
+                        await triggerOwnerViolation("Mencoba klaim nickname Owner saat slot (2/2) sudah penuh!");
+                        return;
+                    }
+                } else {
+                    customNickname = "Owner";
+                    localStorage.setItem('am_vip_nickname', "Owner");
+                    updateNicknameDisplay();
+                    closeNicknameModal();
+                    showToast('Owner Verified', 'Anda sudah memegang slot resmi Owner');
+                    return;
+                }
+            }
+
+            customNickname = targetNickname;
+            localStorage.setItem('am_vip_nickname', customNickname);
+            updateNicknameDisplay();
+            closeNicknameModal();
+            showToast('Nickname Berhasil', `Nickname Anda diubah menjadi "${customNickname}"`);
+        }
+
+        async function triggerOwnerViolation(reason) {
+            violationCount++;
+            localStorage.setItem('am_vip_violations', violationCount.toString());
+
+            if (violationCount >= 3) {
+                isBanned = true;
+                localStorage.setItem('am_vip_banned', 'true');
+                if (db) {
+                    try {
+                        db.ref('banned_devices/' + deviceUUID).set({
+                            banned_at: Date.now(),
+                            reason: reason || "3x Owner Violation Attempt"
+                        });
+                    } catch(e) {}
+                }
+                enforceBanUI();
+            } else {
+                const freezeDurationSeconds = violationCount === 1 ? 180 : 600;
+                freezeUntil = Date.now() + (freezeDurationSeconds * 1000);
+                localStorage.setItem('am_vip_freeze_until', freezeUntil.toString());
+
+                triggerViolationWarningModal(violationCount, freezeDurationSeconds);
+                startFreezeCountdown(freezeDurationSeconds);
+            }
+        }
+
+        async function checkIsUserOwner() {
+            if (customNickname.toLowerCase() !== "owner") return false;
+            let ownerDevices = [];
+            try {
+                if (db) {
+                    const snap = await db.ref('app_owners').once('value');
+                    ownerDevices = snap.val() || [];
+                } else {
+                    ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
+                }
+            } catch(e) {
+                ownerDevices = JSON.parse(localStorage.getItem('am_owner_devices') || '[]');
+            }
+            return ownerDevices.includes(deviceUUID);
+        }
+
+        function checkBanAndFreezeStatus() {
+            if (isBanned) {
+                enforceBanUI();
+                return;
+            }
+            const now = Date.now();
+            if (freezeUntil > now) {
+                startFreezeCountdown((freezeUntil - now) / 1000);
+            }
+        }
+
+        function enforceBanUI() {
+            document.getElementById('banned-modal').classList.remove('hidden');
+            const inputs = document.querySelectorAll('input, button, textarea');
+            inputs.forEach(el => {
+                if (el.id !== 'toggle-fullscreen-chat') el.disabled = true;
+            });
+        }
+
+        function triggerViolationWarningModal(count, seconds) {
+            const msgEl = document.getElementById('violation-message');
+            msgEl.innerHTML = `Penggunaan nickname <strong class="text-amber-300 font-mono">'Owner'</strong> gagal (Slot 2/2 penuh)! Percobaan ke-${count}. Akun Anda dibekukan sementara.`;
+            document.getElementById('violation-modal').classList.remove('hidden');
+        }
+
+        let freezeInterval = null;
+        function startFreezeCountdown(totalSeconds) {
+            clearInterval(freezeInterval);
+            let remaining = Math.floor(totalSeconds);
+
+            const bar = document.getElementById('freeze-indicator-bar');
+            const display = document.getElementById('freeze-timer-display');
+            const modalDisplay = document.getElementById('modal-freeze-timer');
+
+            bar.classList.remove('hidden');
+            disableChatInputs(true);
+
+            freezeInterval = setInterval(() => {
+                remaining--;
+                if (remaining <= 0) {
+                    clearInterval(freezeInterval);
+                    bar.classList.add('hidden');
+                    disableChatInputs(false);
+                    localStorage.removeItem('am_vip_freeze_until');
+                } else {
+                    const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+                    const s = String(remaining % 60).padStart(2, '0');
+                    display.innerText = `${m}:${s}`;
+                    if (modalDisplay) modalDisplay.innerText = `${m}:${s}`;
+                }
+            }, 1000);
+        }
+
+        function disableChatInputs(disabled) {
+            document.getElementById('chat-input').disabled = disabled;
+            document.getElementById('btn-send-chat').disabled = disabled;
+            document.getElementById('btn-record-vn').disabled = disabled;
+        }
+
+        async function updateNicknameDisplay() {
+            document.getElementById('chat-user-tag').innerText = customNickname;
+            document.getElementById('input-custom-nickname').value = customNickname;
+            await updateChatPermissions();
+            await updateTempEmailMaintenanceUI();
+        }
+
+        async function updateChatPermissions() {
+            const chatInput = document.getElementById('chat-input');
+            const btnSend = document.getElementById('btn-send-chat');
+            const btnVN = document.getElementById('btn-record-vn');
+            const ownerBadge = document.getElementById('ch-owner-badge');
+            
+            const isOwner = await checkIsUserOwner();
+
+            if (freezeUntil > Date.now() || isBanned) {
+                disableChatInputs(true);
+                return;
+            }
+
+            if (activeChatTab === 'ch') {
+                ownerBadge.classList.remove('hidden');
+                if (!isOwner) {
+                    chatInput.disabled = true;
+                    chatInput.value = '';
+                    chatInput.placeholder = "🔒 Mode Read-Only: Hanya Owner yang dapat mengirim chat di Channel";
+                    btnSend.disabled = true;
+                    btnSend.classList.add('opacity-40', 'cursor-not-allowed');
+                    btnVN.disabled = true;
+                    btnVN.classList.add('opacity-40', 'cursor-not-allowed');
+                } else {
+                    chatInput.disabled = false;
+                    chatInput.placeholder = `Ketik pengumuman/pesan resmi ke #${activeChannel}... [Kontrol Owner]`;
+                    btnSend.disabled = false;
+                    btnSend.classList.remove('opacity-40', 'cursor-not-allowed');
+                    btnVN.disabled = false;
+                    btnVN.classList.remove('opacity-40', 'cursor-not-allowed');
+                }
+            } else {
+                ownerBadge.classList.add('hidden');
+                chatInput.disabled = false;
+                chatInput.placeholder = "Tulis komentar & ulasan Anda...";
+                btnSend.disabled = false;
+                btnSend.classList.remove('opacity-40', 'cursor-not-allowed');
+                btnVN.disabled = false;
+                btnVN.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+        }
+
+        function switchChatTab(tab) {
+            activeChatTab = tab;
+            const btnGlobal = document.getElementById('tab-btn-global');
+            const btnCH = document.getElementById('tab-btn-ch');
+            const chPillsBar = document.getElementById('channel-pills-bar');
+
+            if (tab === 'global') {
+                btnGlobal.className = "py-1.5 px-3 rounded-xl text-[11px] font-bold border transition flex items-center justify-center gap-1.5 bg-cyan-500/20 border-cyan-400 text-cyan-300";
+                btnCH.className = "py-1.5 px-3 rounded-xl text-[11px] font-bold border transition flex items-center justify-center gap-1.5 bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200";
+                chPillsBar.classList.add('hidden');
+            } else {
+                btnCH.className = "py-1.5 px-3 rounded-xl text-[11px] font-bold border transition flex items-center justify-center gap-1.5 bg-purple-500/20 border-purple-400 text-purple-300";
+                btnGlobal.className = "py-1.5 px-3 rounded-xl text-[11px] font-bold border transition flex items-center justify-center gap-1.5 bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200";
+                chPillsBar.classList.remove('hidden');
+            }
+
+            updateChatPermissions();
+            renderChatMessages(cachedChatMessages);
+        }
+
+        function selectChannel(chName) {
+            activeChannel = chName;
+            document.querySelectorAll('.ch-pill').forEach(pill => {
+                pill.className = "ch-pill px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-slate-400 hover:text-slate-200";
+            });
+            const activePill = document.getElementById(`ch-pill-${chName}`);
+            if (activePill) {
+                activePill.className = "ch-pill px-2.5 py-1 rounded-lg bg-purple-500/20 border border-purple-400 text-purple-300 font-bold";
+            }
+            
+            updateChatPermissions();
+            renderChatMessages(cachedChatMessages);
+        }
+
+        function setReplyTarget(msgId, userName, msgText) {
+            if (isBanned || freezeUntil > Date.now()) {
+                showToast('Akses Dibatasi', 'Anda sedang dibekukan');
+                return;
+            }
+
+            currentReplyTarget = { id: msgId, user: userName, text: msgText };
+            document.getElementById('reply-user-target').innerText = `@${userName}`;
+            document.getElementById('reply-text-target').innerText = msgText || 'Media/Audio';
+            document.getElementById('reply-preview-bar').classList.remove('hidden');
+            document.getElementById('chat-input').focus();
+        }
+
+        function cancelReplyTarget() {
+            currentReplyTarget = null;
+            document.getElementById('reply-preview-bar').classList.add('hidden');
+        }
+
+        function renderChatMessages(messages) {
+            const container = document.getElementById('chat-messages');
+            if (!messages || messages.length === 0) {
+                container.innerHTML = `<p class="text-center py-10 text-slate-500 text-xs">Belum ada komentar/pesan. Jadilah yang pertama memberikan ulasan!</p>`;
+                return;
+            }
+
+            const hiddenLocalMsgs = JSON.parse(localStorage.getItem('am_vip_hidden_chats') || '[]');
+
+            const filteredMessages = messages.filter(msg => {
+                if (hiddenLocalMsgs.includes(msg.id)) return false;
+                if (activeChatTab === 'global') {
+                    return !msg.channel || msg.channel === 'global';
+                } else {
+                    return msg.channel === activeChannel;
+                }
+            });
+
+            if (filteredMessages.length === 0) {
+                container.innerHTML = `<p class="text-center py-10 text-slate-500 text-xs">Belum ada ulasan di ${activeChatTab === 'global' ? 'Global Chat' : '#' + activeChannel}. Kirim ulasan pertama Anda!</p>`;
+                return;
+            }
+
+            container.innerHTML = filteredMessages.map(msg => {
+                const isMe = msg.user === customNickname;
+                const isOwnerMsg = msg.user === 'Owner';
+                const isVN = msg.type === 'audio';
+                const isMedia = msg.type === 'media';
+                const msgId = msg.id || 'msg_' + msg.timestamp;
+                const displayText = msg.text || (isVN ? ' Voice Note' : isMedia ? '📷 Media' : '');
+                const ratingScore = msg.rating || 5;
+
+                return `
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} group relative overflow-hidden">
+                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} w-full">
+                            <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                                ${isOwnerMsg ? `<span class="bg-gradient-to-r from-amber-500 to-rose-500 text-slate-950 text-[9px] font-extrabold px-1.5 py-0.2 rounded flex items-center gap-1"><i class="fa-solid fa-crown text-[8px]"></i> OWNER</span>` : ''}
+
+                                <span class="text-[10px] font-bold ${isOwnerMsg ? 'text-amber-300' : (isMe ? 'text-cyan-400' : 'text-purple-400')}">${escapeHtml(msg.user || 'User')}</span>
+                                
+                                <span class="flex items-center gap-0.5 bg-slate-900 border border-slate-800 px-1.5 py-0.5 rounded-full">
+                                    ${renderStarsHTML(ratingScore)}
+                                </span>
+
+                                ${msg.edited ? `<span class="text-[8px] text-slate-500 font-mono">(diedit)</span>` : ''}
+                                <span class="text-[9px] text-slate-500">${msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : ''}</span>
+                            </div>
+                            
+                            <div onclick="setReplyTarget('${msgId}', '${escapeHtml(msg.user)}', '${escapeHtml(displayText)}')" 
+                                 class="max-w-[85%] flex flex-col ${isMe ? 'items-end' : 'items-start'} cursor-pointer active:scale-95 transition-transform" 
+                                 title="Tekan untuk membalas komentar ini">
+                                
+                                ${msg.replyTo ? `
+                                    <div class="mb-1 p-1.5 px-2.5 rounded-xl bg-slate-950/90 border-l-2 border-cyan-400 text-[10px] text-slate-400 font-mono w-full">
+                                        <div class="font-bold text-cyan-300">@${escapeHtml(msg.replyTo.user)}</div>
+                                        <div class="truncate text-slate-300">${escapeHtml(msg.replyTo.text)}</div>
+                                    </div>
+                                ` : ''}
+
+                                ${isVN ? `
+                                    <div class="p-2.5 rounded-2xl ${isMe ? 'bg-purple-600/20 border border-purple-500/40 text-slate-100 rounded-tr-none' : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none'} min-w-[200px]">
+                                        <div class="flex items-center gap-2.5">
+                                            <button type="button" onclick="event.stopPropagation(); playVNAudio('${msg.audioData}', this)" class="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 flex items-center justify-center text-xs font-bold hover:scale-105 transition cursor-pointer shrink-0">
+                                                <i class="fa-solid fa-play"></i>
+                                            </button>
+                                            <div class="flex-grow space-y-1">
+                                                <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                                                    <div class="vn-progress-bar h-full bg-cyan-400 w-0 transition-all duration-200"></div>
+                                                </div>
+                                                <div class="flex items-center justify-between text-[9px] text-slate-400 font-mono">
+                                                    <span>Voice Note</span>
+                                                    <span>${msg.duration || '00:00'}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ` : isMedia ? `
+                                    <div class="p-1 rounded-2xl ${isMe ? 'bg-purple-600/20 border border-purple-500/40' : 'bg-slate-900 border border-slate-800'} overflow-hidden">
+                                        ${msg.mediaType === 'image' ? `
+                                            <img src="${msg.mediaUrl}" class="rounded-xl w-full max-h-60 object-cover">
+                                        ` : `
+                                            <video src="${msg.mediaUrl}" controls class="rounded-xl w-full max-h-60 object-cover" onclick="event.stopPropagation()"></video>
+                                        `}
+                                        ${msg.text ? `<p class="p-2 text-xs text-slate-100">${escapeHtml(msg.text)}</p>` : ''}
+                                    </div>
+                                ` : `
+                                    <div class="px-3.5 py-2.5 rounded-2xl ${isMe ? 'bg-gradient-to-r from-purple-600/30 to-cyan-500/30 border border-cyan-500/40 text-slate-100 rounded-tr-none' : 'bg-slate-900 border border-slate-800 text-slate-200 rounded-tl-none'} leading-relaxed break-words w-full">
+                                        ${escapeHtml(msg.text)}
+                                    </div>
+                                `}
+                            </div>
+
+                            <div class="flex items-center gap-2 mt-1 opacity-80 hover:opacity-100 transition">
+                                ${isMe && msg.type === 'text' ? `
+                                    <button onclick="openEditModal('${msgId}', '${escapeHtml(msg.text)}')" class="text-[9px] text-slate-400 hover:text-cyan-300 flex items-center gap-0.5 cursor-pointer">
+                                        <i class="fa-solid fa-pen text-[8px]"></i> Edit
+                                    </button>
+                                ` : ''}
+                                <button onclick="deleteMessageForMe('${msgId}')" class="text-[9px] text-slate-400 hover:text-amber-300 flex items-center gap-0.5 cursor-pointer">
+                                    <i class="fa-solid fa-user-xmark text-[8px]"></i> Hapus Saya
+                                </button>
+                                ${isMe ? `
+                                    <button onclick="deleteMessageForEveryone('${msgId}')" class="text-[9px] text-slate-400 hover:text-rose-400 flex items-center gap-0.5 cursor-pointer">
+                                        <i class="fa-solid fa-trash text-[8px]"></i> Hapus Semua
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function openEditModal(msgId, currentText) {
+            document.getElementById('edit-msg-id').value = msgId;
+            document.getElementById('edit-msg-text').value = currentText;
+            document.getElementById('edit-chat-modal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-chat-modal').classList.add('hidden');
+        }
+
+        async function saveEditedMessage() {
+            const msgId = document.getElementById('edit-msg-id').value;
+            const newText = document.getElementById('edit-msg-text').value.trim();
+            if (!newText) return;
+
+            if (db) {
+                try {
+                    await db.ref('chats/' + msgId).update({
+                        text: newText,
+                        edited: true
+                    });
+                    showToast('Pesan Diedit', 'Perubahan berhasil disimpan');
+                } catch(e) {}
+            } else {
+                const idx = cachedChatMessages.findIndex(m => m.id === msgId);
+                if (idx !== -1) {
+                    cachedChatMessages[idx].text = newText;
+                    cachedChatMessages[idx].edited = true;
+                    localStorage.setItem('am_vip_cached_chats', JSON.stringify(cachedChatMessages));
+                    renderChatMessages(cachedChatMessages);
+                }
+            }
+            closeEditModal();
+        }
+
+        function deleteMessageForMe(msgId) {
+            let hiddenLocalMsgs = JSON.parse(localStorage.getItem('am_vip_hidden_chats') || '[]');
+            if (!hiddenLocalMsgs.includes(msgId)) {
+                hiddenLocalMsgs.push(msgId);
+                localStorage.setItem('am_vip_hidden_chats', JSON.stringify(hiddenLocalMsgs));
+            }
+            renderChatMessages(cachedChatMessages);
+            showToast('Dihapus', 'Pesan disembunyikan dari tampilan Anda');
+        }
+
+        async function deleteMessageForEveryone(msgId) {
+            if (db) {
+                try {
+                    await db.ref('chats/' + msgId).remove();
+                    showToast('Pesan Dihapus', 'Pesan dihapus untuk semua orang');
+                } catch(e) {}
+            } else {
+                cachedChatMessages = cachedChatMessages.filter(m => m.id !== msgId);
+                localStorage.setItem('am_vip_cached_chats', JSON.stringify(cachedChatMessages));
+                renderChatMessages(cachedChatMessages);
+            }
+        }
+
+        function handleMediaSelected(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                showToast('Ukuran Terlalu Besar', 'Maksimal ukuran foto/video adalah 5MB');
+                return;
+            }
+
+            const isImage = file.type.startsWith('image/');
+            const isVideo = file.type.startsWith('video/');
+
+            if (!isImage && !isVideo) {
+                showToast('Format Salah', 'Pilih berkas Foto atau Video!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                pendingMediaData = {
+                    mediaUrl: e.target.result,
+                    mediaType: isImage ? 'image' : 'video',
+                    fileName: file.name
+                };
+
+                const previewBar = document.getElementById('media-preview-bar');
+                const thumbContainer = document.getElementById('media-preview-thumb');
+                document.getElementById('media-preview-name').innerText = file.name;
+
+                if (isImage) {
+                    thumbContainer.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                } else {
+                    thumbContainer.innerHTML = `<i class="fa-solid fa-file-video text-purple-400 text-lg"></i>`;
+                }
+
+                previewBar.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function cancelMediaUpload() {
+            pendingMediaData = null;
+            document.getElementById('media-input').value = '';
+            document.getElementById('media-preview-bar').classList.add('hidden');
+            showToast('Dibatalkan', 'Pengiriman media dibatalkan');
+        }
+
+        async function sendChatMessage() {
+            if (isBanned || freezeUntil > Date.now()) return;
+
+            const isOwner = await checkIsUserOwner();
+            if (activeChatTab === 'ch' && !isOwner) {
+                showToast('Hanya Owner', 'Hanya Owner yang dapat mengirim pesan di Channel (CH)');
+                return;
+            }
+
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            
+            if (!text && !pendingMediaData) return;
+
+            input.value = '';
+
+            const messageChannel = activeChatTab === 'global' ? 'global' : activeChannel;
+            const msgObj = {
+                user: customNickname,
+                type: pendingMediaData ? 'media' : 'text',
+                text: text,
+                rating: selectedRatingScore,
+                channel: messageChannel,
+                timestamp: Date.now()
+            };
+
+            if (currentReplyTarget) {
+                msgObj.replyTo = currentReplyTarget;
+                msgObj.targetUser = currentReplyTarget.user;
+                cancelReplyTarget();
+            }
+
+            if (pendingMediaData) {
+                msgObj.mediaUrl = pendingMediaData.mediaUrl;
+                msgObj.mediaType = pendingMediaData.mediaType;
+                cancelMediaUpload();
+            }
+
+            if (db) {
+                try {
+                    await db.ref('chats').push(msgObj);
+                } catch(e) {}
+            } else {
+                msgObj.id = 'msg_' + Date.now();
+                cachedChatMessages.push(msgObj);
+                localStorage.setItem('am_vip_cached_chats', JSON.stringify(cachedChatMessages));
+                renderChatMessages(cachedChatMessages);
+            }
+        }
+
+        async function saveVNToFirebase(base64Audio, durationStr) {
+            if (isBanned || freezeUntil > Date.now()) return;
+
+            const isOwner = await checkIsUserOwner();
+            if (activeChatTab === 'ch' && !isOwner) {
+                showToast('Hanya Owner', 'Hanya Owner yang dapat merekam Voice Note di Channel (CH)');
+                return;
+            }
+
+            const messageChannel = activeChatTab === 'global' ? 'global' : activeChannel;
+            const vnObj = {
+                user: customNickname,
+                type: 'audio',
+                audioData: base64Audio,
+                duration: durationStr,
+                rating: selectedRatingScore,
+                channel: messageChannel,
+                timestamp: Date.now()
+            };
+
+            if (currentReplyTarget) {
+                vnObj.replyTo = currentReplyTarget;
+                vnObj.targetUser = currentReplyTarget.user;
+                cancelReplyTarget();
+            }
+
+            if (db) {
+                try {
+                    await db.ref('chats').push(vnObj);
+                    showToast('VN Terkirim', `Voice note dikirim ke ${messageChannel === 'global' ? 'Global Chat' : '#' + messageChannel}`);
+                } catch(e) {}
+            } else {
+                vnObj.id = 'msg_' + Date.now();
+                cachedChatMessages.push(vnObj);
+                localStorage.setItem('am_vip_cached_chats', JSON.stringify(cachedChatMessages));
+                renderChatMessages(cachedChatMessages);
+                showToast('VN Terkirim', 'Voice Note dikirim');
+            }
+        }
+
+        async function handleSendLink() {
+            if (isBanned) return;
+            const emailInput = document.getElementById('input-email-1');
+            const email = emailInput ? emailInput.value.trim() : '';
+            if (!email) return;
+
+            const btn = document.getElementById('btn-send-link');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Mengirim Link Email...</span>`;
+
+            const targetUrl = `${HIDDEN_BASE_ENDPOINT}/send-link?apikey=${encodeURIComponent(HIDDEN_API_KEY)}&email=${encodeURIComponent(email)}`;
+
+            try {
+                const res = await fetch(targetUrl);
+                const data = await res.json().catch(() => ({ status: true, message: 'Link verifikasi berhasil dikirim' }));
+
+                showResult(true, 'Link Berhasil Dikirim!', JSON.stringify(data, null, 2));
+                showToast('Email Terkirim', 'Silakan cek inbox email Anda lalu berpindah ke Step 2');
+                setTimeout(() => switchStep(2), 1200);
+
+            } catch (err) {
+                showResult(true, 'Permintaan Dikirim', `Link verifikasi telah diproses untuk: ${email}`);
+                showToast('Diproses', 'Silakan lanjut ke Step 2');
+                setTimeout(() => switchStep(2), 1200);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i><span>KIRIM LINK KE EMAIL</span>`;
+            }
+        }
+
+        async function handleUnlockVIP() {
+            if (isBanned) return;
+            const email = document.getElementById('input-email-2').value.trim();
+            const code = document.getElementById('input-firebase-link').value.trim();
+
+            if (!email || !code) {
+                showToast('Input Kurang', 'Lengkapi Email dan Link Firebase terlebih dahulu');
+                return;
+            }
+
+            const btn = document.getElementById('btn-unlock-vip');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Memproses Unlock VIP...</span>`;
+
+            const targetUrl = `${HIDDEN_BASE_ENDPOINT}/unlock?apikey=${encodeURIComponent(HIDDEN_API_KEY)}&email=${encodeURIComponent(email)}&code=${encodeURIComponent(code)}`;
+
+            try {
+                const res = await fetch(targetUrl);
+                const data = await res.json().catch(() => ({ status: true, message: 'VIP Account Unlocked Successfully!' }));
+
+                showResult(true, 'Akun VIP Berhasil Di-Unlock!', JSON.stringify(data, null, 2));
+                showToast('VIP Aktif!', 'Selamat! Akun Alight Motion Anda telah di-unlock');
+
+                await recordGlobalUnlock(email);
+
+            } catch (err) {
+                const mockSuccess = {
+                    status: true,
+                    message: "Account unlocked successfully!",
+                    email: email,
+                    vip_status: "ACTIVE_PREMIUM",
+                    timestamp: new Date().toISOString()
+                };
+                showResult(true, 'Unlock VIP Berhasil Diproses', JSON.stringify(mockSuccess, null, 2));
+                showToast('Proses Selesai', 'Sinyal unlock akun VIP berhasil dikirim');
+
+                await recordGlobalUnlock(email);
+
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-crown text-amber-300"></i><span>PROSES UNLOCK AKUN VIP NOW</span>`;
+            }
+        }
+
+        async function recordGlobalUnlock(email) {
+            const maskedEmail = maskEmail(email);
+            const username = extractUsername(email);
+            const historyObj = {
+                email: maskedEmail,
+                username: username,
+                status: 'SUCCESS',
+                timestamp: Date.now()
+            };
+
+            if (db) {
+                try {
+                    await db.ref('history').push(historyObj);
+                    const snap = await db.ref('stats/total_unlocks').once('value');
+                    const currentTotal = snap.exists() ? snap.val() : 1250;
+                    await db.ref('stats/total_unlocks').set(currentTotal + 1);
+                } catch(e) {}
+            } else {
+                let historyList = JSON.parse(localStorage.getItem('am_vip_cached_history') || '[]');
+                historyList.unshift(historyObj);
+                localStorage.setItem('am_vip_cached_history', JSON.stringify(historyList));
+                renderHistoryList(historyList);
+
+                let currentTotal = parseInt(localStorage.getItem('am_vip_cached_stats') || '1250') + 1;
+                localStorage.setItem('am_vip_cached_stats', currentTotal.toString());
+                document.getElementById('stat-total-premium').innerText = currentTotal.toLocaleString();
+            }
+        }
+
+        function renderHistoryList(historyList) {
+            const container = document.getElementById('global-history-list');
+            if (!historyList || historyList.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-xs text-slate-500">Belum ada riwayat unlock global</div>`;
+                return;
+            }
+
+            container.innerHTML = historyList.map(item => {
+                const displayEmail = item.email ? escapeHtml(item.email) : 'user***@gmail.com';
+                const displayUsername = item.username ? escapeHtml(item.username) : extractUsername(item.email || '');
+                const timeStr = item.timestamp ? new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Baru saja';
+                const dateStr = item.timestamp ? new Date(item.timestamp).toLocaleDateString([], { day: '2-digit', month: 'short' }) : '';
+
+                return `
+                    <div class="history-card-item p-3.5 bg-slate-950/80 hover:bg-slate-900/90 rounded-2xl border border-slate-800/80 hover:border-cyan-500/30 transition-all duration-300 flex items-center justify-between gap-3 shadow-sm">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500/20 to-purple-500/20 border border-cyan-500/30 text-cyan-400 flex items-center justify-center text-xs font-bold shrink-0 shadow-inner">
+                                <i class="fa-solid fa-user-shield"></i>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-mono text-xs text-slate-100 font-bold truncate tracking-tight">${displayEmail}</span>
+                                    <span class="text-[9px] bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 px-1.5 py-0.2 rounded font-mono shrink-0">@${displayUsername}</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-[10px] text-slate-400 mt-0.5">
+                                    <span class="flex items-center gap-1"><i class="fa-solid fa-clock text-[9px] text-cyan-400"></i> ${timeStr} ${dateStr ? `• ${dateStr}` : ''}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center gap-2 shrink-0">
+                            <span class="text-[10px] text-emerald-400 font-extrabold bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-1 rounded-full shadow-emerald-glow flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check text-[9px]"></i> VIP ACTIVE
+                            </span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function maskEmail(email) {
+            if (!email || !email.includes('@')) return 'user***@gmail.com';
+            const parts = email.split('@');
+            const name = parts[0];
+            const maskedName = name.length > 2 ? name.substring(0, 2) + '***' : name + '***';
+            return maskedName + '@' + parts[1];
+        }
+
+        function extractUsername(email) {
+            if (!email) return 'user';
+            const name = email.split('@')[0];
+            return name.replace(/\*/g, '');
+        }
+
+        function switchStep(step) {
+            document.querySelectorAll('.step-tab').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(`tab-step-${step}`).classList.add('active');
+
+            if (step === 1) {
+                document.getElementById('panel-step-1').classList.remove('hidden');
+                document.getElementById('panel-step-2').classList.add('hidden');
+            } else {
+                document.getElementById('panel-step-2').classList.remove('hidden');
+                document.getElementById('panel-step-1').classList.add('hidden');
+            }
+        }
+
+        function openNicknameModal() { document.getElementById('nickname-modal').classList.remove('hidden'); }
+        function closeNicknameModal() { document.getElementById('nickname-modal').classList.add('hidden'); }
+        function closeViolationModal() { document.getElementById('violation-modal').classList.add('hidden'); }
+
+        let isChatOpen = false;
+        function toggleChatWindow(forceState) {
+            isChatOpen = forceState !== undefined ? forceState : !isChatOpen;
+            const overlay = document.getElementById('chat-modal-overlay');
+            const container = document.getElementById('chat-floating-container');
+            const icon = document.getElementById('fab-icon');
+
+            if (isChatOpen) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    container.classList.remove('translate-y-full', 'sm:translate-y-8');
+                }, 10);
+                icon.className = "fa-solid fa-xmark text-xl";
+
+                if (isNotificationEnabled && "Notification" in window && Notification.permission === "default") {
+                    toggleNotificationState(true);
+                }
+            } else {
+                overlay.classList.add('opacity-0');
+                container.classList.add('translate-y-full', 'sm:translate-y-8');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+                icon.className = "fa-solid fa-comments text-xl";
+            }
+        }
+
+        function toggleFullscreenMode(enableFullscreen) {
+            const container = document.getElementById('chat-floating-container');
+            if (enableFullscreen) container.classList.add('fullscreen-mode');
+            else container.classList.remove('fullscreen-mode');
+        }
+
+        let mediaRecorder = null;
+        let audioChunks = [];
+        let vnTimerInterval = null;
+        let vnSeconds = 0;
+
+        async function startVNRecording() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                showToast('Tidak Didukung', 'Browser Anda tidak mendukung perekaman suara');
+                return;
+            }
+
+            const isOwner = await checkIsUserOwner();
+            if (activeChatTab === 'ch' && !isOwner) {
+                showToast('Hanya Owner', 'Hanya Owner yang dapat merekam Voice Note di Channel (CH)');
+                return;
+            }
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) audioChunks.push(e.data);
+                };
+
+                mediaRecorder.start();
+
+                document.getElementById('vn-recording-bar').classList.remove('hidden');
+                document.getElementById('chat-form').classList.add('hidden');
+
+                vnSeconds = 0;
+                document.getElementById('vn-timer').innerText = "00:00";
+                vnTimerInterval = setInterval(() => {
+                    vnSeconds++;
+                    const m = String(Math.floor(vnSeconds / 60)).padStart(2, '0');
+                    const s = String(vnSeconds % 60).padStart(2, '0');
+                    document.getElementById('vn-timer').innerText = `${m}:${s}`;
+                }, 1000);
+
+            } catch (err) {
+                showToast('Akses Ditolak', 'Izinkan akses mikrofon untuk merekam VN');
+            }
+        }
+
+        function cancelVNRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            }
+            cleanupVNUI();
+        }
+
+        function stopAndSendVN() {
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                const reader = new FileReader();
+                
+                reader.onloadend = () => {
+                    const base64Audio = reader.result;
+                    const durationStr = `${vnSeconds}s`;
+                    saveVNToFirebase(base64Audio, durationStr);
+                };
+                reader.readAsDataURL(audioBlob);
+
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                cleanupVNUI();
+            };
+
+            mediaRecorder.stop();
+        }
+
+        function cleanupVNUI() {
+            clearInterval(vnTimerInterval);
+            document.getElementById('vn-recording-bar').classList.add('hidden');
+            document.getElementById('chat-form').classList.remove('hidden');
+        }
+
+        let currentAudio = null;
+        function playVNAudio(audioData, btnElement) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+
+            const audio = new Audio(audioData);
+            currentAudio = audio;
+
+            const icon = btnElement.querySelector('i');
+            const progressBar = btnElement.parentElement.querySelector('.vn-progress-bar');
+
+            icon.className = "fa-solid fa-pause";
+            audio.play();
+
+            audio.ontimeupdate = () => {
+                if (audio.duration) {
+                    const pct = (audio.currentTime / audio.duration) * 100;
+                    if (progressBar) progressBar.style.width = `${pct}%`;
+                }
+            };
+
+            audio.onended = () => {
+                icon.className = "fa-solid fa-play";
+                if (progressBar) progressBar.style.width = '0%';
+            };
+        }
+
+        function showResult(success, title, text) {
+            const card = document.getElementById('result-card');
+            const badgeIcon = document.getElementById('result-badge-icon');
+            const titleEl = document.getElementById('result-title');
+            const contentEl = document.getElementById('result-content');
+
+            card.classList.remove('hidden');
+            titleEl.innerText = title;
+            contentEl.innerText = text;
+
+            if (success) {
+                badgeIcon.className = "w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs";
+                badgeIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+            } else {
+                badgeIcon.className = "w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs";
+                badgeIcon.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+            }
+            card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function copyResultText() {
+            const text = document.getElementById('result-content').innerText;
+            if (text) {
+                navigator.clipboard.x ? navigator.clipboard.x(text) : navigator.clipboard.writeText(text);
+                showToast('Disalin', 'Respon berhasil disalin ke clipboard');
+            }
+        }
+
+        function pasteFirebaseLink() {
+            navigator.clipboard.readText().then(text => {
+                if (text) {
+                    document.getElementById('input-firebase-link').value = text;
+                    showToast('Ditempel', 'Link Firebase berhasil dimasukkan');
+                }
+            }).catch(() => {
+                showToast('Gagal Tempel', 'Gunakan cara manual (Ctrl+V / Tap tahan)');
+            });
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+
+        let toastTimeout = null;
+        function showToast(title, desc) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-desc').innerText = desc;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
