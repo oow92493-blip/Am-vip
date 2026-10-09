@@ -133,12 +133,19 @@
                 </div>
             </div>
 
-            <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-full shadow-emerald-glow">
-                <span class="relative flex h-2.5 w-2.5">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-                </span>
-                <span class="text-xs font-bold text-emerald-400 tracking-wide">Server Online</span>
+            <div class="flex items-center gap-3">
+                <button onclick="toggleQrisModal(true)" class="flex items-center gap-2 bg-gradient-to-r from-amber-500/20 to-purple-500/20 hover:from-amber-500/30 hover:to-purple-500/30 border border-amber-500/40 px-3.5 py-1.5 rounded-full shadow-purple-glow transition cursor-pointer" title="Donasi QRIS">
+                    <i class="fa-solid fa-qrcode text-amber-400 text-xs animate-pulse"></i>
+                    <span class="text-xs font-bold text-amber-300 tracking-wide hidden sm:inline">Donasi</span>
+                </button>
+
+                <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3.5 py-1.5 rounded-full shadow-emerald-glow">
+                    <span class="relative flex h-2.5 w-2.5">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                    </span>
+                    <span class="text-xs font-bold text-emerald-400 tracking-wide">Server Online</span>
+                </div>
             </div>
         </div>
     </header>
@@ -286,16 +293,47 @@
 
     </main>
 
-    <!-- FAB Buttons (Temp Email + Chat Global) di Pojok Kanan Bawah -->
+    <!-- Modal QRIS Donasi -->
+    <div id="qris-modal-overlay" class="fixed inset-0 bg-slate-950/75 backdrop-blur-md z-50 hidden opacity-0 transition-opacity duration-300 flex items-center justify-center p-4">
+        <div id="qris-modal-container" class="glass-card w-full max-w-lg rounded-3xl border border-amber-500/40 flex flex-col shadow-2xl overflow-hidden transform scale-95 transition-transform duration-300 p-6 space-y-5 text-center relative">
+            
+            <button onclick="toggleQrisModal(false)" class="absolute top-4 right-4 w-8 h-8 rounded-xl bg-slate-900 border border-slate-800 hover:bg-rose-500/20 hover:border-rose-500/40 text-slate-400 hover:text-rose-400 flex items-center justify-center text-xs transition cursor-pointer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="space-y-1">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-xl mx-auto shadow-purple-glow">
+                    <i class="fa-solid fa-qrcode"></i>
+                </div>
+                <h3 class="text-base font-extrabold text-slate-100 tracking-tight pt-1">Donasi QRIS</h3>
+                <p class="text-xs text-slate-400">Dukung perkembangan web ini</p>
+            </div>
+
+            <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800/80 shadow-inner flex items-center justify-center">
+                <!-- Ukuran gambar QRIS diperbesar secara maksimal -->
+                <img id="qris-image-src" src="https://cdn.phototourl.com/member/2026-10-09-4d4c1517-76c0-4e81-89e9-990d96a81fc5.jpg" alt="QRIS Donasi" class="w-full h-auto max-w-lg max-h-[500px] object-contain rounded-xl border border-slate-800">
+            </div>
+
+            <p class="text-xs text-slate-300 leading-relaxed font-sans px-1">
+                "kalo mau donasi saya Terima berapapun donasi kalian sangat berarti bagi saya,terimakasih 🙏"
+            </p>
+
+            <div class="pt-1">
+                <button onclick="downloadQrisImage()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-purple-600 hover:from-amber-400 hover:to-purple-500 text-slate-950 font-extrabold text-xs rounded-xl shadow-vip-glow flex items-center justify-center gap-2 transition cursor-pointer">
+                    <i class="fa-solid fa-download"></i> Download QRIS
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAB Buttons -->
     <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
-        <!-- Tombol Temp Email Generator -->
         <button onclick="toggleTempEmailWindow()" class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-vip-glow hover:scale-105 active:scale-95 transition duration-300 cursor-pointer" title="Generator Temp Email Server Online">
             <i class="fa-solid fa-envelope-open-text text-xl"></i>
             <span id="temp-email-badge" class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-slate-950 hidden"></span>
             <span class="absolute inset-0 rounded-full border-2 border-cyan-400/50 animate-pulse-ring pointer-events-none"></span>
         </button>
 
-        <!-- FAB Button Chat Global -->
         <button id="btn-fab-chat" onclick="toggleChatWindow()" class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-cyan-500 text-white flex items-center justify-center shadow-fab-glow hover:scale-105 active:scale-95 transition duration-300 cursor-pointer">
             <i id="fab-icon" class="fa-solid fa-comments text-xl"></i>
             <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950"></span>
@@ -307,7 +345,6 @@
     <div id="temp-email-modal-overlay" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden opacity-0 transition-opacity duration-300 flex items-end sm:items-center justify-center sm:p-4">
         <div id="temp-email-container" class="chat-floating-window glass-card w-full sm:max-w-md h-[85vh] sm:h-[620px] rounded-t-3xl sm:rounded-3xl border border-cyan-500/40 flex flex-col shadow-2xl overflow-hidden transform translate-y-full sm:translate-y-8 transition-transform duration-300">
             
-            <!-- Header Temp Email dengan Desain Premium & Kontrol Owner Maintenance -->
             <div class="flex items-center justify-between p-4 border-b border-slate-800/80 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
                 <div class="flex items-center gap-3">
                     <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 text-cyan-300 flex items-center justify-center text-sm border border-cyan-500/30 shadow-vip-glow">
@@ -322,7 +359,6 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <!-- Tombol Buka/Tutup Maintenance Khusus Owner -->
                     <div id="owner-maintenance-control" class="hidden">
                         <button id="btn-toggle-maintenance" onclick="toggleTempEmailMaintenance()" class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition flex items-center gap-1 cursor-pointer bg-slate-900 border-slate-700 text-slate-300 hover:border-cyan-400">
                             <i class="fa-solid fa-wrench text-[9px]"></i> <span id="maintenance-btn-text">Maintenance: Off</span>
@@ -335,9 +371,7 @@
                 </div>
             </div>
 
-            <!-- Konten Temp Email (Normal) -->
             <div id="temp-email-active-content" class="p-4 flex-grow overflow-y-auto space-y-4 text-xs">
-                <!-- Box Alamat Email -->
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-slate-300 flex items-center justify-between">
                         <span>Alamat Temp Email Anda</span>
@@ -351,7 +385,6 @@
                     </div>
                 </div>
 
-                <!-- Custom Nama / Acak & Aksi -->
                 <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800/80 space-y-3 shadow-sm">
                     <div class="space-y-1">
                         <label class="text-[10px] font-semibold text-slate-400">Kustom Nama Depan</label>
@@ -369,7 +402,6 @@
                     </div>
                 </div>
 
-                <!-- Live Inbox / Notifikasi Masuk -->
                 <div class="space-y-2 pt-1">
                     <div class="flex items-center justify-between">
                         <span class="font-bold text-slate-200 flex items-center gap-1.5">
@@ -386,7 +418,6 @@
                 </div>
             </div>
 
-            <!-- Tampilan Maintenance Khusus User Lain (Terkunci) -->
             <div id="temp-email-maintenance-content" class="hidden flex-grow flex flex-col items-center justify-center p-6 text-center space-y-4 my-auto">
                 <div class="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-3xl shadow-lg animate-pulse">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
@@ -415,7 +446,6 @@
         
         <div id="chat-floating-container" class="chat-floating-window glass-card w-full sm:max-w-md h-[88vh] sm:h-[620px] rounded-t-3xl sm:rounded-3xl border border-purple-500/30 flex flex-col shadow-2xl overflow-hidden transform translate-y-full sm:translate-y-8 transition-transform duration-300">
             
-            <!-- Chat Header -->
             <div class="flex items-center justify-between p-3.5 border-b border-slate-800/80 bg-slate-950/70">
                 <div class="flex items-center gap-2">
                     <div class="w-8 h-8 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xs border border-purple-500/30">
@@ -454,7 +484,6 @@
                 </div>
             </div>
 
-            <!-- Chat Tab Bar -->
             <div class="px-3 pt-2 pb-1 bg-slate-950/90 border-b border-slate-800/80 flex items-center justify-between gap-2">
                 <div class="grid grid-cols-2 gap-1.5 w-full">
                     <button onclick="switchChatTab('global')" id="tab-btn-global" class="py-1.5 px-3 rounded-xl text-[11px] font-bold border transition flex items-center justify-center gap-1.5 bg-cyan-500/20 border-cyan-400 text-cyan-300">
@@ -486,7 +515,6 @@
                 <span id="freeze-timer-display" class="font-bold text-amber-200">00:00</span>
             </div>
 
-            <!-- Chat Message Scroll Container -->
             <div id="chat-messages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs">
                 <div class="text-center py-10 text-slate-500 text-xs animate-pulse">Menghubungkan ke Chat Network...</div>
             </div>
@@ -531,9 +559,7 @@
                 </div>
             </div>
 
-            <!-- Chat & Rating Form Bar -->
             <div class="p-2 bg-slate-950 border-t border-slate-800/80 flex flex-col gap-2">
-                <!-- Select Rating Stars -->
                 <div class="flex items-center justify-between px-2 pt-1">
                     <span class="text-[10px] font-semibold text-slate-400">Beri Rating:</span>
                     <div id="rating-star-picker" class="flex items-center gap-1 text-amber-400 text-xs">
@@ -752,7 +778,51 @@
             }
         });
 
-        // --- TEMP EMAIL GENERATOR & SERVER INBOX LOGIC ---
+        function toggleQrisModal(open) {
+            const overlay = document.getElementById('qris-modal-overlay');
+            const container = document.getElementById('qris-modal-container');
+            if (open) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    container.classList.remove('scale-95');
+                    container.classList.add('scale-100');
+                }, 10);
+            } else {
+                overlay.classList.add('opacity-0');
+                container.classList.remove('scale-100');
+                container.classList.add('scale-95');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        async function downloadQrisImage() {
+            const imgEl = document.getElementById('qris-image-src');
+            try {
+                showToast('Mengunduh...', 'Menyiapkan file QRIS donasi');
+                const response = await fetch(imgEl.src);
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = 'QRIS-Donasi-AlightMotion.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+                showToast('Berhasil', 'QRIS donasi berhasil diunduh');
+            } catch (e) {
+                const link = document.createElement('a');
+                link.href = imgEl.src;
+                link.target = '_blank';
+                link.download = 'QRIS-Donasi.png';
+                link.click();
+                showToast('Berhasil', 'Membuka tautan QRIS');
+            }
+        }
+
         const TEMP_DOMAINS = ['1secmail.com', '1secmail.org', '1secmail.net', 'esiix.com', 'xojxe.com'];
 
         function initTempEmailSystem() {
@@ -849,11 +919,6 @@
         }
 
         async function toggleTempEmailWindow(forceState) {
-            const isOwner = await checkIsUserOwner();
-            if (!isOwner && isTempEmailMaintenance && (forceState === undefined || forceState === true)) {
-                // Tetap boleh buka modalnya agar user lain bisa melihat tampilan "Sedang Maintenance"
-            }
-
             const overlay = document.getElementById('temp-email-modal-overlay');
             const container = document.getElementById('temp-email-container');
             const isHidden = overlay.classList.contains('hidden');
@@ -958,7 +1023,6 @@
                 `;
             }).join('');
         }
-        // -----------------------------------------------------
 
         function setRatingScore(score) {
             selectedRatingScore = score;
@@ -2052,7 +2116,7 @@
             }
         }
 
-                function showResult(success, title, body) {
+        function showResult(success, title, body) {
             const card = document.getElementById('result-card');
             const icon = document.getElementById('result-badge-icon');
             const titleEl = document.getElementById('result-title');
