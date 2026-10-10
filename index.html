@@ -306,12 +306,11 @@
                     <i class="fa-solid fa-qrcode"></i>
                 </div>
                 <h3 class="text-base font-extrabold text-slate-100 tracking-tight pt-1">Donasi QRIS</h3>
-                <p class="text-xs text-slate-400">Dukung perkembangan web ini</p>
+                <p class="text-xs text-slate-400">se ikhlas nya</p>
             </div>
 
             <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800/80 shadow-inner flex items-center justify-center">
-                <!-- Ukuran gambar QRIS diperbesar secara maksimal -->
-                <img id="qris-image-src" src="https://cdn.phototourl.com/member/2026-10-09-4d4c1517-76c0-4e81-89e9-990d96a81fc5.jpg" alt="QRIS Donasi" class="w-full h-auto max-w-lg max-h-[500px] object-contain rounded-xl border border-slate-800">
+                <img id="qris-image-src" src="https://cdn.phototourl.com/member/2026-10-10-8551d47a-8395-42a6-8cb9-4be5e4f90ad0.jpg" alt="QRIS Donasi" class="w-full h-auto max-w-lg max-h-[500px] object-contain rounded-xl border border-slate-800">
             </div>
 
             <p class="text-xs text-slate-300 leading-relaxed font-sans px-1">
@@ -328,6 +327,13 @@
 
     <!-- FAB Buttons -->
     <div class="fixed bottom-6 right-6 z-50 flex items-center gap-3">
+        <!-- AI Chat Bot Button -->
+        <button onclick="toggleAiChatWindow()" class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-emerald-500 via-teal-600 to-cyan-600 text-white flex items-center justify-center shadow-emerald-glow hover:scale-105 active:scale-95 transition duration-300 cursor-pointer" title="AI Assistant">
+            <i class="fa-solid fa-robot text-xl"></i>
+            <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-cyan-400 border-2 border-slate-950"></span>
+            <span class="absolute inset-0 rounded-full border-2 border-emerald-400/50 animate-pulse-ring pointer-events-none"></span>
+        </button>
+
         <button onclick="toggleTempEmailWindow()" class="relative w-14 h-14 rounded-full bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-vip-glow hover:scale-105 active:scale-95 transition duration-300 cursor-pointer" title="Generator Temp Email Server Online">
             <i class="fa-solid fa-envelope-open-text text-xl"></i>
             <span id="temp-email-badge" class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-slate-950 hidden"></span>
@@ -339,6 +345,53 @@
             <span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-slate-950"></span>
             <span class="absolute inset-0 rounded-full border-2 border-cyan-400/50 animate-pulse-ring pointer-events-none"></span>
         </button>
+    </div>
+
+    <!-- Modal Window AI Chat Bot (DeepSeek V4 Flash) -->
+    <div id="ai-chat-modal-overlay" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden opacity-0 transition-opacity duration-300 flex items-end sm:items-center justify-center sm:p-4">
+        <div id="ai-chat-container" class="chat-floating-window glass-card w-full sm:max-w-md h-[88vh] sm:h-[620px] rounded-t-3xl sm:rounded-3xl border border-emerald-500/40 flex flex-col shadow-2xl overflow-hidden transform translate-y-full sm:translate-y-8 transition-transform duration-300">
+            
+            <div class="flex items-center justify-between p-3.5 border-b border-slate-800/80 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 text-emerald-300 flex items-center justify-center text-sm border border-emerald-500/30 shadow-emerald-glow">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-extrabold text-slate-100 flex items-center gap-1.5">
+                            AI Assistant <span class="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded-full border border-emerald-500/30">DeepSeek V4</span>
+                        </h3>
+                        <p class="text-[10px] text-slate-400">Siap membantu pertanyaan Anda</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleAiChatWindow(false)" class="w-8 h-8 rounded-xl bg-slate-900/80 border border-slate-800 hover:bg-rose-500/20 hover:border-rose-500/40 text-slate-400 hover:text-rose-400 flex items-center justify-center text-xs transition cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Area Percakapan AI -->
+            <div id="ai-chat-messages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs">
+                <div class="flex items-start gap-2">
+                    <div class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0 text-xs">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-2xl rounded-tl-none text-slate-200 leading-relaxed">
+                        Halo! Saya AI Assistant Anda (DeepSeek V4 Flash). Ada yang bisa saya bantu?
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Kirim Pesan ke AI -->
+            <form onsubmit="event.preventDefault(); sendAiMessage();" class="p-3 bg-slate-950 border-t border-slate-800/80 flex items-center gap-2">
+                <input type="text" id="ai-chat-input" placeholder="Tulis pesan ke AI..." class="flex-grow bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 focus:outline-none focus:border-emerald-400 transition">
+                <button type="submit" id="btn-send-ai" class="w-10 h-10 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs transition flex items-center justify-center shrink-0 cursor-pointer shadow-emerald-glow">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+
+        </div>
     </div>
 
     <!-- Modal Window Temp Email Generator -->
@@ -387,17 +440,17 @@
 
                 <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800/80 space-y-3 shadow-sm">
                     <div class="space-y-1">
-                        <label class="text-[10px] font-semibold text-slate-400">Kustom Nama Depan</label>
+                        <label class="text-[10px] font-semibold text-slate-400">Kustom ID / Token Email</label>
                         <div class="flex items-center gap-2">
-                            <input type="text" id="custom-prefix-input" placeholder="contoh: vipuser" maxlength="15" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-400">
+                            <input type="text" id="custom-prefix-input" placeholder="contoh ID: 687a8235..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-400">
                             <button onclick="generateCustomTempEmail()" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shrink-0 cursor-pointer transition shadow-purple-glow">
-                                Set Custom
+                                Set ID
                             </button>
                         </div>
                     </div>
                     <div class="flex items-center gap-2 pt-0.5">
                         <button onclick="generateRandomTempEmail()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 font-bold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
-                            <i class="fa-solid fa-shuffle text-cyan-400"></i> Buat email acak
+                            <i class="fa-solid fa-shuffle text-cyan-400"></i> Buat ID Acak
                         </button>
                     </div>
                 </div>
@@ -752,8 +805,8 @@
         
         let currentReplyTarget = null; 
 
-        // Temp Email State
-        let currentTempEmail = localStorage.getItem('am_temp_email') || '';
+        // Temp Email State (Menggunakan ID sesuai endpoint baru)
+        let currentTempEmailId = localStorage.getItem('am_temp_email_id') || '687a8235-0095-428b-aa46-f6fb48f44ee2';
         let tempInboxMessages = JSON.parse(localStorage.getItem('am_temp_inbox') || '[]');
         let isTempEmailMaintenance = localStorage.getItem('am_temp_maintenance') === 'true';
 
@@ -777,6 +830,98 @@
                 });
             }
         });
+
+        // Toggle Modal AI Chat Bot
+        function toggleAiChatWindow(forceState) {
+            const overlay = document.getElementById('ai-chat-modal-overlay');
+            const container = document.getElementById('ai-chat-container');
+            const isHidden = overlay.classList.contains('hidden');
+            const targetState = forceState !== undefined ? forceState : isHidden;
+
+            if (targetState) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    container.classList.remove('translate-y-full', 'sm:translate-y-8');
+                }, 10);
+            } else {
+                overlay.classList.add('opacity-0');
+                container.classList.add('translate-y-full', 'sm:translate-y-8');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Kirim Pesan ke API AI DeepSeek V4 Flash
+        async function sendAiMessage() {
+            const inputEl = document.getElementById('ai-chat-input');
+            const msg = inputEl.value.trim();
+            if (!msg) return;
+
+            inputEl.value = '';
+            const messagesContainer = document.getElementById('ai-chat-messages');
+
+            messagesContainer.innerHTML += `
+                <div class="flex items-start justify-end gap-2">
+                    <div class="p-3 bg-gradient-to-r from-emerald-600/30 to-teal-500/30 border border-emerald-500/40 rounded-2xl rounded-tr-none text-slate-100 leading-relaxed max-w-[85%]">
+                        ${escapeHtml(msg)}
+                    </div>
+                    <div class="w-7 h-7 rounded-xl bg-cyan-500/20 border border-cyan-500/30 text-cyan-400 flex items-center justify-center shrink-0 text-xs">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                </div>
+            `;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            const loadingId = 'ai-loading-' + Date.now();
+            messagesContainer.innerHTML += `
+                <div id="${loadingId}" class="flex items-start gap-2">
+                    <div class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0 text-xs">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="p-3 bg-slate-900 border border-slate-800 rounded-2xl rounded-tl-none text-slate-400 flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-bounce"></span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.2s]"></span>
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-bounce [animation-delay:0.4s]"></span>
+                    </div>
+                </div>
+            `;
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            try {
+                const apiResponse = await fetch(`https://api.synoxcloud.xyz/ai-chat/deepseek-v4-flash?pesan=${encodeURIComponent(msg)}&apikey=FREE`);
+                const data = await apiResponse.json();
+                
+                document.getElementById(loadingId).remove();
+
+                let aiReply = data.result || data.message || data.response || (typeof data === 'string' ? data : JSON.stringify(data));
+
+                messagesContainer.innerHTML += `
+                    <div class="flex items-start gap-2">
+                        <div class="w-7 h-7 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center shrink-0 text-xs">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <div class="p-3 bg-slate-900 border border-slate-800 rounded-2xl rounded-tl-none text-slate-200 leading-relaxed max-w-[85%] whitespace-pre-wrap font-sans">
+                            ${escapeHtml(aiReply)}
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById(loadingId).remove();
+                messagesContainer.innerHTML += `
+                    <div class="flex items-start gap-2">
+                        <div class="w-7 h-7 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-400 flex items-center justify-center shrink-0 text-xs">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="p-3 bg-rose-950/40 border border-rose-800/60 rounded-2xl rounded-tl-none text-rose-300 leading-relaxed text-xs">
+                            Maaf, terjadi kesalahan saat menghubungi server AI. Silakan coba lagi.
+                        </div>
+                    </div>
+                `;
+            }
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
 
         function toggleQrisModal(open) {
             const overlay = document.getElementById('qris-modal-overlay');
@@ -823,15 +968,14 @@
             }
         }
 
-        const TEMP_DOMAINS = ['1secmail.com', '1secmail.org', '1secmail.net', 'esiix.com', 'xojxe.com'];
-
         function initTempEmailSystem() {
-            if (!currentTempEmail) {
-                generateRandomTempEmail();
-            } else {
-                document.getElementById('temp-email-address').value = currentTempEmail;
-                renderTempInbox();
+            if (!currentTempEmailId) {
+                currentTempEmailId = '687a8235-0095-428b-aa46-f6fb48f44ee2';
+                localStorage.setItem('am_temp_email_id', currentTempEmailId);
             }
+            document.getElementById('temp-email-address').value = currentTempEmailId;
+            renderTempInbox();
+            pollTempEmailInbox();
             setInterval(pollTempEmailInbox, 10000);
         }
 
@@ -884,32 +1028,40 @@
         }
 
         function generateRandomTempEmail() {
-            const randomName = 'vip' + Math.random().toString(36).substring(2, 8);
-            const randomDomain = TEMP_DOMAINS[Math.floor(Math.random() * TEMP_DOMAINS.length)];
-            currentTempEmail = `${randomName}@${randomDomain}`;
-            localStorage.setItem('am_temp_email', currentTempEmail);
-            document.getElementById('temp-email-address').value = currentTempEmail;
-            showToast('Temp Email Baru', 'Alamat email sementara berhasil dibuat');
+            // Membuat UUID baru untuk endpoint tempmail
+            const randomUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+            currentTempEmailId = randomUuid;
+            localStorage.setItem('am_temp_email_id', currentTempEmailId);
+            document.getElementById('temp-email-address').value = currentTempEmailId;
+            tempInboxMessages = [];
+            localStorage.setItem('am_temp_inbox', JSON.stringify([]));
+            renderTempInbox();
+            showToast('ID Temp Email Baru', 'Token ID temp email baru dibuat');
         }
 
         function generateCustomTempEmail() {
-            const prefix = document.getElementById('custom-prefix-input').value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-            if (!prefix) {
-                showToast('Nama Tidak Valid', 'Masukkan huruf atau angka untuk nama depan');
+            const customId = document.getElementById('custom-prefix-input').value.trim();
+            if (!customId) {
+                showToast('ID Tidak Valid', 'Masukkan token ID temp mail yang valid');
                 return;
             }
-            const randomDomain = TEMP_DOMAINS[Math.floor(Math.random() * TEMP_DOMAINS.length)];
-            currentTempEmail = `${prefix}_${Math.floor(100 + Math.random() * 900)}@${randomDomain}`;
-            localStorage.setItem('am_temp_email', currentTempEmail);
-            document.getElementById('temp-email-address').value = currentTempEmail;
-            showToast('Kustom Email Siap', `Email: ${currentTempEmail}`);
+            currentTempEmailId = customId;
+            localStorage.setItem('am_temp_email_id', currentTempEmailId);
+            document.getElementById('temp-email-address').value = currentTempEmailId;
+            tempInboxMessages = [];
+            localStorage.setItem('am_temp_inbox', JSON.stringify([]));
+            renderTempInbox();
+            showToast('ID Custom Diset', `Token ID: ${currentTempEmailId}`);
         }
 
         function copyTempEmail() {
             const emailVal = document.getElementById('temp-email-address').value;
             if (emailVal) {
                 navigator.clipboard.writeText(emailVal);
-                showToast('Disalin', 'Alamat temp email disalin ke clipboard');
+                showToast('Disalin', 'ID temp email disalin ke clipboard');
                 
                 const email1 = document.getElementById('input-email-1');
                 if (email1 && !email1.value) email1.value = emailVal;
@@ -942,39 +1094,32 @@
             }
         }
 
+        // Mengambil inbox sesuai endpoint baru: https://api.synoxcloud.xyz/tempmail/tempmail-inbox?id=...&apikey=FREE
         async function pollTempEmailInbox() {
-            if (!currentTempEmail) return;
+            if (!currentTempEmailId) return;
             try {
-                const parts = currentTempEmail.split('@');
-                const login = parts[0];
-                const domain = parts[1];
-                const res = await fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${login}&domain=${domain}`);
+                const res = await fetch(`https://api.synoxcloud.xyz/tempmail/tempmail-inbox?id=${encodeURIComponent(currentTempEmailId)}&apikey=FREE`);
                 const data = await res.json();
 
-                if (Array.isArray(data) && data.length > 0) {
-                    if (data.length > tempInboxMessages.length) {
-                        const latestMsg = data[0];
-                        const detailRes = await fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=${latestMsg.id}`);
-                        const detailData = await detailRes.json();
+                // Menyesuaikan struktur respon API baru
+                let items = [];
+                if (Array.isArray(data)) {
+                    items = data;
+                } else if (data && data.result && Array.isArray(data.result)) {
+                    items = data.result;
+                } else if (data && data.messages && Array.isArray(data.messages)) {
+                    items = data.messages;
+                }
 
-                        const newInboxItem = {
-                            id: latestMsg.id,
-                            from: latestMsg.from,
-                            subject: latestMsg.subject,
-                            date: latestMsg.date,
-                            body: detailData.body || detailData.textBody || 'Tidak ada isi teks',
-                            htmlBody: detailData.htmlBody || ''
-                        };
-
-                        if (!tempInboxMessages.some(m => m.id === newInboxItem.id)) {
-                            tempInboxMessages.unshift(newInboxItem);
-                            localStorage.setItem('am_temp_inbox', JSON.stringify(tempInboxMessages));
-                            renderTempInbox();
-                            
-                            document.getElementById('temp-email-badge').classList.remove('hidden');
-                            triggerChromePushNotification("Inbox Temp Email Masuk!", `Dari: ${latestMsg.from} - ${latestMsg.subject}`);
-                            showToast("Email Masuk Baru!", `Pesan dari ${latestMsg.from}`);
-                        }
+                if (items.length > 0) {
+                    if (items.length > tempInboxMessages.length) {
+                        tempInboxMessages = items;
+                        localStorage.setItem('am_temp_inbox', JSON.stringify(tempInboxMessages));
+                        renderTempInbox();
+                        
+                        document.getElementById('temp-email-badge').classList.remove('hidden');
+                        triggerChromePushNotification("Kotak Masuk Temp Email Masuk!", `Ada ${items.length} pesan baru.`);
+                        showToast("Email Masuk Baru!", `Pesan diterima pada ID aktif`);
                     }
                 }
             } catch(e) {}
@@ -995,8 +1140,13 @@
             }
 
             listEl.innerHTML = tempInboxMessages.map(msg => {
+                const sender = msg.from || msg.sender || 'Seseorang';
+                const subject = msg.subject || 'Tanpa Subjek';
+                const bodyText = msg.body || msg.text || msg.content || JSON.stringify(msg);
+                const dateStr = msg.date || msg.time || '';
+
                 let extractedLink = '';
-                const urlMatch = msg.body.match(/(https:\/\/[^\s]+)/g);
+                const urlMatch = String(bodyText).match(/(https:\/\/[^\s]+)/g);
                 if (urlMatch) {
                     const found = urlMatch.find(u => u.includes('firebase') || u.includes('alight') || u.length > 30);
                     if (found) extractedLink = found.replace(/["<>]/g, '');
@@ -1005,11 +1155,11 @@
                 return `
                     <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
                         <div class="flex items-center justify-between text-[10px] text-slate-400">
-                            <span class="font-bold text-cyan-300 truncate max-w-[180px]">${escapeHtml(msg.from)}</span>
-                            <span>${escapeHtml(msg.date)}</span>
+                            <span class="font-bold text-cyan-300 truncate max-w-[180px]">${escapeHtml(sender)}</span>
+                            <span>${escapeHtml(dateStr)}</span>
                         </div>
-                        <div class="font-bold text-slate-100 text-xs">${escapeHtml(msg.subject)}</div>
-                        <div class="text-[11px] text-slate-300 bg-slate-950 p-2 rounded-xl font-mono max-h-24 overflow-y-auto whitespace-pre-wrap">${escapeHtml(msg.body)}</div>
+                        <div class="font-bold text-slate-100 text-xs">${escapeHtml(subject)}</div>
+                        <div class="text-[11px] text-slate-300 bg-slate-950 p-2 rounded-xl font-mono max-h-24 overflow-y-auto whitespace-pre-wrap">${escapeHtml(bodyText)}</div>
                         
                         ${extractedLink ? `
                             <div class="pt-1 flex items-center justify-between gap-2">
