@@ -119,6 +119,52 @@
 
 <body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-950 font-sans relative pb-20 sm:pb-0">
 
+    <!-- GLOBAL WEB MAINTENANCE OVERLAY -->
+    <div id="global-web-maintenance-overlay" class="fixed inset-0 bg-[#05070f] z-[99999] hidden flex items-center justify-center p-4">
+        <div class="glass-card max-w-lg w-full p-8 rounded-3xl border border-amber-500/50 text-center space-y-6 shadow-2xl">
+            <div class="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-3xl mx-auto shadow-lg animate-pulse">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+            </div>
+            <div class="space-y-3">
+                <h2 class="text-xl font-extrabold text-amber-300 uppercase tracking-wide">WEB SEDANG MAINTENANCE</h2>
+                <p id="maintenance-reason-display" class="text-xs text-slate-300 leading-relaxed">
+                    Situs web sedang dalam pemeliharaan sistem atau dipindahkan ke alamat baru oleh Owner.
+                </p>
+            </div>
+            <div id="maintenance-link-container" class="pt-2">
+                <a id="maintenance-target-link" href="#" target="_blank" class="hidden w-full py-3.5 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-slate-950 font-extrabold text-xs rounded-xl shadow-vip-glow flex items-center justify-center gap-2 transition cursor-pointer">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Kunjungi Web Baru / Tautan Resmi
+                </a>
+            </div>
+
+            <!-- Kontrol khusus Owner untuk mematikan/menyalakan maintenance web -->
+            <div id="owner-global-maint-control" class="hidden pt-4 border-t border-slate-800 space-y-3 text-left">
+                <div class="text-[11px] font-bold text-amber-400 flex items-center gap-1">
+                    <i class="fa-solid fa-crown"></i> Panel Kontrol Owner (Web Maintenance)
+                </div>
+                <div class="space-y-2">
+                    <textarea id="input-maint-reason" rows="2" placeholder="Masukkan alasan maintenance / pindah web..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-400 resize-none"></textarea>
+                    <input type="text" id="input-maint-link" placeholder="Masukkan URL web baru (https://...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-cyan-300 font-mono focus:outline-none focus:border-cyan-400">
+                    <div class="flex items-center gap-2 pt-1">
+                        <button onclick="saveGlobalWebMaintenance(true)" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-extrabold text-xs rounded-xl transition cursor-pointer">
+                            Aktifkan Maintenance Web
+                        </button>
+                        <button onclick="saveGlobalWebMaintenance(false)" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs rounded-xl transition cursor-pointer">
+                            Matikan Maintenance
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tombol Mengapung Khusus Owner untuk Buka Panel Maintenance Web -->
+    <div id="owner-floating-maint-btn-container" class="fixed top-4 left-4 z-[9999] hidden">
+        <button onclick="toggleOwnerWebMaintModal()" class="px-3 py-2 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-300 font-bold text-[11px] shadow-lg flex items-center gap-1.5 hover:bg-amber-500/30 transition cursor-pointer">
+            <i class="fa-solid fa-gear animate-spin"></i> Atur Maintenance Web
+        </button>
+    </div>
+
     <header class="border-b border-slate-800/80 glass-card sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -821,6 +867,7 @@
             setRatingScore(5);
             initTempEmailSystem();
             await updateTempEmailMaintenanceUI();
+            await checkGlobalWebMaintenanceState();
 
             const email1 = document.getElementById('input-email-1');
             if (email1) {
@@ -830,6 +877,97 @@
                 });
             }
         });
+
+        // -------------------------------------------------------------
+        // FITUR WEB MAINTENANCE (KHUSUS OWNER: ALASAN & LINK WEB BARU)
+        // -------------------------------------------------------------
+        async function checkGlobalWebMaintenanceState() {
+            let isMaintActive = localStorage.getItem('am_global_maint_active') === 'true';
+            let maintReason = localStorage.getItem('am_global_maint_reason') || 'Situs web sedang dalam pemeliharaan sistem atau dipindahkan ke alamat baru oleh Owner.';
+            let maintLink = localStorage.getItem('am_global_maint_link') || '';
+
+            if (db) {
+                try {
+                    const snap = await db.ref('settings/global_web_maintenance').once('value');
+                    if (snap.exists()) {
+                        const val = snap.val();
+                        isMaintActive = !!val.active;
+                        maintReason = val.reason || maintReason;
+                        maintLink = val.link || maintLink;
+                        localStorage.setItem('am_global_maint_active', isMaintActive ? 'true' : 'false');
+                        localStorage.setItem('am_global_maint_reason', maintReason);
+                        localStorage.setItem('am_global_maint_link', maintLink);
+                    }
+                } catch(e) {}
+            }
+
+            const isOwner = await checkIsUserOwner();
+            const ownerPanel = document.getElementById('owner-global-maint-control');
+            const floatingBtn = document.getElementById('owner-floating-maint-btn-container');
+
+            if (isOwner) {
+                ownerPanel.classList.remove('hidden');
+                floatingBtn.classList.remove('hidden');
+                document.getElementById('input-maint-reason').value = maintReason;
+                document.getElementById('input-maint-link').value = maintLink;
+            } else {
+                ownerPanel.classList.add('hidden');
+                floatingBtn.classList.add('hidden');
+            }
+
+            const overlay = document.getElementById('global-web-maintenance-overlay');
+            const reasonEl = document.getElementById('maintenance-reason-display');
+            const linkEl = document.getElementById('maintenance-target-link');
+
+            // Jika Owner yang akses, abaikan overlay maintenance agar bisa mengatur
+            if (isMaintActive && !isOwner) {
+                reasonEl.innerText = maintReason;
+                if (maintLink) {
+                    linkEl.href = maintLink;
+                    linkEl.classList.remove('hidden');
+                } else {
+                    linkEl.classList.add('hidden');
+                }
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
+        async function saveGlobalWebMaintenance(activeState) {
+            const isOwner = await checkIsUserOwner();
+            if (!isOwner) return;
+
+            const reason = document.getElementById('input-maint-reason').value.trim() || 'Website dipindahkan ke alamat baru.';
+            const link = document.getElementById('input-maint-link').value.trim();
+
+            localStorage.setItem('am_global_maint_active', activeState ? 'true' : 'false');
+            localStorage.setItem('am_global_maint_reason', reason);
+            localStorage.setItem('am_global_maint_link', link);
+
+            if (db) {
+                try {
+                    await db.ref('settings/global_web_maintenance').set({
+                        active: activeState,
+                        reason: reason,
+                        link: link
+                    });
+                } catch(e) {}
+            }
+
+            showToast("Berhasil Disimpan", activeState ? "Maintenance Web Aktif untuk semua user!" : "Maintenance Web dimatikan.");
+            await checkGlobalWebMaintenanceState();
+        }
+
+        function toggleOwnerWebMaintModal() {
+            // Membuka modal pengaturan dengan memunculkan overlay maintenance jika user adalah owner
+            const overlay = document.getElementById('global-web-maintenance-overlay');
+            if (overlay.classList.contains('hidden')) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
 
         // Toggle Modal AI Chat Bot
         function toggleAiChatWindow(forceState) {
@@ -1028,7 +1166,6 @@
         }
 
         function generateRandomTempEmail() {
-            // Membuat UUID baru untuk endpoint tempmail
             const randomUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
                 var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
                 return v.toString(16);
@@ -1094,14 +1231,12 @@
             }
         }
 
-        // Mengambil inbox sesuai endpoint baru: https://api.synoxcloud.xyz/tempmail/tempmail-inbox?id=...&apikey=FREE
         async function pollTempEmailInbox() {
             if (!currentTempEmailId) return;
             try {
                 const res = await fetch(`https://api.synoxcloud.xyz/tempmail/tempmail-inbox?id=${encodeURIComponent(currentTempEmailId)}&apikey=FREE`);
                 const data = await res.json();
 
-                // Menyesuaikan struktur respon API baru
                 let items = [];
                 if (Array.isArray(data)) {
                     items = data;
@@ -1290,6 +1425,10 @@
 
             if (db) {
                 try {
+                    db.ref('settings/global_web_maintenance').on('value', async (snap) => {
+                        await checkGlobalWebMaintenanceState();
+                    });
+
                     db.ref('settings/temp_email_maintenance').on('value', (snap) => {
                         if (snap.exists()) {
                             isTempEmailMaintenance = snap.val();
@@ -1529,6 +1668,7 @@
             document.getElementById('input-custom-nickname').value = customNickname;
             await updateChatPermissions();
             await updateTempEmailMaintenanceUI();
+            await checkGlobalWebMaintenanceState();
         }
 
         async function updateChatPermissions() {
