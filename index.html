@@ -119,52 +119,6 @@
 
 <body class="min-h-screen flex flex-col justify-between selection:bg-cyan-500 selection:text-slate-950 font-sans relative pb-20 sm:pb-0">
 
-    <!-- GLOBAL WEB MAINTENANCE OVERLAY -->
-    <div id="global-web-maintenance-overlay" class="fixed inset-0 bg-[#05070f] z-[99999] hidden flex items-center justify-center p-4">
-        <div class="glass-card max-w-lg w-full p-8 rounded-3xl border border-amber-500/50 text-center space-y-6 shadow-2xl">
-            <div class="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-3xl mx-auto shadow-lg animate-pulse">
-                <i class="fa-solid fa-screwdriver-wrench"></i>
-            </div>
-            <div class="space-y-3">
-                <h2 class="text-xl font-extrabold text-amber-300 uppercase tracking-wide">WEB SEDANG MAINTENANCE</h2>
-                <p id="maintenance-reason-display" class="text-xs text-slate-300 leading-relaxed">
-                    Situs web sedang dalam pemeliharaan sistem atau dipindahkan ke alamat baru oleh Owner.
-                </p>
-            </div>
-            <div id="maintenance-link-container" class="pt-2">
-                <a id="maintenance-target-link" href="#" target="_blank" class="hidden w-full py-3.5 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-slate-950 font-extrabold text-xs rounded-xl shadow-vip-glow flex items-center justify-center gap-2 transition cursor-pointer">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Kunjungi Web Baru / Tautan Resmi
-                </a>
-            </div>
-
-            <!-- Kontrol khusus Owner untuk mematikan/menyalakan maintenance web -->
-            <div id="owner-global-maint-control" class="hidden pt-4 border-t border-slate-800 space-y-3 text-left">
-                <div class="text-[11px] font-bold text-amber-400 flex items-center gap-1">
-                    <i class="fa-solid fa-crown"></i> Panel Kontrol Owner (Web Maintenance)
-                </div>
-                <div class="space-y-2">
-                    <textarea id="input-maint-reason" rows="2" placeholder="Masukkan alasan maintenance / pindah web..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2.5 text-xs text-slate-100 focus:outline-none focus:border-amber-400 resize-none"></textarea>
-                    <input type="text" id="input-maint-link" placeholder="Masukkan URL web baru (https://...)" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-cyan-300 font-mono focus:outline-none focus:border-cyan-400">
-                    <div class="flex items-center gap-2 pt-1">
-                        <button onclick="saveGlobalWebMaintenance(true)" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-extrabold text-xs rounded-xl transition cursor-pointer">
-                            Aktifkan Maintenance Web
-                        </button>
-                        <button onclick="saveGlobalWebMaintenance(false)" class="w-full py-2 bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-xs rounded-xl transition cursor-pointer">
-                            Matikan Maintenance
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tombol Mengapung Khusus Owner untuk Buka Panel Maintenance Web -->
-    <div id="owner-floating-maint-btn-container" class="fixed top-4 left-4 z-[9999] hidden">
-        <button onclick="toggleOwnerWebMaintModal()" class="px-3 py-2 rounded-xl bg-amber-500/20 border border-amber-500/50 text-amber-300 font-bold text-[11px] shadow-lg flex items-center gap-1.5 hover:bg-amber-500/30 transition cursor-pointer">
-            <i class="fa-solid fa-gear animate-spin"></i> Atur Maintenance Web
-        </button>
-    </div>
-
     <header class="border-b border-slate-800/80 glass-card sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -440,9 +394,9 @@
         </div>
     </div>
 
-    <!-- Modal Window Temp Email Generator -->
+    <!-- Modal Window Temp Email Generator (v1 & v2 + Maintenance Owner) -->
     <div id="temp-email-modal-overlay" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-50 hidden opacity-0 transition-opacity duration-300 flex items-end sm:items-center justify-center sm:p-4">
-        <div id="temp-email-container" class="chat-floating-window glass-card w-full sm:max-w-md h-[85vh] sm:h-[620px] rounded-t-3xl sm:rounded-3xl border border-cyan-500/40 flex flex-col shadow-2xl overflow-hidden transform translate-y-full sm:translate-y-8 transition-transform duration-300">
+        <div id="temp-email-container" class="chat-floating-window glass-card w-full sm:max-w-md h-[90vh] sm:h-[650px] rounded-t-3xl sm:rounded-3xl border border-cyan-500/40 flex flex-col shadow-2xl overflow-hidden transform translate-y-full sm:translate-y-8 transition-transform duration-300">
             
             <div class="flex items-center justify-between p-4 border-b border-slate-800/80 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950">
                 <div class="flex items-center gap-3">
@@ -451,52 +405,55 @@
                     </div>
                     <div>
                         <h3 class="text-xs font-extrabold text-slate-100 flex items-center gap-1.5">
-                            Temp Mail Pro <span class="text-[9px] bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded-full border border-cyan-500/30">Free</span>
+                            Temp Mail Pro <span class="text-[9px] bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded-full border border-cyan-500/30">v1 & v2</span>
                         </h3>
                         <p class="text-[10px] text-slate-400">inbox⌛</p>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <div id="owner-maintenance-control" class="hidden">
-                        <button id="btn-toggle-maintenance" onclick="toggleTempEmailMaintenance()" class="px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition flex items-center gap-1 cursor-pointer bg-slate-900 border-slate-700 text-slate-300 hover:border-cyan-400">
-                            <i class="fa-solid fa-wrench text-[9px]"></i> <span id="maintenance-btn-text">Maintenance: Off</span>
-                        </button>
+                    <div id="owner-maintenance-control" class="hidden flex items-center gap-1">
+                        <button onclick="toggleTempEmailMaintenance('v1')" id="btn-maint-v1" class="px-2 py-1 rounded-lg text-[9px] font-bold border transition cursor-pointer bg-slate-900 border-slate-700 text-slate-300">Maint V1: Off</button>
+                        <button onclick="toggleTempEmailMaintenance('v2')" id="btn-maint-v2" class="px-2 py-1 rounded-lg text-[9px] font-bold border transition cursor-pointer bg-slate-900 border-slate-700 text-slate-300">Maint V2: Off</button>
                     </div>
 
-                    <button onclick="toggleTempEmailWindow(false)" class="w-8 h-8 rounded-xl bg-slate-900/80 border border-slate-800 hover:bg-rose-500/20 hover:border-rose-500/40 text-slate-400 hover:text-rose-400 flex items-center justify-center text-xs transition cursor-pointer">
+                    <button onclick="toggleTempEmailWindow(false)" class="w-8 h-8 rounded-xl bg-slate-900/80 border border-slate-800 hover:bg-rose-500/25 hover:border-rose-500/40 text-slate-400 hover:text-rose-400 flex items-center justify-center text-xs transition cursor-pointer">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             </div>
 
-            <div id="temp-email-active-content" class="p-4 flex-grow overflow-y-auto space-y-4 text-xs">
+            <!-- Tab Switcher v1 & v2 -->
+            <div class="grid grid-cols-2 gap-1.5 p-3 bg-slate-950 border-b border-slate-800 text-xs">
+                <button onclick="switchTempEmailMode('v1')" id="tab-temp-v1" class="py-2 px-3 rounded-xl font-bold border transition flex items-center justify-center gap-1.5 bg-cyan-500/20 border-cyan-400 text-cyan-300 cursor-pointer">
+                    <i class="fa-solid fa-pen-nib text-[10px]"></i> Temp Mail V1 (Custom)
+                </button>
+                <button onclick="switchTempEmailMode('v2')" id="tab-temp-v2" class="py-2 px-3 rounded-xl font-bold border transition flex items-center justify-center gap-1.5 bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer">
+                    <i class="fa-solid fa-shuffle text-[10px]"></i> Temp Mail V2 (Acak)
+                </button>
+            </div>
+
+            <!-- CONTENT V1 -->
+            <div id="temp-content-v1" class="p-4 flex-grow overflow-y-auto space-y-4 text-xs">
                 <div class="space-y-1.5">
                     <label class="text-[11px] font-semibold text-slate-300 flex items-center justify-between">
-                        <span>Alamat Temp Email Anda</span>
-                        <span class="text-[10px] text-cyan-400 font-mono"><i class="fa-solid fa-bolt"></i> Siap Pakai</span>
+                        <span>Alamat Temp Email V1 Anda</span>
+                        <span class="text-[10px] text-cyan-400 font-mono"><i class="fa-solid fa-bolt"></i> Custom Depan</span>
                     </label>
                     <div class="flex items-center gap-2">
-                        <input type="text" id="temp-email-address" readonly class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-3.5 py-3 text-xs text-cyan-300 font-mono focus:outline-none shadow-inner" placeholder="Memuat email...">
-                        <button onclick="copyTempEmail()" class="px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-xl shrink-0 flex items-center gap-1.5 cursor-pointer shadow-vip-glow transition">
+                        <input type="text" id="temp-email-v1-address" readonly class="w-full bg-slate-950/90 border border-cyan-500/40 rounded-xl px-3 py-3 text-xs text-cyan-300 font-mono focus:outline-none shadow-inner" placeholder="Email V1...">
+                        <button onclick="copyTempEmailV1()" class="px-4 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold rounded-xl shrink-0 flex items-center gap-1.5 cursor-pointer shadow-vip-glow transition">
                             <i class="fa-regular fa-copy"></i> Salin
                         </button>
                     </div>
                 </div>
 
-                <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800/80 space-y-3 shadow-sm">
-                    <div class="space-y-1">
-                        <label class="text-[10px] font-semibold text-slate-400">Kustom ID / Token Email</label>
-                        <div class="flex items-center gap-2">
-                            <input type="text" id="custom-prefix-input" placeholder="contoh ID: 687a8235..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-400">
-                            <button onclick="generateCustomTempEmail()" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl shrink-0 cursor-pointer transition shadow-purple-glow">
-                                Set ID
-                            </button>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-2 pt-0.5">
-                        <button onclick="generateRandomTempEmail()" class="w-full py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 text-slate-200 font-bold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition">
-                            <i class="fa-solid fa-shuffle text-cyan-400"></i> Buat ID Acak
+                <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800/80 space-y-2.5">
+                    <label class="text-[10px] font-semibold text-slate-400">Custom Nama Depan Email</label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="custom-prefix-v1" placeholder="contoh: oow92493" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2.5 text-xs text-slate-100 font-mono focus:outline-none focus:border-cyan-400">
+                        <button onclick="setCustomTempEmailV1()" class="px-4 py-2.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-extrabold rounded-xl shrink-0 cursor-pointer transition shadow-vip-glow">
+                            Set Email
                         </button>
                     </div>
                 </div>
@@ -504,33 +461,73 @@
                 <div class="space-y-2 pt-1">
                     <div class="flex items-center justify-between">
                         <span class="font-bold text-slate-200 flex items-center gap-1.5">
-                            <i class="fa-solid fa-inbox text-cyan-400"></i> Kotak Masuk Inbox (<span id="inbox-count">0</span>)
+                            <i class="fa-solid fa-inbox text-cyan-400"></i> Inbox V1 (<span id="inbox-v1-count">0</span>)
                         </span>
-                        <button onclick="refreshTempInbox()" class="text-[10px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer bg-cyan-950/60 border border-cyan-900/50 px-2 py-1 rounded-lg">
-                            <i class="fa-solid fa-rotate"></i> Refresh Inbox
+                        <button onclick="refreshInboxV1()" class="text-[10px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer bg-cyan-950/60 border border-cyan-900/50 px-2 py-1 rounded-lg">
+                            <i class="fa-solid fa-rotate"></i> Refresh
                         </button>
                     </div>
-
-                    <div id="temp-inbox-list" class="space-y-2.5 min-h-[160px] max-h-[210px] overflow-y-auto pr-1">
-                        <div class="text-center py-10 text-slate-500 text-xs">riwayat inbox</div>
+                    <div id="inbox-v1-list" class="space-y-2.5 min-h-[140px] max-h-[190px] overflow-y-auto pr-1">
+                        <div class="text-center py-8 text-slate-500 text-xs">riwayat inbox v1</div>
                     </div>
                 </div>
             </div>
 
-            <div id="temp-email-maintenance-content" class="hidden flex-grow flex flex-col items-center justify-center p-6 text-center space-y-4 my-auto">
-                <div class="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-3xl shadow-lg animate-pulse">
+            <!-- MAINTENANCE CONTENT V1 -->
+            <div id="temp-maint-v1" class="hidden flex-grow flex flex-col items-center justify-center p-6 text-center space-y-4 my-auto">
+                <div class="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-2xl shadow-lg animate-pulse">
                     <i class="fa-solid fa-screwdriver-wrench"></i>
                 </div>
                 <div class="space-y-2">
-                    <h3 class="text-base font-extrabold text-amber-300 tracking-wide uppercase">Fitur Sedang Maintenance</h3>
-                    <p class="text-xs text-slate-400 max-w-xs leading-relaxed">
-                        Fitur <strong class="text-slate-200">Temp Email</strong> saat ini sedang ditutup sementara oleh Owner untuk pemeliharaan sistem melakukan pengembangan sementara
-                    </p>
+                    <h3 class="text-sm font-extrabold text-amber-300 uppercase">Temp Email V1 Maintenance</h3>
+                    <p class="text-xs text-slate-400 max-w-xs">Fitur Temp Email V1 sedang dalam pemeliharaan sistem oleh Owner.</p>
                 </div>
-                <div class="pt-2">
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/20 text-[11px] font-mono text-amber-400">
-                        <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span> Status: Locked maintenance
-                    </span>
+            </div>
+
+            <!-- CONTENT V2 -->
+            <div id="temp-content-v2" class="hidden p-4 flex-grow overflow-y-auto space-y-4 text-xs">
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-semibold text-slate-300 flex items-center justify-between">
+                        <span>Alamat Temp Email V2 Anda</span>
+                        <span class="text-[10px] text-purple-400 font-mono"><i class="fa-solid fa-shuffle"></i> Acak Domain</span>
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <input type="text" id="temp-email-v2-address" readonly class="w-full bg-slate-950/90 border border-purple-500/40 rounded-xl px-3 py-3 text-xs text-purple-300 font-mono focus:outline-none shadow-inner" placeholder="Email V2...">
+                        <button onclick="copyTempEmailV2()" class="px-4 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold rounded-xl shrink-0 flex items-center gap-1.5 cursor-pointer shadow-purple-glow transition">
+                            <i class="fa-regular fa-copy"></i> Salin
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800/80 space-y-2.5">
+                    <button onclick="generateRandomTempEmailV2()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold rounded-xl flex items-center justify-center gap-2 cursor-pointer transition shadow-purple-glow">
+                        <i class="fa-solid fa-rotate text-amber-300"></i> Buat Email Acak Baru (V2)
+                    </button>
+                </div>
+
+                <div class="space-y-2 pt-1">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-slate-200 flex items-center gap-1.5">
+                            <i class="fa-solid fa-inbox text-purple-400"></i> Inbox V2 (<span id="inbox-v2-count">0</span>)
+                        </span>
+                        <button onclick="refreshInboxV2()" class="text-[10px] text-purple-400 hover:text-purple-300 flex items-center gap-1 cursor-pointer bg-purple-950/60 border border-purple-900/50 px-2 py-1 rounded-lg">
+                            <i class="fa-solid fa-rotate"></i> Refresh
+                        </button>
+                    </div>
+                    <div id="inbox-v2-list" class="space-y-2.5 min-h-[140px] max-h-[190px] overflow-y-auto pr-1">
+                        <div class="text-center py-8 text-slate-500 text-xs">riwayat inbox v2</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAINTENANCE CONTENT V2 -->
+            <div id="temp-maint-v2" class="hidden flex-grow flex flex-col items-center justify-center p-6 text-center space-y-4 my-auto">
+                <div class="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-2xl shadow-lg animate-pulse">
+                    <i class="fa-solid fa-screwdriver-wrench"></i>
+                </div>
+                <div class="space-y-2">
+                    <h3 class="text-sm font-extrabold text-amber-300 uppercase">Temp Email V2 Maintenance</h3>
+                    <p class="text-xs text-slate-400 max-w-xs">Fitur Temp Email V2 sedang dalam pemeliharaan sistem oleh Owner.</p>
                 </div>
             </div>
             
@@ -812,6 +809,7 @@
         // EMBEDDED HIDDEN CREDENTIALS
         const HIDDEN_BASE_ENDPOINT = 'https://apiz.vsunsee.qzz.io/vsunseeV8/alightmotion';
         const HIDDEN_API_KEY = 'VsunseeXVANZ';
+        const TEMP_API_KEY = 'VsunseeXVANZ';
 
         const firebaseConfig = {
             databaseURL: "https://am-vip-default-rtdb.firebaseio.com"
@@ -848,13 +846,18 @@
         let cachedChatMessages = [];
         let pendingMediaData = null; 
         let selectedRatingScore = 5; 
-        
         let currentReplyTarget = null; 
 
-        // Temp Email State (Menggunakan ID sesuai endpoint baru)
-        let currentTempEmailId = localStorage.getItem('am_temp_email_id') || '687a8235-0095-428b-aa46-f6fb48f44ee2';
-        let tempInboxMessages = JSON.parse(localStorage.getItem('am_temp_inbox') || '[]');
-        let isTempEmailMaintenance = localStorage.getItem('am_temp_maintenance') === 'true';
+        // Temp Email v1 & v2 State
+        let tempEmailMode = localStorage.getItem('am_temp_mode') || 'v1';
+        let currentTempEmailV1 = localStorage.getItem('am_temp_v1_email') || 'oow92493@gmail.com';
+        let currentTempEmailV2 = localStorage.getItem('am_temp_v2_email') || '';
+        
+        let inboxV1Messages = JSON.parse(localStorage.getItem('am_inbox_v1') || '[]');
+        let inboxV2Messages = JSON.parse(localStorage.getItem('am_inbox_v2') || '[]');
+
+        let isTempV1Maintenance = localStorage.getItem('am_temp_maint_v1') === 'true';
+        let isTempV2Maintenance = localStorage.getItem('am_temp_maint_v2') === 'true';
 
         const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
         let isNotificationEnabled = localStorage.getItem('am_vip_notif_enabled') !== 'false';
@@ -865,9 +868,7 @@
             setupRealtimeDataListeners();
             updateNotificationUI();
             setRatingScore(5);
-            initTempEmailSystem();
-            await updateTempEmailMaintenanceUI();
-            await checkGlobalWebMaintenanceState();
+            initTempEmailSystemPro();
 
             const email1 = document.getElementById('input-email-1');
             if (email1) {
@@ -879,93 +880,308 @@
         });
 
         // -------------------------------------------------------------
-        // FITUR WEB MAINTENANCE (KHUSUS OWNER: ALASAN & LINK WEB BARU)
+        // FITUR TEMP EMAIL V1 & V2 + MAINTENANCE OWNER
         // -------------------------------------------------------------
-        async function checkGlobalWebMaintenanceState() {
-            let isMaintActive = localStorage.getItem('am_global_maint_active') === 'true';
-            let maintReason = localStorage.getItem('am_global_maint_reason') || 'Situs web sedang dalam pemeliharaan sistem atau dipindahkan ke alamat baru oleh Owner.';
-            let maintLink = localStorage.getItem('am_global_maint_link') || '';
+        async function initTempEmailSystemPro() {
+            switchTempEmailMode(tempEmailMode);
+            
+            document.getElementById('temp-email-v1-address').value = currentTempEmailV1;
+            document.getElementById('custom-prefix-v1').value = currentTempEmailV1.split('@')[0];
 
-            if (db) {
+            if (!currentTempEmailV2) {
+                await generateRandomTempEmailV2(true);
+            } else {
+                document.getElementById('temp-email-v2-address').value = currentTempEmailV2;
+            }
+
+            renderInboxV1();
+            renderInboxV2();
+            pollTempInboxes();
+            setInterval(pollTempInboxes, 10000);
+            await updateTempMaintenanceUIState();
+        }
+
+        async function updateTempMaintenanceUIState() {
+            const isOwner = await checkIsUserOwner();
+            const ownerCtrl = document.getElementById('owner-maintenance-control');
+            const btnV1 = document.getElementById('btn-maint-v1');
+            const btnV2 = document.getElementById('btn-maint-v2');
+
+            if (isOwner) {
+                ownerCtrl.classList.remove('hidden');
+            } else {
+                ownerCtrl.classList.add('hidden');
+            }
+
+            // V1 UI State
+            if (isTempV1Maintenance && !isOwner) {
+                document.getElementById('temp-content-v1').classList.add('hidden');
+                document.getElementById('temp-maint-v1').classList.remove('hidden');
+            } else {
+                document.getElementById('temp-content-v1').classList.remove('hidden');
+                document.getElementById('temp-maint-v1').classList.add('hidden');
+            }
+
+            // V2 UI State
+            if (isTempV2Maintenance && !isOwner) {
+                document.getElementById('temp-content-v2').classList.add('hidden');
+                document.getElementById('temp-maint-v2').classList.remove('hidden');
+            } else {
+                document.getElementById('temp-content-v2').classList.remove('hidden');
+                document.getElementById('temp-maint-v2').classList.add('hidden');
+            }
+
+            if (btnV1) {
+                btnV1.innerText = isTempV1Maintenance ? "Maint V1: ON" : "Maint V1: OFF";
+                btnV1.className = isTempV1Maintenance ? "px-2 py-1 rounded-lg text-[9px] font-bold border transition cursor-pointer bg-amber-500/20 border-amber-500 text-amber-300" : "px-2 py-1 rounded-lg text-[9px] font-bold border transition cursor-pointer bg-slate-900 border-slate-700 text-slate-300";
+            }
+            if (btnV2) {
+                btnV2.innerText = isTempV2Maintenance ? "Maint V2: ON" : "Maint V2: OFF";
+                btnV2.className = isTempV2Maintenance ? "px-2 py-1 rounded-lg text-[9px] font-bold border transition cursor-pointer bg-amber-500/20 border-amber-500 text-amber-300" : "px-2 py-1 rounded-lg text-[9px] font-bold border transition cursor-pointer bg-slate-900 border-slate-700 text-slate-300";
+            }
+        }
+
+        async function toggleTempEmailMaintenance(version) {
+            const isOwner = await checkIsUserOwner();
+            if (!isOwner) return;
+
+            if (version === 'v1') {
+                isTempV1Maintenance = !isTempV1Maintenance;
+                localStorage.setItem('am_temp_maint_v1', isTempV1Maintenance ? 'true' : 'false');
+                if (db) db.ref('settings/temp_maint_v1').set(isTempV1Maintenance);
+                showToast("Maintenance V1", isTempV1Maintenance ? "Temp Email V1 Ditutup" : "Temp Email V1 Dibuka");
+            } else {
+                isTempV2Maintenance = !isTempV2Maintenance;
+                localStorage.setItem('am_temp_maint_v2', isTempV2Maintenance ? 'true' : 'false');
+                if (db) db.ref('settings/temp_maint_v2').set(isTempV2Maintenance);
+                showToast("Maintenance V2", isTempV2Maintenance ? "Temp Email V2 Ditutup" : "Temp Email V2 Dibuka");
+            }
+
+            await updateTempMaintenanceUIState();
+        }
+
+        function switchTempEmailMode(mode) {
+            tempEmailMode = mode;
+            localStorage.setItem('am_temp_mode', mode);
+            const btnV1 = document.getElementById('tab-temp-v1');
+            const btnV2 = document.getElementById('tab-temp-v2');
+            const contentV1 = document.getElementById('temp-content-v1');
+            const contentV2 = document.getElementById('temp-content-v2');
+            const maintV1 = document.getElementById('temp-maint-v1');
+            const maintV2 = document.getElementById('temp-maint-v2');
+
+            if (mode === 'v1') {
+                btnV1.className = "py-2 px-3 rounded-xl font-bold border transition flex items-center justify-center gap-1.5 bg-cyan-500/20 border-cyan-400 text-cyan-300 cursor-pointer";
+                btnV2.className = "py-2 px-3 rounded-xl font-bold border transition flex items-center justify-center gap-1.5 bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer";
+                contentV1.classList.remove('hidden');
+                contentV2.classList.add('hidden');
+                maintV1.classList.add('hidden');
+                maintV2.classList.add('hidden');
+            } else {
+                btnV2.className = "py-2 px-3 rounded-xl font-bold border transition flex items-center justify-center gap-1.5 bg-purple-500/20 border-purple-400 text-purple-300 cursor-pointer";
+                btnV1.className = "py-2 px-3 rounded-xl font-bold border transition flex items-center justify-center gap-1.5 bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200 cursor-pointer";
+                contentV2.classList.remove('hidden');
+                contentV1.classList.add('hidden');
+                maintV1.classList.add('hidden');
+                maintV2.classList.add('hidden');
+            }
+            updateTempMaintenanceUIState();
+        }
+
+        // V1 Functions (Custom Prefix + Inbox API)
+        function setCustomTempEmailV1() {
+            const prefix = document.getElementById('custom-prefix-v1').value.trim();
+            if (!prefix) {
+                showToast("Format Salah", "Masukkan nama depan email yang valid");
+                return;
+            }
+            currentTempEmailV1 = prefix + '@gmail.com';
+            localStorage.setItem('am_temp_v1_email', currentTempEmailV1);
+            document.getElementById('temp-email-v1-address').value = currentTempEmailV1;
+            inboxV1Messages = [];
+            localStorage.setItem('am_inbox_v1', JSON.stringify([]));
+            renderInboxV1();
+            showToast("Berhasil Diset", `Temp Email V1: ${currentTempEmailV1}`);
+        }
+
+        function copyTempEmailV1() {
+            navigator.clipboard.writeText(currentTempEmailV1);
+            showToast("Disalin", "Alamat Temp Email V1 disalin!");
+            
+            const email1 = document.getElementById('input-email-1');
+            if (email1 && !email1.value) email1.value = currentTempEmailV1;
+        }
+
+        // V2 Functions (Random Domains API)
+        async function generateRandomTempEmailV2(silent = false) {
+            try {
+                if (!silent) showToast("Memuat...", "Mengambil domain acak v2...");
+                const res = await fetch(`https://apiz.vsunsee.qzz.io/vsunseeV8/tempmail/domains?apikey=${TEMP_API_KEY}`);
+                const data = await res.json();
+                
+                let domains = [];
+                if (Array.isArray(data)) domains = data;
+                else if (data && data.domains) domains = data.domains;
+                else if (data && data.result) domains = data.result;
+
+                const randomName = 'user_' + Math.random().toString(36).substring(2, 8);
+                const randomDomain = domains.length > 0 ? domains[Math.floor(Math.random() * domains.length)] : 'vsunsee.qzz.io';
+                
+                currentTempEmailV2 = `${randomName}@${typeof randomDomain === 'string' ? randomDomain : (randomDomain.domain || 'vsunsee.qzz.io')}`;
+                localStorage.setItem('am_temp_v2_email', currentTempEmailV2);
+                document.getElementById('temp-email-v2-address').value = currentTempEmailV2;
+                
+                inboxV2Messages = [];
+                localStorage.setItem('am_inbox_v2', JSON.stringify([]));
+                renderInboxV2();
+                if (!silent) showToast("Berhasil", "Temp Email V2 acak dibuat!");
+            } catch(e) {
+                currentTempEmailV2 = 'rand_' + Math.floor(1000 + Math.random() * 9000) + '@vsunsee.qzz.io';
+                localStorage.setItem('am_temp_v2_email', currentTempEmailV2);
+                document.getElementById('temp-email-v2-address').value = currentTempEmailV2;
+                if (!silent) showToast("Berhasil", "Temp Email V2 dibuat!");
+            }
+        }
+
+        function copyTempEmailV2() {
+            navigator.clipboard.writeText(currentTempEmailV2);
+            showToast("Disalin", "Alamat Temp Email V2 disalin!");
+
+            const email1 = document.getElementById('input-email-1');
+            if (email1 && !email1.value) email1.value = currentTempEmailV2;
+        }
+
+        // Polling Inboxes for V1 & V2
+        async function pollTempInboxes() {
+            // Poll V1 Inbox
+            if (currentTempEmailV1) {
                 try {
-                    const snap = await db.ref('settings/global_web_maintenance').once('value');
-                    if (snap.exists()) {
-                        const val = snap.val();
-                        isMaintActive = !!val.active;
-                        maintReason = val.reason || maintReason;
-                        maintLink = val.link || maintLink;
-                        localStorage.setItem('am_global_maint_active', isMaintActive ? 'true' : 'false');
-                        localStorage.setItem('am_global_maint_reason', maintReason);
-                        localStorage.setItem('am_global_maint_link', maintLink);
+                    const resV1 = await fetch(`https://apiz.vsunsee.qzz.io/vsunseeV8/tempmail/inbox?apikey=${TEMP_API_KEY}&email=${encodeURIComponent(currentTempEmailV1)}`);
+                    const dataV1 = await resV1.json();
+                    let itemsV1 = Array.isArray(dataV1) ? dataV1 : (dataV1.result || dataV1.messages || []);
+                    if (itemsV1.length > inboxV1Messages.length) {
+                        inboxV1Messages = itemsV1;
+                        localStorage.setItem('am_inbox_v1', JSON.stringify(inboxV1Messages));
+                        renderInboxV1();
+                        document.getElementById('temp-email-badge').classList.remove('hidden');
+                        triggerChromePushNotification("Inbox V1 Masuk!", `Ada ${itemsV1.length} pesan baru di V1.`);
+                        showToast("Email V1 Baru!", "Pesan diterima di kotak masuk V1");
                     }
                 } catch(e) {}
             }
 
-            const isOwner = await checkIsUserOwner();
-            const ownerPanel = document.getElementById('owner-global-maint-control');
-            const floatingBtn = document.getElementById('owner-floating-maint-btn-container');
-
-            if (isOwner) {
-                ownerPanel.classList.remove('hidden');
-                floatingBtn.classList.remove('hidden');
-                document.getElementById('input-maint-reason').value = maintReason;
-                document.getElementById('input-maint-link').value = maintLink;
-            } else {
-                ownerPanel.classList.add('hidden');
-                floatingBtn.classList.add('hidden');
-            }
-
-            const overlay = document.getElementById('global-web-maintenance-overlay');
-            const reasonEl = document.getElementById('maintenance-reason-display');
-            const linkEl = document.getElementById('maintenance-target-link');
-
-            // Jika Owner yang akses, abaikan overlay maintenance agar bisa mengatur
-            if (isMaintActive && !isOwner) {
-                reasonEl.innerText = maintReason;
-                if (maintLink) {
-                    linkEl.href = maintLink;
-                    linkEl.classList.remove('hidden');
-                } else {
-                    linkEl.classList.add('hidden');
-                }
-                overlay.classList.remove('hidden');
-            } else {
-                overlay.classList.add('hidden');
-            }
-        }
-
-        async function saveGlobalWebMaintenance(activeState) {
-            const isOwner = await checkIsUserOwner();
-            if (!isOwner) return;
-
-            const reason = document.getElementById('input-maint-reason').value.trim() || 'Website dipindahkan ke alamat baru.';
-            const link = document.getElementById('input-maint-link').value.trim();
-
-            localStorage.setItem('am_global_maint_active', activeState ? 'true' : 'false');
-            localStorage.setItem('am_global_maint_reason', reason);
-            localStorage.setItem('am_global_maint_link', link);
-
-            if (db) {
+            // Poll V2 Inbox
+            if (currentTempEmailV2) {
                 try {
-                    await db.ref('settings/global_web_maintenance').set({
-                        active: activeState,
-                        reason: reason,
-                        link: link
-                    });
+                    const resV2 = await fetch(`https://apiz.vsunsee.qzz.io/vsunseeV8/tempmail/inbox?apikey=${TEMP_API_KEY}&email=${encodeURIComponent(currentTempEmailV2)}`);
+                    const dataV2 = await resV2.json();
+                    let itemsV2 = Array.isArray(dataV2) ? dataV2 : (dataV2.result || dataV2.messages || []);
+                    if (itemsV2.length > inboxV2Messages.length) {
+                        inboxV2Messages = itemsV2;
+                        localStorage.setItem('am_inbox_v2', JSON.stringify(inboxV2Messages));
+                        renderInboxV2();
+                        document.getElementById('temp-email-badge').classList.remove('hidden');
+                        triggerChromePushNotification("Inbox V2 Masuk!", `Ada ${itemsV2.length} pesan baru di V2.`);
+                        showToast("Email V2 Baru!", "Pesan diterima di kotak masuk V2");
+                    }
                 } catch(e) {}
             }
-
-            showToast("Berhasil Disimpan", activeState ? "Maintenance Web Aktif untuk semua user!" : "Maintenance Web dimatikan.");
-            await checkGlobalWebMaintenanceState();
         }
 
-        function toggleOwnerWebMaintModal() {
-            // Membuka modal pengaturan dengan memunculkan overlay maintenance jika user adalah owner
-            const overlay = document.getElementById('global-web-maintenance-overlay');
-            if (overlay.classList.contains('hidden')) {
+        function refreshInboxV1() {
+            showToast("Refresh", "Memeriksa inbox V1...");
+            pollTempInboxes();
+        }
+
+        function refreshInboxV2() {
+            showToast("Refresh", "Memeriksa inbox V2...");
+            pollTempInboxes();
+        }
+
+        function renderInboxV1() {
+            const listEl = document.getElementById('inbox-v1-list');
+            document.getElementById('inbox-v1-count').innerText = inboxV1Messages.length;
+
+            if (inboxV1Messages.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">riwayat inbox v1</div>`;
+                return;
+            }
+
+            listEl.innerHTML = inboxV1Messages.map(msg => renderInboxItemCard(msg)).join('');
+        }
+
+        function renderInboxV2() {
+            const listEl = document.getElementById('inbox-v2-list');
+            document.getElementById('inbox-v2-count').innerText = inboxV2Messages.length;
+
+            if (inboxV2Messages.length === 0) {
+                listEl.innerHTML = `<div class="text-center py-8 text-slate-500 text-xs">riwayat inbox v2</div>`;
+                return;
+            }
+
+            listEl.innerHTML = inboxV2Messages.map(msg => renderInboxItemCard(msg)).join('');
+        }
+
+        function renderInboxItemCard(msg) {
+            const sender = msg.from || msg.sender || 'Seseorang';
+            const subject = msg.subject || 'Tanpa Subjek';
+            const bodyText = msg.body || msg.text || msg.content || JSON.stringify(msg);
+            const dateStr = msg.date || msg.time || '';
+
+            let extractedLink = '';
+            const urlMatch = String(bodyText).match(/(https:\/\/[^\s]+)/g);
+            if (urlMatch) {
+                const found = urlMatch.find(u => u.includes('firebase') || u.includes('alight') || u.length > 30);
+                if (found) extractedLink = found.replace(/["<>]/g, '');
+            }
+
+            return `
+                <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
+                    <div class="flex items-center justify-between text-[10px] text-slate-400">
+                        <span class="font-bold text-cyan-300 truncate max-w-[180px]">${escapeHtml(sender)}</span>
+                        <span>${escapeHtml(dateStr)}</span>
+                    </div>
+                    <div class="font-bold text-slate-100 text-xs">${escapeHtml(subject)}</div>
+                    <div class="text-[11px] text-slate-300 bg-slate-950 p-2 rounded-xl font-mono max-h-24 overflow-y-auto whitespace-pre-wrap">${escapeHtml(bodyText)}</div>
+                    
+                    ${extractedLink ? `
+                        <div class="pt-1 flex items-center justify-between gap-2">
+                            <input type="text" readonly value="${extractedLink}" class="w-full bg-slate-950 border border-purple-500/40 rounded-lg px-2.5 py-1.5 text-[10px] text-purple-300 font-mono">
+                            <div class="flex items-center gap-1 shrink-0">
+                                <a href="${extractedLink}" target="_blank" class="px-2.5 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-extrabold rounded-lg text-[10px] flex items-center gap-1 cursor-pointer" title="Buka Link">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka
+                                </a>
+                                <button onclick="navigator.clipboard.writeText('${extractedLink}'); showToast('Link Disalin', 'Link verifikasi disalin!');" class="px-2.5 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg text-[10px] cursor-pointer" title="Salin Link">
+                                    Salin
+                                </button>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        async function toggleTempEmailWindow(forceState) {
+            const overlay = document.getElementById('temp-email-modal-overlay');
+            const container = document.getElementById('temp-email-container');
+            const isHidden = overlay.classList.contains('hidden');
+            const targetState = forceState !== undefined ? forceState : isHidden;
+
+            await updateTempMaintenanceUIState();
+
+            if (targetState) {
                 overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    container.classList.remove('translate-y-full', 'sm:translate-y-8');
+                }, 10);
+                document.getElementById('temp-email-badge').classList.add('hidden');
             } else {
-                overlay.classList.add('hidden');
+                overlay.classList.add('opacity-0');
+                container.classList.add('translate-y-full', 'sm:translate-y-8');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
             }
         }
 
@@ -1106,209 +1322,6 @@
             }
         }
 
-        function initTempEmailSystem() {
-            if (!currentTempEmailId) {
-                currentTempEmailId = '687a8235-0095-428b-aa46-f6fb48f44ee2';
-                localStorage.setItem('am_temp_email_id', currentTempEmailId);
-            }
-            document.getElementById('temp-email-address').value = currentTempEmailId;
-            renderTempInbox();
-            pollTempEmailInbox();
-            setInterval(pollTempEmailInbox, 10000);
-        }
-
-        async function updateTempEmailMaintenanceUI() {
-            const isOwner = await checkIsUserOwner();
-            const ownerControl = document.getElementById('owner-maintenance-control');
-            const activeContent = document.getElementById('temp-email-active-content');
-            const maintContent = document.getElementById('temp-email-maintenance-content');
-            const maintBtnText = document.getElementById('maintenance-btn-text');
-            const maintBtn = document.getElementById('btn-toggle-maintenance');
-
-            if (isOwner) {
-                ownerControl.classList.remove('hidden');
-            } else {
-                ownerControl.classList.add('hidden');
-            }
-
-            if (isTempEmailMaintenance && !isOwner) {
-                activeContent.classList.add('hidden');
-                maintContent.classList.remove('hidden');
-            } else {
-                activeContent.classList.remove('hidden');
-                maintContent.classList.add('hidden');
-            }
-
-            if (isTempEmailMaintenance) {
-                maintBtnText.innerText = "Maintenance: ON";
-                maintBtn.className = "px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition flex items-center gap-1 cursor-pointer bg-amber-500/20 border-amber-500 text-amber-300";
-            } else {
-                maintBtnText.innerText = "Maintenance: OFF";
-                maintBtn.className = "px-2.5 py-1.5 rounded-xl text-[10px] font-bold border transition flex items-center gap-1 cursor-pointer bg-slate-900 border-slate-700 text-slate-300 hover:border-cyan-400";
-            }
-        }
-
-        async function toggleTempEmailMaintenance() {
-            const isOwner = await checkIsUserOwner();
-            if (!isOwner) return;
-
-            isTempEmailMaintenance = !isTempEmailMaintenance;
-            localStorage.setItem('am_temp_maintenance', isTempEmailMaintenance ? 'true' : 'false');
-
-            if (db) {
-                try {
-                    await db.ref('settings/temp_email_maintenance').set(isTempEmailMaintenance);
-                } catch(e) {}
-            }
-
-            await updateTempEmailMaintenanceUI();
-            showToast("Status Maintenance", isTempEmailMaintenance ? "Temp Email ditutup untuk user lain (Maintenance ON)" : "Temp Email dibuka kembali (Maintenance OFF)");
-        }
-
-        function generateRandomTempEmail() {
-            const randomUuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-            currentTempEmailId = randomUuid;
-            localStorage.setItem('am_temp_email_id', currentTempEmailId);
-            document.getElementById('temp-email-address').value = currentTempEmailId;
-            tempInboxMessages = [];
-            localStorage.setItem('am_temp_inbox', JSON.stringify([]));
-            renderTempInbox();
-            showToast('ID Temp Email Baru', 'Token ID temp email baru dibuat');
-        }
-
-        function generateCustomTempEmail() {
-            const customId = document.getElementById('custom-prefix-input').value.trim();
-            if (!customId) {
-                showToast('ID Tidak Valid', 'Masukkan token ID temp mail yang valid');
-                return;
-            }
-            currentTempEmailId = customId;
-            localStorage.setItem('am_temp_email_id', currentTempEmailId);
-            document.getElementById('temp-email-address').value = currentTempEmailId;
-            tempInboxMessages = [];
-            localStorage.setItem('am_temp_inbox', JSON.stringify([]));
-            renderTempInbox();
-            showToast('ID Custom Diset', `Token ID: ${currentTempEmailId}`);
-        }
-
-        function copyTempEmail() {
-            const emailVal = document.getElementById('temp-email-address').value;
-            if (emailVal) {
-                navigator.clipboard.writeText(emailVal);
-                showToast('Disalin', 'ID temp email disalin ke clipboard');
-                
-                const email1 = document.getElementById('input-email-1');
-                if (email1 && !email1.value) email1.value = emailVal;
-                const email2 = document.getElementById('input-email-2');
-                if (email2 && !email2.value) email2.value = emailVal;
-            }
-        }
-
-        async function toggleTempEmailWindow(forceState) {
-            const overlay = document.getElementById('temp-email-modal-overlay');
-            const container = document.getElementById('temp-email-container');
-            const isHidden = overlay.classList.contains('hidden');
-            const targetState = forceState !== undefined ? forceState : isHidden;
-
-            await updateTempEmailMaintenanceUI();
-
-            if (targetState) {
-                overlay.classList.remove('hidden');
-                setTimeout(() => {
-                    overlay.classList.remove('opacity-0');
-                    container.classList.remove('translate-y-full', 'sm:translate-y-8');
-                }, 10);
-                document.getElementById('temp-email-badge').classList.add('hidden');
-            } else {
-                overlay.classList.add('opacity-0');
-                container.classList.add('translate-y-full', 'sm:translate-y-8');
-                setTimeout(() => {
-                    overlay.classList.add('hidden');
-                }, 300);
-            }
-        }
-
-        async function pollTempEmailInbox() {
-            if (!currentTempEmailId) return;
-            try {
-                const res = await fetch(`https://api.synoxcloud.xyz/tempmail/tempmail-inbox?id=${encodeURIComponent(currentTempEmailId)}&apikey=FREE`);
-                const data = await res.json();
-
-                let items = [];
-                if (Array.isArray(data)) {
-                    items = data;
-                } else if (data && data.result && Array.isArray(data.result)) {
-                    items = data.result;
-                } else if (data && data.messages && Array.isArray(data.messages)) {
-                    items = data.messages;
-                }
-
-                if (items.length > 0) {
-                    if (items.length > tempInboxMessages.length) {
-                        tempInboxMessages = items;
-                        localStorage.setItem('am_temp_inbox', JSON.stringify(tempInboxMessages));
-                        renderTempInbox();
-                        
-                        document.getElementById('temp-email-badge').classList.remove('hidden');
-                        triggerChromePushNotification("Kotak Masuk Temp Email Masuk!", `Ada ${items.length} pesan baru.`);
-                        showToast("Email Masuk Baru!", `Pesan diterima pada ID aktif`);
-                    }
-                }
-            } catch(e) {}
-        }
-
-        function refreshTempInbox() {
-            showToast('Memperbarui', 'Memeriksa server inbox email...');
-            pollTempEmailInbox();
-        }
-
-        function renderTempInbox() {
-            const listEl = document.getElementById('temp-inbox-list');
-            document.getElementById('inbox-count').innerText = tempInboxMessages.length;
-
-            if (tempInboxMessages.length === 0) {
-                listEl.innerHTML = `<div class="text-center py-10 text-slate-500 text-xs">riwayat inbox</div>`;
-                return;
-            }
-
-            listEl.innerHTML = tempInboxMessages.map(msg => {
-                const sender = msg.from || msg.sender || 'Seseorang';
-                const subject = msg.subject || 'Tanpa Subjek';
-                const bodyText = msg.body || msg.text || msg.content || JSON.stringify(msg);
-                const dateStr = msg.date || msg.time || '';
-
-                let extractedLink = '';
-                const urlMatch = String(bodyText).match(/(https:\/\/[^\s]+)/g);
-                if (urlMatch) {
-                    const found = urlMatch.find(u => u.includes('firebase') || u.includes('alight') || u.length > 30);
-                    if (found) extractedLink = found.replace(/["<>]/g, '');
-                }
-
-                return `
-                    <div class="p-3 bg-slate-900 rounded-2xl border border-slate-800 space-y-2">
-                        <div class="flex items-center justify-between text-[10px] text-slate-400">
-                            <span class="font-bold text-cyan-300 truncate max-w-[180px]">${escapeHtml(sender)}</span>
-                            <span>${escapeHtml(dateStr)}</span>
-                        </div>
-                        <div class="font-bold text-slate-100 text-xs">${escapeHtml(subject)}</div>
-                        <div class="text-[11px] text-slate-300 bg-slate-950 p-2 rounded-xl font-mono max-h-24 overflow-y-auto whitespace-pre-wrap">${escapeHtml(bodyText)}</div>
-                        
-                        ${extractedLink ? `
-                            <div class="pt-1 flex items-center justify-between gap-2">
-                                <input type="text" readonly value="${extractedLink}" class="w-full bg-slate-950 border border-purple-500/40 rounded-lg px-2.5 py-1.5 text-[10px] text-purple-300 font-mono">
-                                <button onclick="navigator.clipboard.writeText('${extractedLink}'); showToast('Link Disalin', 'Link autentikasi email disalin!');" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-lg shrink-0 text-[10px] cursor-pointer">
-                                    Salin Link
-                                </button>
-                            </div>
-                        ` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
         function setRatingScore(score) {
             selectedRatingScore = score;
             const stars = document.querySelectorAll('#rating-star-picker i');
@@ -1425,15 +1438,18 @@
 
             if (db) {
                 try {
-                    db.ref('settings/global_web_maintenance').on('value', async (snap) => {
-                        await checkGlobalWebMaintenanceState();
-                    });
-
-                    db.ref('settings/temp_email_maintenance').on('value', (snap) => {
+                    db.ref('settings/temp_maint_v1').on('value', (snap) => {
                         if (snap.exists()) {
-                            isTempEmailMaintenance = snap.val();
-                            localStorage.setItem('am_temp_maintenance', isTempEmailMaintenance ? 'true' : 'false');
-                            updateTempEmailMaintenanceUI();
+                            isTempV1Maintenance = snap.val();
+                            localStorage.setItem('am_temp_maint_v1', isTempV1Maintenance ? 'true' : 'false');
+                            updateTempMaintenanceUIState();
+                        }
+                    });
+                    db.ref('settings/temp_maint_v2').on('value', (snap) => {
+                        if (snap.exists()) {
+                            isTempV2Maintenance = snap.val();
+                            localStorage.setItem('am_temp_maint_v2', isTempV2Maintenance ? 'true' : 'false');
+                            updateTempMaintenanceUIState();
                         }
                     });
 
@@ -1667,8 +1683,7 @@
             document.getElementById('chat-user-tag').innerText = customNickname;
             document.getElementById('input-custom-nickname').value = customNickname;
             await updateChatPermissions();
-            await updateTempEmailMaintenanceUI();
-            await checkGlobalWebMaintenanceState();
+            await updateTempMaintenanceUIState();
         }
 
         async function updateChatPermissions() {
